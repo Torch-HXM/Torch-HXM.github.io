@@ -24,9 +24,9 @@
 <meta property="og:description" content="文件属性信息“Linux系统中万物皆文件”，当我们进入家目录并键入命令： 1ls -l  终端会输出目录下文件的一些信息。但是在这些信息中，作为小白的我只能看出来，输出中包含时间和文件名，其余的项就不知道代表什么了。  (base) torch@torch:~$ ls -l  total 20  drwxr-xr-x 28 torch torch 4096 Aug 16 16:57 anacond">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-16T04:39:50.000Z">
-<meta property="article:modified_time" content="2023-09-18T05:37:58.215Z">
+<meta property="article:modified_time" content="2023-09-19T03:24:22.063Z">
 <meta property="article:author" content="北国回忆录">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="文件编程">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.3k 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          29 分钟
+          28 分钟
         
       </span>
     
@@ -334,8 +334,7 @@
 </tr>
 </tbody></table>
 <p>这其中有一些名词需要解释和扩充，我们整理如下</p>
-<ol>
-<li><p>文件类型<br>其中，我们经常会去操作的是普通文件和目录文件。以后的重心也会放在普通文件和目录文件上。如果对其他文件类型不清楚也没关系，用到的很少。</p>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>其中，我们经常会去操作的是普通文件和目录文件。以后的重心也会放在普通文件和目录文件上。如果对其他文件类型不清楚也没关系，用到的很少。</p>
 <table>
 <thead>
 <tr>
@@ -372,10 +371,8 @@
 <td align="center">套接口文件&#x2F;数据接口文件</td>
 </tr>
 </tbody></table>
-</li>
-<li><p>文件所有者与文件所属用户组<br>文件所有者默认情况下是文件创建者，所属用户组为文件创建者所属的组。</p>
-</li>
-<li><p>权限<br>虽然普通文件和目录文件的权限种类和代表字符相同，但是却代表着不同的含义<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linux 实操篇⑤（组管理：文件所有者、所属组、其他组；权限管理：rwx 权限详解 0-9 位说明 、修改文件权限 chmod、修改文件/目录所有者 chown、修改文件/目录所在组 chgrp）](https://blog.csdn.net/weixin_57558097/article/details/127498309)">[1]</span></a></sup>。</p>
+<h3 id="文件所有者与文件所属用户组"><a href="#文件所有者与文件所属用户组" class="headerlink" title="文件所有者与文件所属用户组"></a>文件所有者与文件所属用户组</h3><p>文件所有者默认情况下是文件创建者，所属用户组为文件创建者所属的组。</p>
+<h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><p>虽然普通文件和目录文件的权限种类和代表字符相同，但是却代表着不同的含义<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linux 实操篇⑤（组管理：文件所有者、所属组、其他组；权限管理：rwx 权限详解 0-9 位说明 、修改文件权限 chmod、修改文件/目录所有者 chown、修改文件/目录所在组 chgrp）](https://blog.csdn.net/weixin_57558097/article/details/127498309)">[1]</span></a></sup>。</p>
 <table>
 <thead>
 <tr>
@@ -400,10 +397,7 @@
 <td align="center">可以进入目录</td>
 </tr>
 </tbody></table>
-</li>
-<li><p>奇怪的<strong>4096</strong><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linux下为什么目录的大小总是4096](https://community.aidlux.com/postDetail/556)">[2]</span></a></sup><br>可以看到，我们的目录文件大小都是4096B，但是我们的目录中明明存放了不同的东西，不应该一样大呀？而且这4096B也就是4kb是不是太小了？值得注意的是，我们的目录文件的大小并不表示该目录内所有文件大小的总和，而是该目录的<strong>i节点</strong>和目录下所有的文件名字符的大小（这么说也不准确，但是可以这么理解）。文件名可以理解，i节点又是啥？这个后面说。总之，目录文件所包含的信息总共就这两部分，其实占不了多大的空间，所以不会像我们在windows中看目录属性那样显示大小有几百兆。但是，即使是这样，也不应该相等，都是4kb呀？这就是另一个问题了，涉及到linux系统文件存取的最小单位——<strong>块</strong>。这个最小存储单元的存在意味着，linux系统中的文件最小也的是4kb，而我们的目录，<strong>i节点</strong>占用的空间很小，一般是128B或256B，主要的空间都用在记录文件名上了，只要该目录下的文件名没有多到一定程度，突破了一个<strong>块</strong>的记录限制，那么这个目录文件的大小就只能是4096B。</p>
-</li>
-</ol>
+<h3 id="奇怪的4096-2"><a href="#奇怪的4096-2" class="headerlink" title="奇怪的4096[2]"></a>奇怪的<strong>4096</strong><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linux下为什么目录的大小总是4096](https://community.aidlux.com/postDetail/556)">[2]</span></a></sup></h3><p>可以看到，我们的目录文件大小都是4096B，但是我们的目录中明明存放了不同的东西，不应该一样大呀？而且这4096B也就是4kb是不是太小了？值得注意的是，我们的目录文件的大小并不表示该目录内所有文件大小的总和，而是该目录的<strong>i节点</strong>和目录下所有的文件名字符的大小（这么说也不准确，但是可以这么理解）。文件名可以理解，i节点又是啥？这个后面说。总之，目录文件所包含的信息总共就这两部分，其实占不了多大的空间，所以不会像我们在windows中看目录属性那样显示大小有几百兆。但是，即使是这样，也不应该相等，都是4kb呀？这就是另一个问题了，涉及到linux系统文件存取的最小单位——<strong>块</strong>。这个最小存储单元的存在意味着，linux系统中的文件最小也的是4kb，而我们的目录，<strong>i节点</strong>占用的空间很小，一般是128B或256B，主要的空间都用在记录文件名上了，只要该目录下的文件名没有多到一定程度，突破了一个<strong>块</strong>的记录限制，那么这个目录文件的大小就只能是4096B。</p>
 <h2 id="i节点"><a href="#i节点" class="headerlink" title="i节点"></a>i节点</h2><p>上面一节中，我们有说到目录中包含一个i节点。其实linux系统中的所有文件都有一个i节点（索引节点，index node）。它的具体内容如下：</p>
 <table>
 <thead>
@@ -458,9 +452,6 @@
 <p>“ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>    “ Netrw Directory Listing                                        (netrw v156)<br>    “   &#x2F;home&#x2F;torch&#x2F;anaconda3<br>    “   Sorted by      name<br>    “   Sort sequence: [/]$,&lt;core%(.\d+)=&gt;,.h$,.c$,.cpp$,~=*$,*,.o$,.obj$,.info$,.swp$,.bak$,”   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special<br>    “ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>    ..&#x2F;                                                                              .&#x2F;<br>    bin&#x2F;<br>    compiler_compat&#x2F;<br>    conda-meta&#x2F;<br>    condabin&#x2F;<br>    doc&#x2F;<br>    envs&#x2F;<br>    etc&#x2F;<br>    include&#x2F;<br>    lib&#x2F;<br>    libexec&#x2F;<br>    licensing&#x2F;<br>    man&#x2F;<br>    mkspecs&#x2F;<br>    phrasebooks&#x2F;<br>    pkgs&#x2F;<br>    plugins&#x2F;<br>    qml&#x2F;<br>    resources&#x2F;</p>
 </blockquote>
 <p>  可以看到，其实这个目录文件中的文字内容就是该目录下所包含的文件名称。而实际上，这些输出已经被vim处理过了，实际的内容不只是文件名，还有文件名所对应的<strong>i节点号</strong>。文件名与<strong>i节点号</strong>构成了一个查询列表，当我们通过文件名操作文件时，计算机就可以通过查询列表找到文件的i节点号来完成操作。而这个查询列表就保存在目录文件中。</p>
-<ul>
-<li>参考书籍：LinuxC与C++一线开发实践</li>
-</ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_57558097/article/details/127498309">Linux 实操篇⑤（组管理：文件所有者、所属组、其他组；权限管理：rwx 权限详解 0-9 位说明 、修改文件权限 chmod、修改文件&#x2F;目录所有者 chown、修改文件&#x2F;目录所在组 chgrp）</a>
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://community.aidlux.com/postDetail/556">Linux下为什么目录的大小总是4096</a>
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
@@ -496,7 +487,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/linux/" class="print-no-link">#linux</a>
+        <a href="/tags/%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/" class="print-no-link">#文件编程</a>
       
     </div>
   
