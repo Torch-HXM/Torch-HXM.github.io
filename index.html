@@ -244,7 +244,7 @@
       
       <a class="index-excerpt " href="/2023/09/16/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" target="_self">
         <div>
-          文件属性信息“Linux系统中万物皆文件”，当我们进入家目录并键入命令： 1ls -l  终端会输出目录下文件的一些信息。但是在这些信息中，作为小白的我只能看出来，输出中包含时间和文件名，其余的项就不知道代表什么了。  (base) torch@torch:~$ ls -l  total 20  drwxr-xr-x 28 torch torch 4096 Aug 16 16:57 anacond
+          文件属性信息 文件类型 文件所有者与文件所属用户组 权限 奇怪的4096[^2]   i节点 目录文件  文件属性信息“Linux系统中万物皆文件”，当我们进入家目录并键入命令： 1ls -l  终端会输出目录下文件的一些信息。但是在这些信息中，作为小白的我只能看出来，输出中包含时间和文件名，其余的项就不知道代表什么了。  (base) torch@torch:~$ ls -l  total 2
         </div>
       </a>
 
@@ -311,7 +311,7 @@
       
       <a class="index-excerpt " href="/2023/09/16/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80IO/" target="_self">
         <div>
-          文件描述符文件描述符是计算机操作文件时所用的符号，上文中所提到的i节点是计算机查找文件时所用的符号。那么，既然已经有i节点号可以唯一确定文件，为什么呢还要用文件描述符呢？一个文件可以被同一个用户或者不同用户同时打开一次或多次，这就造成文件需要有一个结构能够分别记录每一次打开后的操作，比如光标位置。因此，linux系统使用了文件描述符来解决这个问题。当打开或者创建一个文件的时候，内核就会向进程返回一
+          文件描述符 文件的基础IO 文件的创建与打开    文件描述符文件描述符是计算机操作文件时所用的符号，上文中所提到的i节点是计算机查找文件时所用的符号。那么，既然已经有i节点号可以唯一确定文件，为什么呢还要用文件描述符呢？一个文件可以被同一个用户或者不同用户同时打开一次或多次，这就造成文件需要有一个结构能够分别记录每一次打开后的操作，比如光标位置。因此，linux系统使用了文件描述符来解决这个问
         </div>
       </a>
 
@@ -362,73 +362,6 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" target="_self">
-          <img src="/img/post/linuxMultiprocess.png" srcset="/img/loading.gif" lazyload alt="Linux多进程编程-基本概念">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" target="_self">
-          Linux多进程编程-基本概念
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" target="_self">
-        <div>
-          
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-09-20 15:31" pubdate>
-              2023-09-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">linux</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/">#多进程编程</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2023/09/18/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81/" target="_self">
           <img src="/img/post/linuxFileSystem.png" srcset="/img/loading.gif" lazyload alt="Linux文件编程-文件状态">
         </a>
@@ -445,7 +378,7 @@
       
       <a class="index-excerpt " href="/2023/09/18/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81/" target="_self">
         <div>
-          文件状态函数文件的状态被储存在一个stat结构体中，它所包含的内容如下： 123456789101112131415struct stat&#123;    mdoe_t    st_mode;    // 文件对应的模式、文件、目录等    ino_t     st_ino;     // inode节点号    dev_t     st_dev;     // 设备号码    dev_t
+          文件状态 函数 演示    文件状态函数文件的状态被储存在一个stat结构体中，它所包含的内容如下： 123456789101112131415struct stat&#123;    mdoe_t    st_mode;    // 文件对应的模式、文件、目录等    ino_t     st_ino;     // inode节点号    dev_t     st_dev;     // 设
         </div>
       </a>
 
@@ -512,7 +445,7 @@
       
       <a class="index-excerpt " href="/2023/09/19/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A(fcntl)/" target="_self">
         <div>
-          文件锁定当多个用户同时操作同一个文件时，为了避免共享资源产生竞争状态，我们可以给文件上锁。文件锁分为建议性锁和强制性锁。建议性锁会给文件设置一个标志位，但是，如果对文件操作之前不对该标志位进行检测，那么建议性锁就会形同虚设，其他进程依旧可以对文件进行操作。而强制性锁会让上锁的进程“霸占”这个文件的一些权限，比如一个进程A对文件F设置了一个只允许读操作的强制性锁（读取锁），那么进程B就只能对文件F进
+          文件锁定 函数和参数 建议性锁 强制性锁    文件锁定当多个用户同时操作同一个文件时，为了避免共享资源产生竞争状态，我们可以给文件上锁。文件锁分为建议性锁和强制性锁。建议性锁会给文件设置一个标志位，但是，如果对文件操作之前不对该标志位进行检测，那么建议性锁就会形同虚设，其他进程依旧可以对文件进行操作。而强制性锁会让上锁的进程“霸占”这个文件的一些权限，比如一个进程A对文件F设置了一个只允许读操
         </div>
       </a>
 
@@ -579,7 +512,7 @@
       
       <a class="index-excerpt " href="/2023/09/19/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84(mmap)/" target="_self">
         <div>
-          文件的内存映射为什么要将文件映射到内存？频繁地读取和写入文件十分耗时，如果能将文件加载到内存中，则读取和写入的主体就变成了程序和内存而不是程序和文件，大大减小时间开销。另外，将文件映射到内存中并由多个进程访问，能够实现进程之间共享内存。 函数和主要参数12345678910#include &lt;sys/mman.h&gt;/** * @param start     映射内存的起始地址，通常设
+          文件的内存映射 为什么要将文件映射到内存？ 函数和主要参数 通过内存映射读取文件 通过内存映射修改文件    文件的内存映射为什么要将文件映射到内存？频繁地读取和写入文件十分耗时，如果能将文件加载到内存中，则读取和写入的主体就变成了程序和内存而不是程序和文件，大大减小时间开销。另外，将文件映射到内存中并由多个进程访问，能够实现进程之间共享内存。 函数和主要参数12345678910#includ
         </div>
       </a>
 
@@ -630,23 +563,23 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2023/09/19/C++-%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/" target="_self">
-          <img src="/img/post/C++.png" srcset="/img/loading.gif" lazyload alt="C++-文件编程">
+        <a href="/2023/09/19/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" target="_self">
+          <img src="/img/post/linuxFileSystem.png" srcset="/img/loading.gif" lazyload alt="Linux文件编程-C++">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2023/09/19/C++-%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/" target="_self">
-          C++-文件编程
+        <a href="/2023/09/19/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" target="_self">
+          Linux文件编程-C++
         </a>
       </h2>
 
       
-      <a class="index-excerpt " href="/2023/09/19/C++-%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/" target="_self">
+      <a class="index-excerpt " href="/2023/09/19/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" target="_self">
         <div>
-          流的概念在C++语言中，数据的输入和输出（I&#x2F;O）包括对标准输入设备（键盘）和标准输出设备（显示器）、外存磁盘文件、内存中指定字符串储存空间进行输入和输出三个方面，分别简称为标准I&#x2F;O，文件I&#x2F;O，串I&#x2F;O。C++将写入文件和读取文件抽象的说为文件流，三种I&#x2F;O对应着三种文件流，分别是标准I&#x2F;O流，文件I&#x2F;O流和字符串I&#x2
+          流的概念 流的类库 流操作 基础文件I&#x2F;O 更精细的文件I&#x2F;O    流的概念在C++语言中，数据的输入和输出（I&#x2F;O）包括对标准输入设备（键盘）和标准输出设备（显示器）、外存磁盘文件、内存中指定字符串储存空间进行输入和输出三个方面，分别简称为标准I&#x2F;O，文件I&#x2F;O，串I&#x2F;O。C++将写入文件和读取文件抽象的说为文件流，三种I&#x2F
         </div>
       </a>
 
@@ -670,7 +603,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/C/" class="category-chain-item">C++</a>
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
   
   
 
@@ -686,6 +619,73 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/">#文件编程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" target="_self">
+          <img src="/img/post/linuxMultiprocess.png" srcset="/img/loading.gif" lazyload alt="Linux多进程编程-创建进程">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" target="_self">
+          Linux多进程编程-创建进程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" target="_self">
+        <div>
+          进程的基础操作 获得当前进程的PID 创建进程 替换进程    进程的基础操作获得当前进程的PID12345678#include &lt;unistd.h&gt;#include &lt;stdio.h&gt;int main(int argc, char** argv)&#123;    pid_t pid = getpid();    printf(&quot;进程的PID是：%d\n&q
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-09-20 15:31" pubdate>
+              2023-09-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/">#多进程编程</a>
             
           </div>
         
