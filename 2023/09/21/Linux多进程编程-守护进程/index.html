@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="北国回忆录">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="守护进程的特点具有超级用户权限父进程是init进程不使用控制终端是各自进程组和会话过程的唯一进程编写守护进程的基本步骤创建子进程，退出父进程 父进程先于子进程退出会变为孤儿进程 孤儿进程会被init进程收养——父进程是init进程  在子进程中创建新对话 setsid函数用于创建新会话，并担任该会话的组长——是各自进程组和会话过程的唯一进程 setsid函数让进程摆脱原会话、原进程组和原控制终端的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux多进程编程-守护进程">
+<meta property="og:url" content="http://example.com/2023/09/21/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="守护进程的特点具有超级用户权限父进程是init进程不使用控制终端是各自进程组和会话过程的唯一进程编写守护进程的基本步骤创建子进程，退出父进程 父进程先于子进程退出会变为孤儿进程 孤儿进程会被init进程收养——父进程是init进程  在子进程中创建新对话 setsid函数用于创建新会话，并担任该会话的组长——是各自进程组和会话过程的唯一进程 setsid函数让进程摆脱原会话、原进程组和原控制终端的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/post/linuxMultiprocess.png">
+<meta property="article:published_time" content="2023-09-21T05:20:18.000Z">
+<meta property="article:modified_time" content="2023-09-21T07:42:20.263Z">
+<meta property="article:author" content="北国回忆录">
+<meta property="article:tag" content="多进程编程">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/post/linuxMultiprocess.png">
+  
+  
+  
+  <title>Linux多进程编程-守护进程 - 北国回忆录</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>北国回忆录</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Linux多进程编程-守护进程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-09-21 13:20" pubdate>
+          2023年9月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux多进程编程-守护进程</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年9月21日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="守护进程的特点"><a href="#守护进程的特点" class="headerlink" title="守护进程的特点"></a>守护进程的特点</h2><h4 id="具有超级用户权限"><a href="#具有超级用户权限" class="headerlink" title="具有超级用户权限"></a>具有超级用户权限</h4><h4 id="父进程是init进程"><a href="#父进程是init进程" class="headerlink" title="父进程是init进程"></a>父进程是init进程</h4><h4 id="不使用控制终端"><a href="#不使用控制终端" class="headerlink" title="不使用控制终端"></a>不使用控制终端</h4><h4 id="是各自进程组和会话过程的唯一进程"><a href="#是各自进程组和会话过程的唯一进程" class="headerlink" title="是各自进程组和会话过程的唯一进程"></a>是各自进程组和会话过程的唯一进程</h4><h2 id="编写守护进程的基本步骤"><a href="#编写守护进程的基本步骤" class="headerlink" title="编写守护进程的基本步骤"></a>编写守护进程的基本步骤</h2><h3 id="创建子进程，退出父进程"><a href="#创建子进程，退出父进程" class="headerlink" title="创建子进程，退出父进程"></a>创建子进程，退出父进程</h3><ul>
+<li>父进程先于子进程退出会变为孤儿进程</li>
+<li>孤儿进程会被init进程收养——<a href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E6%98%AFinit%E8%BF%9B%E7%A8%8B">父进程是init进程</a></li>
+</ul>
+<h3 id="在子进程中创建新对话"><a href="#在子进程中创建新对话" class="headerlink" title="在子进程中创建新对话"></a>在子进程中创建新对话</h3><ul>
+<li>setsid函数用于创建新会话，并担任该会话的组长——<a href="#%E6%98%AF%E5%90%84%E8%87%AA%E8%BF%9B%E7%A8%8B%E7%BB%84%E5%92%8C%E4%BC%9A%E8%AF%9D%E8%BF%87%E7%A8%8B%E7%9A%84%E5%94%AF%E4%B8%80%E8%BF%9B%E7%A8%8B">是各自进程组和会话过程的唯一进程</a></li>
+<li>setsid函数让进程摆脱原会话、原进程组和原控制终端的控制——<a href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%88%E7%AB%AF">不使用控制终端</a></li>
+<li>setsid函数使进程完全独立出来</li>
+</ul>
+<h3 id="改变当前目录为根目录"><a href="#改变当前目录为根目录" class="headerlink" title="改变当前目录为根目录"></a>改变当前目录为根目录</h3><p>试想，如果我们的守护进程的工作目录是在一个U盘里，那当我们要弹出U盘时，由于守护进程的存在我们会失败。因此，守护进程的工作目录需要修改为非移动设备上，比如我们的根目录。</p>
+<ul>
+<li>chdir函数可以更改进程的工作路径</li>
+</ul>
+<h3 id="重新设置文件权限掩码"><a href="#重新设置文件权限掩码" class="headerlink" title="重新设置文件权限掩码"></a>重新设置文件权限掩码</h3><ul>
+<li>子进程会继承原父进程的文件权限掩码</li>
+<li>给子进程使用文件带来麻烦</li>
+<li>函数umask(0)重设文件权限掩码</li>
+</ul>
+<blockquote>
+<p>umask(0)所获得的权限是将0取反在与创建文件时的权限相与。相当于保留了文件的创建时权限。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">权限</th>
+<th align="center">八进制值</th>
+<th align="center">二进制值</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">—</td>
+<td align="center">0</td>
+<td align="center">000</td>
+<td align="center">没有权限</td>
+</tr>
+<tr>
+<td align="center">–x</td>
+<td align="center">1</td>
+<td align="center">001</td>
+<td align="center">只有执行权限</td>
+</tr>
+<tr>
+<td align="center">-w-</td>
+<td align="center">2</td>
+<td align="center">010</td>
+<td align="center">只有写权限</td>
+</tr>
+<tr>
+<td align="center">-wx</td>
+<td align="center">3</td>
+<td align="center">011</td>
+<td align="center">写入和执行权限</td>
+</tr>
+<tr>
+<td align="center">r–</td>
+<td align="center">4</td>
+<td align="center">100</td>
+<td align="center">只有阅读权限</td>
+</tr>
+<tr>
+<td align="center">r-x</td>
+<td align="center">5</td>
+<td align="center">101</td>
+<td align="center">读取和执行权限</td>
+</tr>
+<tr>
+<td align="center">rw-</td>
+<td align="center">6</td>
+<td align="center">110</td>
+<td align="center">读写权限</td>
+</tr>
+<tr>
+<td align="center">rwx</td>
+<td align="center">7</td>
+<td align="center">111</td>
+<td align="center">执行所有三项操作的权限，即读取、写入和执行</td>
+</tr>
+</tbody></table>
+<h3 id="关闭文件描述符"><a href="#关闭文件描述符" class="headerlink" title="关闭文件描述符"></a>关闭文件描述符</h3><ul>
+<li>子进程会继承父进程已打开的文件，但这些文件可能不再使用，但依旧占据系统资源</li>
+<li>比如标准输入输出和错误文件0,1,2，守护进程永远无法输出内容到屏幕，这三个文件失去作用</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;MAXFILE;i++) <span class="hljs-built_in">close</span>(i);    <span class="hljs-comment">//关闭文件描述符, MAXFILE是系统能够提供的文件描述符的最大值</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相关阅读：子进程能否访问父进程上锁的文件？<br>在操作系统中，Fork会创建一个与父进程几乎相同的子进程。这意味着子进程继承了父进程的许多属性，例如打开的文件描述符和虚拟内存。然而，在Fork后，子进程和父进程是两个完全独立的进程，它们共享的只有一个初始状态。因此，子进程不能继承父进程的锁。如果父进程在Fork之前持有一个锁，它会继续持有该锁，但是在子进程中，锁的状态将被重置。在子进程中，锁不再处于锁定状态，因此需要重新获取锁才能访问共享资源。此外，锁的互斥量被存储在内存中，子进程会得到它自己的内存副本，这意味着子进程和父进程中的锁不会是相同的锁。<br>因此，子进程需要重新获取锁才能访问共享资源。如果在父进程中的锁是一个进程之间共享的锁（例如POSIX 有名信号量），则可以再次打开该锁，使得父子进程都可以使用这个锁，但必须小心以避免锁的竞争条件。</p>
+</blockquote>
+<h3 id="让守护进程能够被退出"><a href="#让守护进程能够被退出" class="headerlink" title="让守护进程能够被退出"></a>让守护进程能够被退出</h3><ul>
+<li>使用kill命令来终止守护进程</li>
+<li>kill命令会向进程发送signal信号，我们需要让守护进程能够接收信号<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="hljs-comment">// SIGTERM是kill命令发出的信号</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sigterm_handler</span><span class="hljs-params">(<span class="hljs-type">int</span> arg)</span></span>&#123; ... &#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>相关阅读：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55752775/article/details/130853402">Linux中的信号</a></p>
+</blockquote>
+<h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span>         <span class="hljs-comment">// 包含 exit</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span>         <span class="hljs-comment">// 包含 strlen</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span>          <span class="hljs-comment">// 包含 open</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span>      <span class="hljs-comment">// 包含 pid_t</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span>         <span class="hljs-comment">// 包含 read, write, close, usleep, setsid, chdir</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span>         <span class="hljs-comment">// 包含 signal, SIGTERM</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span>       <span class="hljs-comment">// 包含 umask</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAXFILE 1024        <span class="hljs-comment">// 使用ulimit -n命令查看</span></span><br><br><span class="hljs-keyword">volatile</span> <span class="hljs-type">sig_atomic_t</span> _running = <span class="hljs-number">1</span>;     <span class="hljs-comment">// volatile告诉编译器，_running随时可能被更改。_running标志着我们守护进程的运行状态，1代表在运行，0代表需要终止。</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sigterm_handler</span><span class="hljs-params">(<span class="hljs-type">int</span> arg)</span></span>&#123;<br>    _running = <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span>** argv)</span></span>&#123;<br>    <span class="hljs-type">pid_t</span> pc;<br>    <span class="hljs-type">int</span> fd, len;<br>    <span class="hljs-type">char</span>* buf = <span class="hljs-string">&quot;This is a Dameon.\n&quot;</span>;<br>    len = <span class="hljs-built_in">strlen</span>(buf);<br>    pc = fork();                        <span class="hljs-comment">// **创建子进程**</span><br>    <span class="hljs-keyword">if</span>(pc&lt;<span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;ERROR: create process failed.\n&quot;</span>);<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pc&gt;<span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;PID: %d\n&quot;</span>, pc);        <span class="hljs-comment">// 输出子进程PID</span><br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);                        <span class="hljs-comment">// **退出父进程**</span><br>    &#125;<br><br>    <span class="hljs-built_in">setsid</span>();                           <span class="hljs-comment">// **创建新会话**</span><br>    <span class="hljs-built_in">chdir</span>(<span class="hljs-string">&quot;/&quot;</span>);                         <span class="hljs-comment">// **将工作目录转移到根目录**</span><br>    <span class="hljs-built_in">umask</span>(<span class="hljs-number">0</span>);                           <span class="hljs-comment">// **重置文件权限掩码**</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">3</span>;i&lt;MAXFILE;i++) <span class="hljs-built_in">close</span>(i);<span class="hljs-comment">// **关闭所有文件描述符**   //这里没有关闭标准输入输出和错误，方便我们debug。</span><br><br>    <span class="hljs-built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="hljs-comment">// **处理kill事件**</span><br>    <span class="hljs-keyword">while</span>(_running)&#123;<br>        fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/home/torch/code/linux-c++/clion/dameon.log&quot;</span>, O_CREAT|O_WRONLY|O_APPEND);    <span class="hljs-comment">// 文件不存在时创建，仅写入，追加</span><br>        <span class="hljs-keyword">if</span>(fd&lt;<span class="hljs-number">0</span>)&#123;<br>            <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;open&quot;</span>);<br>            <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);                                                <span class="hljs-comment">// 文件打开失败</span><br>        &#125;<br>        <span class="hljs-built_in">write</span>(fd, buf, len);<br>        <span class="hljs-built_in">close</span>(fd);<br>        <span class="hljs-built_in">usleep</span>(<span class="hljs-number">10</span>*<span class="hljs-number">1000</span>);                                            <span class="hljs-comment">// 10ms延时</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>将代码编译后用sudo权限执行——<a href="#%E5%85%B7%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">具有超级用户权限</a></p>
+<blockquote>
+<p>PID: 9259</p>
+</blockquote>
+<p>可以通过ps axj命令查看守护进程，可以找到我们的进程就在其中。可以使用sudo kill 9259杀死我们的进程。使用管理员权限打开dameon.log文件，可以看到里面的内容。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/" class="print-no-link">#多进程编程</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux多进程编程-守护进程</div>
+      <div>http://example.com/2023/09/21/Linux多进程编程-守护进程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>北国回忆录</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年9月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/20/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" title="Linux多进程编程-创建进程">
+                        <span class="hidden-mobile">Linux多进程编程-创建进程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
