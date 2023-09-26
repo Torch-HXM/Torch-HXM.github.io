@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="北国回忆录">
 <meta property="og:description" content="原文名称：Probabilistic and Geometric Depth: Detecting Objects in Perspective 发布时间：2022年 概率几何深度：在透视图像中检测对象摘要3D目标检测在辅助驾驶系统和其他各式各样的工程实践中有着极重要的作用。单目3D目标检测，作为基础图像任务中一个具有代表性的设定，虽然提供了一个比传统的依赖于激光雷达传感器的方法更具有性价比的方法">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/img/post/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.png">
+<meta property="og:image" content="http://example.com/img/post/Monocular3DDetection/Monocular3DDetection.png">
 <meta property="article:published_time" content="2023-09-25T06:39:12.000Z">
-<meta property="article:modified_time" content="2023-09-26T09:33:55.559Z">
+<meta property="article:modified_time" content="2023-09-26T09:39:05.042Z">
 <meta property="article:author" content="北国回忆录">
 <meta property="article:tag" content="单目3D目标检测">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/post/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B.png">
+<meta name="twitter:image" content="http://example.com/img/post/Monocular3DDetection/Monocular3DDetection.png">
   
   
   
@@ -294,7 +294,7 @@
 <p>本文首先以定量的方式在两个权威的benchmark上对该方法的问题进行了调研。尽管我们已然知晓深度信息对于该任务来说十分的重要，但是我们惊讶的发现不准确的深度信息会让所有其他定位预测无法取得较好的精度。可以看出，实例深度是方法的瓶颈，所以我们将单目3D目标检测简化为实例深度预测问题以此来从本质上解决它。</p>
 <p>此前的一些方法首先使用一个复杂的深度估计网络来为2D目标检测器补偿深度信息。之后一些方法通过将深度的回归直接作为3D定位任务的一部分来简化网络结构。然而，他们的共同问题是，他们仍然简单的使用一个深度回归器从独立的实例或像素中回归深度。我们观察到，每一个物体都和其他的物体共同存在于同一张图像中，他们之间的几何关系对于预测出准确的深度信息很有帮助。</p>
 <p>基于这些观测结果，我们提出了一种概率和几何深度方法，该方法通过联合概率深度的不确定性和共同存在的物体之间的几何关系来获得精确地深度估计。具体来说，由于每个实例的初始深度估计在这个不适定设置中通常是不准确的，我们加入了一个概率表示来捕获估计深度的不确定性。我们首先将深度值分割到一组区间中，并根据分布的期望值来计算深度（图1(a)）。将分布中top-k置信分数的平均值作为深度的不确定性。为了模拟几何关系，我们进一步构造了一个深度传播图，以增强其上下文关系的估计。每个实例深度的不确定性为其中的传播提供了有用的指导。得益于这个总体方案，我们可以很容易地识别具有更高置信度的预测，更重要的是，利用基于图的协同机制更准确地估计它们的深度。</p>
-<p><img src="/img/post/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB/PGD1.png" srcset="/img/loading.gif" lazyload alt="图 1"></p>
+<p><img src="/img/post/Monocular3DDetection/PGD1.png" srcset="/img/loading.gif" lazyload alt="图 1"></p>
 <p>我们在一个简单的单目三维目标探测器FCOS3D上实现了该方法。尽管基本思想很简单，我们的PGD还是在使用不同的基准设置和评估指标下，在KITTI和nuScenes上取得了显著的性能提升。它在所有单眼视觉方法中获得第一名，同时仍然保持实时效率。这种简单而有效的方法证明，只需根据深度进行设计，二维探测器就能够检测透视物体。</p>
 <h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><h3 id="2D目标检测"><a href="#2D目标检测" class="headerlink" title="2D目标检测"></a>2D目标检测</h3><p>现代2D目标检测方法可以分为有锚和无锚两个分支。有锚的方法由于预设了锚，使回归任务变得简单；无锚的方法由于没有复杂的先验设定使得它具有更好的普适性。考虑到FCOS处理这档和尺度方差的能力，我们使用了FCOS的3D分支——<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content/ICCV2021W/3DODI/html/Wang_FCOS3D_Fully_Convolutional_One-Stage_Monocular_3D_Object_Detection_ICCVW_2021_paper.html">FCOS3D</a>作为我们改进的baseline。</p>
 <h3 id="单目深度估计"><a href="#单目深度估计" class="headerlink" title="单目深度估计"></a>单目深度估计</h3><p>单目深度估计和单目3D目标检测一样是一个具有挑战性的不适定问题。它的目的是在给定RGB图像的情况下预测像素级别的密集的全局景深场。早期的工作是用非参数优化方法从人造的特征中预测深度。随着cnn的快速发展，全监督方法、基于立体匹配和单目视频的自监督方法逐渐出现。虽然这个问题已经被探索了很长时间，但很少有在特定任务中专门研究它，比如物体检测，密集的深度监督总是不能保证，我们只关心实例深度的准确性，而不是全局景深场。<br>至于深度学习问题的重新定义，已经有人做了一些尝试，例如，DORN将深度学习问题重新定义为序数回归，并提出了一种间隔增加离散化（SID）策略来改进网络训练和减少计算。它类似于我们对不确定性建模的概率表示的基本思想，但在动机和设计细节方面有所不同。</p>
@@ -314,7 +314,7 @@
 </ul>
 <p>我们在3D和2D定位之间追加了一个连续性损失，这个损失将在追加材料中详细说明。</p>
 <p>基于此，我们将这个baseline应用在两个具有代表性的banchmark上，分别是KITTI和nuScenes，并一步一步地用真值取代预测值来观察性能瓶颈（如图 2）。出乎意料的是，在两个数据集上使用不同的指标衡量性能，都表现出以下规律：一个不准确的深度信息会阻碍其他子任务准确率的提升。因此，目前的单目三维检测，特别是三维定位，可以在很大程度上简化为实例深度估计问题，这将是我们接下来提出的方法的重点。更多的关于Oracle的分析清参见补充材料。</p>
-<p><img src="/img/post/%E5%8D%95%E7%9B%AE3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB/PGD2.png" srcset="/img/loading.gif" lazyload alt="图 2"></p>
+<p><img src="/img/post/Monocular3DDetection/PGD2.png" srcset="/img/loading.gif" lazyload alt="图 2"></p>
 <blockquote>
 <p>图片译文：在使用不同数据集和策略下的Oracle分析。从左到右依次是：在KITTI数据集上基于3D IoU的mAP指标、NuScenes 检测分数（NDS）、在nuScenes上基于距离的mAP指标。我们用真值逐渐替换预测值来观察性能的改进。可以看到，一个准确的深度值可以使性能显著提升，并且，只有在有了准确精度的前提下，其他的准确信息（偏移量、尺寸等）才会对性能的提升有所帮助。</p>
 </blockquote>
