@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="守护进程的特点具有超级用户权限父进程是init进程不使用控制终端是各自进程组和会话过程的唯一进程编写守护进程的基本步骤创建子进程，退出父进程 父进程先于子进程退出会变为孤儿进程 孤儿进程会被init进程收养——父进程是init进程  在子进程中创建新对话 setsid函数用于创建新会话，并担任该会话的组长——是各自进程组和会话过程的唯一进程 setsid函数让进程摆脱原会话、原进程组和原控制终端的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux多进程编程-守护进程">
+<meta property="og:url" content="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="守护进程的特点具有超级用户权限父进程是init进程不使用控制终端是各自进程组和会话过程的唯一进程编写守护进程的基本步骤创建子进程，退出父进程 父进程先于子进程退出会变为孤儿进程 孤儿进程会被init进程收养——父进程是init进程  在子进程中创建新对话 setsid函数用于创建新会话，并担任该会话的组长——是各自进程组和会话过程的唯一进程 setsid函数让进程摆脱原会话、原进程组和原控制终端的">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T05:20:18.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:18:10.429Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="Linux多进程编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/","path":"2023/09/21/linux/linux多进程编程/Linux多进程编程-守护进程/","title":"Linux多进程编程-守护进程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux多进程编程-守护进程 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">守护进程的特点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90"><span class="nav-number">1.0.1.</span> <span class="nav-text">具有超级用户权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E6%98%AFinit%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.0.2.</span> <span class="nav-text">父进程是init进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%88%E7%AB%AF"><span class="nav-number">1.0.3.</span> <span class="nav-text">不使用控制终端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%AF%E5%90%84%E8%87%AA%E8%BF%9B%E7%A8%8B%E7%BB%84%E5%92%8C%E4%BC%9A%E8%AF%9D%E8%BF%87%E7%A8%8B%E7%9A%84%E5%94%AF%E4%B8%80%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.0.4.</span> <span class="nav-text">是各自进程组和会话过程的唯一进程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">编写守护进程的基本步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%90%E8%BF%9B%E7%A8%8B%EF%BC%8C%E9%80%80%E5%87%BA%E7%88%B6%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">创建子进程，退出父进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%AD%90%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AF%B9%E8%AF%9D"><span class="nav-number">2.2.</span> <span class="nav-text">在子进程中创建新对话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E5%BD%93%E5%89%8D%E7%9B%AE%E5%BD%95%E4%B8%BA%E6%A0%B9%E7%9B%AE%E5%BD%95"><span class="nav-number">2.3.</span> <span class="nav-text">改变当前目录为根目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%8E%A9%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">重新设置文件权限掩码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">2.5.</span> <span class="nav-text">关闭文件描述符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A9%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E8%83%BD%E5%A4%9F%E8%A2%AB%E9%80%80%E5%87%BA"><span class="nav-number">2.6.</span> <span class="nav-text">让守护进程能够被退出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA"><span class="nav-number">3.</span> <span class="nav-text">演示</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux多进程编程-守护进程 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux多进程编程-守护进程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-21 13:20:18" itemprop="dateCreated datePublished" datetime="2023-09-21T13:20:18+08:00">2023-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:18:10" itemprop="dateModified" datetime="2024-07-30T19:18:10+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="守护进程的特点"><a href="#守护进程的特点" class="headerlink" title="守护进程的特点"></a>守护进程的特点</h2><h4 id="具有超级用户权限"><a href="#具有超级用户权限" class="headerlink" title="具有超级用户权限"></a>具有超级用户权限</h4><h4 id="父进程是init进程"><a href="#父进程是init进程" class="headerlink" title="父进程是init进程"></a>父进程是init进程</h4><h4 id="不使用控制终端"><a href="#不使用控制终端" class="headerlink" title="不使用控制终端"></a>不使用控制终端</h4><h4 id="是各自进程组和会话过程的唯一进程"><a href="#是各自进程组和会话过程的唯一进程" class="headerlink" title="是各自进程组和会话过程的唯一进程"></a>是各自进程组和会话过程的唯一进程</h4><h2 id="编写守护进程的基本步骤"><a href="#编写守护进程的基本步骤" class="headerlink" title="编写守护进程的基本步骤"></a>编写守护进程的基本步骤</h2><h3 id="创建子进程，退出父进程"><a href="#创建子进程，退出父进程" class="headerlink" title="创建子进程，退出父进程"></a>创建子进程，退出父进程</h3><ul>
+<li>父进程先于子进程退出会变为孤儿进程</li>
+<li>孤儿进程会被init进程收养——<a href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E6%98%AFinit%E8%BF%9B%E7%A8%8B">父进程是init进程</a></li>
+</ul>
+<h3 id="在子进程中创建新对话"><a href="#在子进程中创建新对话" class="headerlink" title="在子进程中创建新对话"></a>在子进程中创建新对话</h3><ul>
+<li>setsid函数用于创建新会话，并担任该会话的组长——<a href="#%E6%98%AF%E5%90%84%E8%87%AA%E8%BF%9B%E7%A8%8B%E7%BB%84%E5%92%8C%E4%BC%9A%E8%AF%9D%E8%BF%87%E7%A8%8B%E7%9A%84%E5%94%AF%E4%B8%80%E8%BF%9B%E7%A8%8B">是各自进程组和会话过程的唯一进程</a></li>
+<li>setsid函数让进程摆脱原会话、原进程组和原控制终端的控制——<a href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%88%E7%AB%AF">不使用控制终端</a></li>
+<li>setsid函数使进程完全独立出来</li>
+</ul>
+<h3 id="改变当前目录为根目录"><a href="#改变当前目录为根目录" class="headerlink" title="改变当前目录为根目录"></a>改变当前目录为根目录</h3><p>试想，如果我们的守护进程的工作目录是在一个U盘里，那当我们要弹出U盘时，由于守护进程的存在我们会失败。因此，守护进程的工作目录需要修改为非移动设备上，比如我们的根目录。</p>
+<ul>
+<li>chdir函数可以更改进程的工作路径</li>
+</ul>
+<h3 id="重新设置文件权限掩码"><a href="#重新设置文件权限掩码" class="headerlink" title="重新设置文件权限掩码"></a>重新设置文件权限掩码</h3><ul>
+<li>子进程会继承原父进程的文件权限掩码</li>
+<li>给子进程使用文件带来麻烦</li>
+<li>函数umask(0)重设文件权限掩码</li>
+</ul>
+<blockquote>
+<p>umask(0)所获得的权限是将0取反在与创建文件时的权限相与。相当于保留了文件的创建时权限。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">权限</th>
+<th align="center">八进制值</th>
+<th align="center">二进制值</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">—</td>
+<td align="center">0</td>
+<td align="center">000</td>
+<td align="center">没有权限</td>
+</tr>
+<tr>
+<td align="center">–x</td>
+<td align="center">1</td>
+<td align="center">001</td>
+<td align="center">只有执行权限</td>
+</tr>
+<tr>
+<td align="center">-w-</td>
+<td align="center">2</td>
+<td align="center">010</td>
+<td align="center">只有写权限</td>
+</tr>
+<tr>
+<td align="center">-wx</td>
+<td align="center">3</td>
+<td align="center">011</td>
+<td align="center">写入和执行权限</td>
+</tr>
+<tr>
+<td align="center">r–</td>
+<td align="center">4</td>
+<td align="center">100</td>
+<td align="center">只有阅读权限</td>
+</tr>
+<tr>
+<td align="center">r-x</td>
+<td align="center">5</td>
+<td align="center">101</td>
+<td align="center">读取和执行权限</td>
+</tr>
+<tr>
+<td align="center">rw-</td>
+<td align="center">6</td>
+<td align="center">110</td>
+<td align="center">读写权限</td>
+</tr>
+<tr>
+<td align="center">rwx</td>
+<td align="center">7</td>
+<td align="center">111</td>
+<td align="center">执行所有三项操作的权限，即读取、写入和执行</td>
+</tr>
+</tbody></table>
+<h3 id="关闭文件描述符"><a href="#关闭文件描述符" class="headerlink" title="关闭文件描述符"></a>关闭文件描述符</h3><ul>
+<li>子进程会继承父进程已打开的文件，但这些文件可能不再使用，但依旧占据系统资源</li>
+<li>比如标准输入输出和错误文件0,1,2，守护进程永远无法输出内容到屏幕，这三个文件失去作用</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);    <span class="comment">//关闭文件描述符, MAXFILE是系统能够提供的文件描述符的最大值</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相关阅读：子进程能否访问父进程上锁的文件？<br>在操作系统中，Fork会创建一个与父进程几乎相同的子进程。这意味着子进程继承了父进程的许多属性，例如打开的文件描述符和虚拟内存。然而，在Fork后，子进程和父进程是两个完全独立的进程，它们共享的只有一个初始状态。因此，子进程不能继承父进程的锁。如果父进程在Fork之前持有一个锁，它会继续持有该锁，但是在子进程中，锁的状态将被重置。在子进程中，锁不再处于锁定状态，因此需要重新获取锁才能访问共享资源。此外，锁的互斥量被存储在内存中，子进程会得到它自己的内存副本，这意味着子进程和父进程中的锁不会是相同的锁。<br>因此，子进程需要重新获取锁才能访问共享资源。如果在父进程中的锁是一个进程之间共享的锁（例如POSIX 有名信号量），则可以再次打开该锁，使得父子进程都可以使用这个锁，但必须小心以避免锁的竞争条件。</p>
+</blockquote>
+<h3 id="让守护进程能够被退出"><a href="#让守护进程能够被退出" class="headerlink" title="让守护进程能够被退出"></a>让守护进程能够被退出</h3><ul>
+<li>使用kill命令来终止守护进程</li>
+<li>kill命令会向进程发送signal信号，我们需要让守护进程能够接收信号<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// SIGTERM是kill命令发出的信号</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>相关阅读：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55752775/article/details/130853402">Linux中的信号</a></p>
+</blockquote>
+<h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>         <span class="comment">// 包含 exit</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span>         <span class="comment">// 包含 strlen</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span>          <span class="comment">// 包含 open</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>      <span class="comment">// 包含 pid_t</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>         <span class="comment">// 包含 read, write, close, usleep, setsid, chdir</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span>         <span class="comment">// 包含 signal, SIGTERM</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span>       <span class="comment">// 包含 umask</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXFILE 1024        <span class="comment">// 使用ulimit -n命令查看</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">sig_atomic_t</span> _running = <span class="number">1</span>;     <span class="comment">// volatile告诉编译器，_running随时可能被更改。_running标志着我们守护进程的运行状态，1代表在运行，0代表需要终止。</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123;</span><br><span class="line">    _running = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pc;</span><br><span class="line">    <span class="type">int</span> fd, len;</span><br><span class="line">    <span class="type">char</span>* buf = <span class="string">&quot;This is a Dameon.\n&quot;</span>;</span><br><span class="line">    len = <span class="built_in">strlen</span>(buf);</span><br><span class="line">    pc = fork();                        <span class="comment">// **创建子进程**</span></span><br><span class="line">    <span class="keyword">if</span>(pc&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;ERROR: create process failed.\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pc&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;PID: %d\n&quot;</span>, pc);        <span class="comment">// 输出子进程PID</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);                        <span class="comment">// **退出父进程**</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">setsid</span>();                           <span class="comment">// **创建新会话**</span></span><br><span class="line">    <span class="built_in">chdir</span>(<span class="string">&quot;/&quot;</span>);                         <span class="comment">// **将工作目录转移到根目录**</span></span><br><span class="line">    <span class="built_in">umask</span>(<span class="number">0</span>);                           <span class="comment">// **重置文件权限掩码**</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">3</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);<span class="comment">// **关闭所有文件描述符**   //这里没有关闭标准输入输出和错误，方便我们debug。</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// **处理kill事件**</span></span><br><span class="line">    <span class="keyword">while</span>(_running)&#123;</span><br><span class="line">        fd = <span class="built_in">open</span>(<span class="string">&quot;/home/torch/code/linux-c++/clion/dameon.log&quot;</span>, O_CREAT|O_WRONLY|O_APPEND);    <span class="comment">// 文件不存在时创建，仅写入，追加</span></span><br><span class="line">        <span class="keyword">if</span>(fd&lt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">1</span>);                                                <span class="comment">// 文件打开失败</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">write</span>(fd, buf, len);</span><br><span class="line">        <span class="built_in">close</span>(fd);</span><br><span class="line">        <span class="built_in">usleep</span>(<span class="number">10</span>*<span class="number">1000</span>);                                            <span class="comment">// 10ms延时</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>将代码编译后用sudo权限执行——<a href="#%E5%85%B7%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">具有超级用户权限</a></p>
+<blockquote>
+<p>PID: 9259</p>
+</blockquote>
+<p>可以通过ps axj命令查看守护进程，可以找到我们的进程就在其中。可以使用sudo kill 9259杀死我们的进程。使用管理员权限打开dameon.log文件，可以看到里面的内容。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> Linux多进程编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" rel="prev" title="Linux多进程编程-创建进程">
+                  <i class="fa fa-angle-left"></i> Linux多进程编程-创建进程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%881%EF%BC%89-%E4%BF%A1%E5%8F%B7/" rel="next" title="Linux多进程编程-进程间通信（1）-信号">
+                  Linux多进程编程-进程间通信（1）-信号 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

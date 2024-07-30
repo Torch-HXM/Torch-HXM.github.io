@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="信号通信的原理信号一览我们希望让程序A与程序B通过信号进行沟通，则需要两处设定  A程序向B程序发送信号 B程序自定义信号的处理方式  这样程序B就能够对程序A发送而来的信号进行解析了。程序A与程序B之间用来沟通的信号必须是Linux系统中预先设定的信号，否则无法被捕获。linux系统中有62种信号，可以通过以下命令查看： 1kill -l    序号 信号 意义    1 SIGHUP 在用户终">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux多进程编程-进程间通信（1）-信号">
+<meta property="og:url" content="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%881%EF%BC%89-%E4%BF%A1%E5%8F%B7/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="信号通信的原理信号一览我们希望让程序A与程序B通过信号进行沟通，则需要两处设定  A程序向B程序发送信号 B程序自定义信号的处理方式  这样程序B就能够对程序A发送而来的信号进行解析了。程序A与程序B之间用来沟通的信号必须是Linux系统中预先设定的信号，否则无法被捕获。linux系统中有62种信号，可以通过以下命令查看： 1kill -l    序号 信号 意义    1 SIGHUP 在用户终">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T07:48:27.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:18:20.444Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="Linux多进程编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%881%EF%BC%89-%E4%BF%A1%E5%8F%B7/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%881%EF%BC%89-%E4%BF%A1%E5%8F%B7/","path":"2023/09/21/linux/linux多进程编程/Linux多进程编程-进程间通信（1）-信号/","title":"Linux多进程编程-进程间通信（1）-信号"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux多进程编程-进程间通信（1）-信号 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%80%9A%E4%BF%A1%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">信号通信的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E4%B8%80%E8%A7%88"><span class="nav-number">1.1.</span> <span class="nav-text">信号一览</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7"><span class="nav-number">2.</span> <span class="nav-text">发送信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">设置信号的处理方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E7%9A%84sigaction"><span class="nav-number">3.1.</span> <span class="nav-text">复杂的sigaction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84signal"><span class="nav-number">3.2.</span> <span class="nav-text">简单的signal</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%881%EF%BC%89-%E4%BF%A1%E5%8F%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux多进程编程-进程间通信（1）-信号 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux多进程编程-进程间通信（1）-信号
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-21 15:48:27" itemprop="dateCreated datePublished" datetime="2023-09-21T15:48:27+08:00">2023-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:18:20" itemprop="dateModified" datetime="2024-07-30T19:18:20+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="信号通信的原理"><a href="#信号通信的原理" class="headerlink" title="信号通信的原理"></a>信号通信的原理</h3><h4 id="信号一览"><a href="#信号一览" class="headerlink" title="信号一览"></a>信号一览</h4><p>我们希望让程序A与程序B通过信号进行沟通，则需要两处设定</p>
+<ul>
+<li>A程序向B程序发送信号</li>
+<li>B程序自定义信号的处理方式</li>
+</ul>
+<p>这样程序B就能够对程序A发送而来的信号进行解析了。程序A与程序B之间用来沟通的信号必须是Linux系统中预先设定的信号，否则无法被捕获。linux系统中有62种信号，可以通过以下命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -l</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">信号</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">SIGHUP</td>
+<td align="left">在用户终端链接结束时发出</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">SIGINT</td>
+<td align="left">程序终止信号，在用户输入Ctrl+C时发出</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">SIGQUIT</td>
+<td align="left">与SIFINT类似，但是程序终止时会产生core文件</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">SIGILL</td>
+<td align="left">程序出错，执行了非法指令所产生的信号</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">SIGTRAP</td>
+<td align="left">由断点指令和其他trap指令产生，由debugger使用</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">SIGABRT</td>
+<td align="left">调用about函数生成的信号</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">SIGBUS</td>
+<td align="left">非法地址，包裹内存地址对齐出错</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">SIGFPE</td>
+<td align="left">发生致命的算术运算错误时发出</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">SIGKILL</td>
+<td align="left">用来立即结束程序的运行。<strong>本信号不能被阻塞、处理和忽略</strong></td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">SIGUSR1</td>
+<td align="left">留给用户使用</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left">SIGSEGV</td>
+<td align="left">试图访问未分配给自己的内存，或试图向没有写权限的内存地址写数据</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left">SIGUSR2</td>
+<td align="left">留给用户使用</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left">SIGPIPE</td>
+<td align="left">管道破裂</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left">SIGALRM</td>
+<td align="left">时钟信号，计算实际时间或时钟时间，alarm函数使用该信号</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left">SIGTERM</td>
+<td align="left">程序结束信号，与SIGKILL不同，该信号可以被阻塞、处理</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left">SIGSTKFLT</td>
+<td align="left">Linux专用，数学协处理器的栈异常</td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left">SIGCHLD</td>
+<td align="left">子进程结束时，父进程会收到这个信号</td>
+</tr>
+<tr>
+<td align="left">18</td>
+<td align="left">SIGCONT</td>
+<td align="left">让一个停止的进程继续执行</td>
+</tr>
+<tr>
+<td align="left">19</td>
+<td align="left">SIGSTOP</td>
+<td align="left">停止进程，<strong>本信号不能被阻塞、处理和忽略</strong></td>
+</tr>
+<tr>
+<td align="left">20</td>
+<td align="left">SIGTSTP</td>
+<td align="left">停止进程，可以被处理和忽略</td>
+</tr>
+<tr>
+<td align="left">21</td>
+<td align="left">SIGTTIN</td>
+<td align="left">当后台作业要从用户终端读取数据时，该作业中所有进程都会收到该信号。默认时这些进程会停止执行</td>
+</tr>
+<tr>
+<td align="left">22</td>
+<td align="left">SIGTTOU</td>
+<td align="left">类似于SIFTTIN，但在写终端（或修改终端模式）时收到</td>
+</tr>
+<tr>
+<td align="left">23</td>
+<td align="left">SIGURG</td>
+<td align="left">有“紧急数据”或带外数据到达socket时产生</td>
+</tr>
+<tr>
+<td align="left">24</td>
+<td align="left">SIGXCPU</td>
+<td align="left">超过CPU时间资源限制</td>
+</tr>
+<tr>
+<td align="left">25</td>
+<td align="left">SIGXFSZ</td>
+<td align="left">进程企图扩大文件，以至于超过文件大小资源限制</td>
+</tr>
+<tr>
+<td align="left">26</td>
+<td align="left">SIGVTALRM</td>
+<td align="left">虚拟时钟信号，类似于SIGALRM，但计算的是该进程占用CPU的时间</td>
+</tr>
+<tr>
+<td align="left">27</td>
+<td align="left">SIGPROF</td>
+<td align="left">类似于SIGALRM和SIGVTALRM，但计算的是该进程占用CPU的时间和系统调用时间</td>
+</tr>
+<tr>
+<td align="left">28</td>
+<td align="left">SIGWINCH</td>
+<td align="left">窗口大小改变时发出</td>
+</tr>
+<tr>
+<td align="left">29</td>
+<td align="left">SIGIO</td>
+<td align="left">文件描述符准备就绪，可以开始输入\输出操作</td>
+</tr>
+<tr>
+<td align="left">30</td>
+<td align="left">SIGPWR</td>
+<td align="left">电源失败</td>
+</tr>
+<tr>
+<td align="left">31</td>
+<td align="left">SIGSYS</td>
+<td align="left">非法系统调用</td>
+</tr>
+</tbody></table>
+<p>以上31种信号是传统UNIX信号，是不可靠信号（非实时），不支持排队，可能造成信号丢失。</p>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">信号</th>
+<th align="left">序号</th>
+<th align="left">信号</th>
+<th align="left">序号</th>
+<th align="left">信号</th>
+<th align="left">序号</th>
+<th align="left">信号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">SIGRTMIN</td>
+<td align="left">11</td>
+<td align="left">SIGRTMIN+10</td>
+<td align="left">21</td>
+<td align="left">SIGRTMAX-10</td>
+<td align="left">31</td>
+<td align="left">SIGRTMAX</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">SIGRTMIN+1</td>
+<td align="left">12</td>
+<td align="left">SIGRTMIN+11</td>
+<td align="left">22</td>
+<td align="left">SIGRTMAX-9</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">SIGRTMIN+2</td>
+<td align="left">13</td>
+<td align="left">SIGRTMIN+12</td>
+<td align="left">23</td>
+<td align="left">SIGRTMAX-8</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">SIGRTMIN+3</td>
+<td align="left">14</td>
+<td align="left">SIGRTMIN+13</td>
+<td align="left">24</td>
+<td align="left">SIGRTMAX-7</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">SIGRTMIN+4</td>
+<td align="left">15</td>
+<td align="left">SIGRTMIN+14</td>
+<td align="left">25</td>
+<td align="left">SIGRTMAX-6</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">SIGRTMIN+5</td>
+<td align="left">16</td>
+<td align="left">SIGRTMIN+15</td>
+<td align="left">26</td>
+<td align="left">SIGRTMAX-5</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">SIGRTMIN+6</td>
+<td align="left">17</td>
+<td align="left">SIGRTMAX-14</td>
+<td align="left">27</td>
+<td align="left">SIGRTMAX-4</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">SIGRTMIN+7</td>
+<td align="left">18</td>
+<td align="left">SIGRTMAX-13</td>
+<td align="left">28</td>
+<td align="left">SIGRTMAX-3</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">SIGRTMIN+8</td>
+<td align="left">19</td>
+<td align="left">SIGRTMAX-12</td>
+<td align="left">29</td>
+<td align="left">SIGRTMAX-2</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">SIGRTMIN+9</td>
+<td align="left">20</td>
+<td align="left">SIGRTMAX-11</td>
+<td align="left">30</td>
+<td align="left">SIGRTMAX-1</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p>以上31种信号后来扩充的信号，是可靠信号（实时），支持排队，不会丢失。</p>
+<h3 id="发送信号"><a href="#发送信号" class="headerlink" title="发送信号"></a>发送信号</h3><p>在C&#x2F;C++程序中，可以通过kill命令向指定PID的程序发送信号</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>  # 包含pid_t类型</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span>     # 包含kill函数</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param pid   信号接收者标识</span></span><br><span class="line"><span class="comment"> * @param sig   信号</span></span><br><span class="line"><span class="comment"> * @return      执行成功返回0，否则返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">kill</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> sig)</span>;</span><br></pre></td></tr></table></figure>
+<p>其中信号接收者标识pid有四种情况</p>
+<table>
+<thead>
+<tr>
+<th align="center">pid</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&gt;0</td>
+<td align="center">此时的pid为进程号</td>
+</tr>
+<tr>
+<td align="center">&#x3D;0</td>
+<td align="center">信号将送往所有与调用kill()函数同使用组的进程</td>
+</tr>
+<tr>
+<td align="center">&#x3D;-1</td>
+<td align="center">信号将依据调用kill()函数进程的权限发送给所有能够被发送的进程（init除外）</td>
+</tr>
+<tr>
+<td align="center">&lt;-1</td>
+<td align="center">信号将送往以-pid为组标识的进程</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>相关阅读-进程的组标识：进程组长的pid号</p>
+</blockquote>
+<h3 id="设置信号的处理方式"><a href="#设置信号的处理方式" class="headerlink" title="设置信号的处理方式"></a>设置信号的处理方式</h3><p>设置信号的处理方式后，程序接收到信号后会对信号进行中断反应。信号处理方式的设置并不会阻碍程序的运行。</p>
+<h4 id="复杂的sigaction"><a href="#复杂的sigaction" class="headerlink" title="复杂的sigaction"></a>复杂的sigaction</h4><p>sigaction()函数可以用来设置信号（SIGKILL和SIGSTOP除外）的处理方式以及在处理过程中对其他信号的屏蔽行为。该函数的形式如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param signum    需要设置处理方式的信号，可以指定除SIGKILL和SIGSTOP以外的所有信号</span></span><br><span class="line"><span class="comment"> * @param act       对信号处理方式进行设置的结构体指针</span></span><br><span class="line"><span class="comment"> * @param oldact    原来对信号的处理方式</span></span><br><span class="line"><span class="comment"> * @return          执行成功返回0，否则返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sigaction</span><span class="params">(<span class="type">int</span> signum, <span class="type">const</span> <span class="keyword">struct</span> sigaction *act, <span class="keyword">struct</span> sigaction *oldact)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>结构体struct sigaction的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sigaction</span>&#123;</span></span><br><span class="line">    <span class="type">void</span>        (*sa_handler)(<span class="type">int</span>);</span><br><span class="line">    <span class="type">void</span>        (*sa_sigaction)(<span class="type">int</span>, <span class="type">siginfo_t</span> *, <span class="type">void</span> *);</span><br><span class="line">    <span class="type">sigset_t</span>    sa_mask;</span><br><span class="line">    <span class="type">int</span>         sa_flags;</span><br><span class="line">    <span class="type">void</span>        (*sa_restorer)(<span class="type">void</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在该结构体中，sa_handler和sa_sigaction都指向一个信号处理函数，用来自定义信号处理方式，具体使用哪一个由参数sa_flags决定。需要注意的是，sa_handler和sa_sigaction由于存放在联合体中而不能同时设定。sa_restorer被弃用。sa_mask用来指定在信号处理期间需要屏蔽的信号。sa_flags用于指定信号的处理行为，具体如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">sa_flags</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SA_RESTART</td>
+<td align="center">使被信号打断的系统调用自动重新发起</td>
+</tr>
+<tr>
+<td align="center">SA_NOCLDSTOP</td>
+<td align="center">使父进程在他的子进程暂停或继续运行时不会收到SIGCHLD信号</td>
+</tr>
+<tr>
+<td align="center">SA_NOCLDWAIT</td>
+<td align="center">使父进程在它的子进程退出时不会收到SIGCHLD信号</td>
+</tr>
+<tr>
+<td align="center">SA_NODEFER</td>
+<td align="center">使信号屏蔽无效</td>
+</tr>
+<tr>
+<td align="center">SA_RESETHAND</td>
+<td align="center">信号处理之后重新设置为默认的处理方式</td>
+</tr>
+<tr>
+<td align="center">SA_SIGINFO</td>
+<td align="center">使用sa_sigaction而非sa_handler</td>
+</tr>
+</tbody></table>
+<p>我们看下面的例程</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">sig_usr</span><span class="params">(<span class="type">int</span> signum)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">512</span>];</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sigaction</span> sa_usr;</span><br><span class="line">    sa_usr.sa_flags = <span class="number">0</span>;</span><br><span class="line">    sa_usr.sa_handler = sig_usr;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sigaction</span>(SIGUSR1, &amp;sa_usr, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">sigaction</span>(SIGUSR2, &amp;sa_usr, <span class="literal">NULL</span>);</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;My PID is &quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((n = <span class="built_in">read</span>(STDIN_FILENO, buf, <span class="number">511</span>))==<span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(errno == EINTR)</span><br><span class="line">            &#123;</span><br><span class="line">                    cout&lt;&lt; <span class="string">&quot;此调用被信号中断。\n&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            buf[n] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">            cout&lt;&lt; buf&lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">sig_usr</span><span class="params">(<span class="type">int</span> signum)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(signum == SIGUSR1)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;SIGUSR1 received\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(signum == SIGUSR2)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;SIGUSR2 received\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;signal &quot;</span>&lt;&lt; signum&lt;&lt; <span class="string">&quot; received\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例程中，我们设置了 SIGUSR1 和 SIGUSR2 的处理方式，并让程序不断读取标准输入文件的内容。由于进程对信号的处理是中断式的，所以当进程接收到 SIGUSR1 或 SIGUSR2 信号后，读取操作会被中断，当 read 函数因为被中断而读取失败时，将返回-1，并将 EINTR 错误写入到 errno 中。</p>
+<p>将程序编译执行，并开启另一个终端向该进程发送信号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -USR1 pid</span><br><span class="line"><span class="built_in">kill</span> -USR2 pid</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>My PID is 236<br>  SIGUSR1 received<br>  此调用被信号中断。<br>  SIGUSR2 received<br>  此调用被信号中断。        </p>
+</blockquote>
+<p>若不想主进程被信号中断而出错，则需要让进程被打断的操作自动重新发起。在程序中需要修改 sa_usr.sa_flags &#x3D; SA_RESTART; 编译并运行程序，在另一个终端中向该进程发送信号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -USR1 pid</span><br><span class="line"><span class="built_in">kill</span> -USR2 pid</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>My PID is 210<br>  SIGUSR1 received<br>  SIGUSR2 received      </p>
+</blockquote>
+<p>可以看到，读取操作将不会因为中断而失败。</p>
+<h4 id="简单的signal"><a href="#简单的signal" class="headerlink" title="简单的signal"></a>简单的signal</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param signum    需要设置处理方式的信号</span></span><br><span class="line"><span class="comment"> * @param handler   处理信号的回调函数</span></span><br><span class="line"><span class="comment"> * @return          执行成功返回0，否则返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">signal</span><span class="params">(<span class="type">int</span> signum, <span class="type">void</span>* handler)</span></span>;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> Linux多进程编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/" rel="prev" title="Linux多进程编程-守护进程">
+                  <i class="fa fa-angle-left"></i> Linux多进程编程-守护进程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/25/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%882%EF%BC%89-%E7%AE%A1%E9%81%93/" rel="next" title="Linux多进程编程-进程间通信（2）-管道">
+                  Linux多进程编程-进程间通信（2）-管道 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

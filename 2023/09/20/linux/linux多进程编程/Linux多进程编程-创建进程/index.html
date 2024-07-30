@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="进程的基础操作获得当前进程的PID12345678#include &lt;unistd.h&gt;#include &lt;stdio.h&gt;int main(int argc, char** argv)&#123;    pid_t pid &#x3D; getpid();    printf(&quot;进程的PID是：%d\n&quot;, pid);    return 0;&#125;  进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux多进程编程-创建进程">
+<meta property="og:url" content="http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="进程的基础操作获得当前进程的PID12345678#include &lt;unistd.h&gt;#include &lt;stdio.h&gt;int main(int argc, char** argv)&#123;    pid_t pid &#x3D; getpid();    printf(&quot;进程的PID是：%d\n&quot;, pid);    return 0;&#125;  进">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-20T07:31:11.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:18:24.887Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="Linux多进程编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/","path":"2023/09/20/linux/linux多进程编程/Linux多进程编程-创建进程/","title":"Linux多进程编程-创建进程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux多进程编程-创建进程 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">进程的基础操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%BE%97%E5%BD%93%E5%89%8D%E8%BF%9B%E7%A8%8B%E7%9A%84PID"><span class="nav-number">1.1.</span> <span class="nav-text">获得当前进程的PID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">创建进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6%E7%88%B6%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%97%B6%E5%BA%8F%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">如何控制父进程与子进程的时序关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">替换进程</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux多进程编程-创建进程 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux多进程编程-创建进程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-20 15:31:11" itemprop="dateCreated datePublished" datetime="2023-09-20T15:31:11+08:00">2023-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:18:24" itemprop="dateModified" datetime="2024-07-30T19:18:24+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="进程的基础操作"><a href="#进程的基础操作" class="headerlink" title="进程的基础操作"></a>进程的基础操作</h2><h3 id="获得当前进程的PID"><a href="#获得当前进程的PID" class="headerlink" title="获得当前进程的PID"></a>获得当前进程的PID</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid = getpid();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;进程的PID是：%d\n&quot;</span>, pid);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>进程的PID是：4830</p>
+</blockquote>
+<h3 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h3><ol>
+<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">fork</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>该函数用于创建子进程，子进程被创建后复制父进程的程序内容和变量内容（但不共享变量内存，不继承文件锁），包括该fork函数。如果进程创建成功，在父进程中，fork函数的返回值为子进程的PID；在子进程中fork函数的返回值为0。看起来就像是fork有两个返回值一样。如果进程创建失败，子进程没有产生，父进程中的fork函数返回-1。</p>
+<ol start="2">
+<li>示例代码</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;                          <span class="comment">// 用以记录进程的PID</span></span><br><span class="line">    <span class="type">int</span> counter = <span class="number">0</span>;                    <span class="comment">// 用以证明子进程复制了父进程的程序，但并不是内存共享</span></span><br><span class="line"></span><br><span class="line">    pid = fork();                       <span class="comment">// 创建子进程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;                          <span class="comment">// 进程创建失败</span></span><br><span class="line">        cerr&lt;&lt; <span class="string">&quot;进程创建失败！&quot;</span>&lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;                    <span class="comment">// 该进程为子进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是子进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;                               <span class="comment">// 该进程为父进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是父进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; <span class="string">&quot;  我获得的子进程PID为：&quot;</span>&lt;&lt; pid&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;子进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;父进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我是父进程，PID：7825  我获得的子进程PID为：7826<br>父进程中的counter：1<br>我是子进程，PID：7826<br>子进程中的counter：1    </p>
+</blockquote>
+<ol start="3">
+<li>分析</li>
+</ol>
+<p>可以看到，在父进程中我们所获得的子进程的PID和在子进程中所获得的PID是一致的(7826)。同时，子进程虽然在创建时拷贝了父进程的变量，但是，由于子进程与父进程之间不存在内存共享，所以在子进程和父进程中分别修改counter并不能互相影响。<strong>另外，子进程和父进程的执行并没有先后顺序，一切都取决于操作系统的调度策略。</strong></p>
+<h3 id="如何控制父进程与子进程的时序关系？"><a href="#如何控制父进程与子进程的时序关系？" class="headerlink" title="如何控制父进程与子进程的时序关系？"></a>如何控制父进程与子进程的时序关系？</h3><p>很多时候，我们希望子进程先行结束，然后再结束父进程。这样做有三点好处：</p>
+<ul>
+<li>能够确保交给子进程的任务在父进程结束之前完满完成。</li>
+<li>同时也可以避免父进程先行结束，子进程成为孤儿进程。</li>
+<li>在父进程中回收子进程的task_struct，以免子进程成为僵尸进程。</li>
+</ul>
+<p>在C\C++中，我们通过wait()或waitpid()函数来实现这一目的。wait()和waitpid()函数都能够阻塞调用他们的进程，直到接收到子进程的状态才会结束阻塞。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     阻塞父进程，等待任意一个子进程退出，停止阻塞并回收子进程资源</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @return          执行成功返回子进程的PID，失败返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">wait</span><span class="params">(<span class="type">int</span>* status)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     高配版wait，函数的行为由pid和options参数决定</span></span><br><span class="line"><span class="comment"> * @param pid       子进程的PID号</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @param options   函数控制选项</span></span><br><span class="line"><span class="comment"> * @return          由options的设定决定</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span>* status, <span class="type">int</span> options)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在waitpid()函数中，参数pid有以下几种状态：</p>
+<table>
+<thead>
+<tr>
+<th align="center">pid</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&gt;0</td>
+<td align="center">需要等待的子进程的PID号</td>
+</tr>
+<tr>
+<td align="center">&#x3D;0</td>
+<td align="center">等待与当前进程相同组的任何子进程进程</td>
+</tr>
+<tr>
+<td align="center">&#x3D;-1</td>
+<td align="center">等待任何子进程，与 wait() 相似</td>
+</tr>
+<tr>
+<td align="center">&lt;-1</td>
+<td align="center">等待进程组识别码为-pid的任何子进程</td>
+</tr>
+</tbody></table>
+<p>options参数设定与函数行为的对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">options</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">WNOHANG</td>
+<td align="center"><strong>非阻塞</strong>形式：若pid表示的子进程没有结束，则不予等待，返回0；若结束，则返回该子进程进程PID。发生错误返回-1。</td>
+</tr>
+<tr>
+<td align="center">WUNTRACED</td>
+<td align="center">若pid表示的子进程进入暂停状态，则立即返回子进程PID；若子进程处于结束状态，则不予理会。发生错误返回-1。</td>
+</tr>
+</tbody></table>
+<h3 id="替换进程"><a href="#替换进程" class="headerlink" title="替换进程"></a>替换进程</h3><ol>
+<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execle</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ..., <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">execv</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvpe</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[], <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>exec函数族同样可以创建进程，与fork不同的是，exec创建的进程会取代父进程，甚至会占有父进程的PID，实打实的进程界的“鬼上身”。exec函数族中常用的两个函数分别是execl和execlp，下面将通过实例详细介绍。</p>
+<ul>
+<li>execl</li>
+</ul>
+<p>execl的第一个参数是执行文件的路径，第二个参数是该执行文件所需的输入（执行文件传参），和我们main(int argc, char** argv)中的argv部分一样，执行文件传参的第一个参数argv[0]一般是文件名（可以是任何字符，一般设置为文件名或命令名）。从第二个参数argv[1]起才是真正能够在执行文件中发挥作用的参数。当argv中出现NULL时则认为传参结束。一般情况下，执行文件都需要一个argv[0]文件名参数，也就是说argv至少需要一个非null参数（就是我们说的文件名），否则不能正确执行。<br>函数执行成功时无返回值，执行失败时返回-1.</p>
+<p><strong>$ 执行一个不需要传参的执行文件</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;==========================&quot;</span>&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+<p>在这个例子中，我们执行了pwd命令，他是一个不需要参数的命令，因此我们的argv[0]为命令名，并没有实际作用，但必须要有；argv[1]为NULL，表示传参结束。另外，程序并没有输出一串”&#x3D;”号，说明程序被替换为了pwd命令，原来的程序已经不存在了。</p>
+<p><strong>$ 执行一个需要传参的执行文件</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/ls&quot;</span>, <span class="string">&quot;ls -al&quot;</span>, <span class="string">&quot;-al&quot;</span>, <span class="string">&quot;/etc/passwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+<p>在这个例子中，我们执行了ls -al &#x2F;etc&#x2F;passwd命令，所以我们的argv[0]为”ls -al”并没有实际作用，但必须要有；argv[1]为”-al”，argv[2]为”&#x2F;etc&#x2F;passwd”，argv[3]为NULL，表示传参结束。</p>
+<p><strong>$ 如果argv没有任何参数会发生什么？</strong></p>
+<p>我们首先写一个被执行程序，并把他编译为test.out，然后执行</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * file name: test.cpp</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;argc: &quot;</span>&lt;&lt; argc&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;argc;i++)&#123;</span><br><span class="line">        cout&lt;&lt; argv[i]&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc: 1<br>.&#x2F;test.out</p>
+</blockquote>
+<p>系统自动传递了一个文件名参数给我们的程序，因此检测到一个参数，参数为文件名。</p>
+<p>我们再写一个程序通过execl函数执行我们的test.out</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc：1    </p>
+</blockquote>
+<p>可以看到，当我们不传递任何参数给执行文件时，编译时会给我们警告，并且函数会自动传递一个空字符参数给我们的执行文件。我们对程序进行修改：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="string">&quot;test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc：1<br>test.out</p>
+</blockquote>
+<p>此时编译器不再发出警告，test.out获得了我们传递给他的”test.out”字符串。</p>
+<ul>
+<li>execlp</li>
+</ul>
+<p>execlp的第一个参数是环境变量中的文件名，第二个参数和execl一致。相比于execl，execlp专门用来执行已经加入到环境变量中的程序。</p>
+<p><strong>$ 示例</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execlp</span>(<span class="string">&quot;pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> Linux多进程编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" rel="prev" title="Linux文件编程-C++">
+                  <i class="fa fa-angle-left"></i> Linux文件编程-C++
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/" rel="next" title="Linux多进程编程-守护进程">
+                  Linux多进程编程-守护进程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

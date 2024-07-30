@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="进程间的管道通信  匿名管道管道是两个进程之间的共享文件，数据能够在管道中单向传输。匿名管道由于无法被显示指定（因为它没有名字，所以只能在创建它的程序中以变量的形式用文件描述符指定）所以只能在具有公共祖先的进程之间使用（因为公共祖先的进程之间可以共享这个文件描述符）。这是匿名管道的局限之一。 虽然管道是一个文件，但是它具有独特的特点：  不支持文件指针的移动，所以只能读取当前位置。不能读取文件的任">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程间交换数据的方式">
+<meta property="og:url" content="http://example.com/2024/04/06/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E4%BA%A4%E6%8D%A2%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="进程间的管道通信  匿名管道管道是两个进程之间的共享文件，数据能够在管道中单向传输。匿名管道由于无法被显示指定（因为它没有名字，所以只能在创建它的程序中以变量的形式用文件描述符指定）所以只能在具有公共祖先的进程之间使用（因为公共祖先的进程之间可以共享这个文件描述符）。这是匿名管道的局限之一。 虽然管道是一个文件，但是它具有独特的特点：  不支持文件指针的移动，所以只能读取当前位置。不能读取文件的任">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-06T11:21:12.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:20:29.157Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="Linux多进程编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/04/06/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E4%BA%A4%E6%8D%A2%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/04/06/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E4%BA%A4%E6%8D%A2%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F/","path":"2024/04/06/linux/linux多进程编程/进程间交换数据的方式/","title":"进程间交换数据的方式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>进程间交换数据的方式 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E7%AE%A1%E9%81%93%E9%80%9A%E4%BF%A1"><span class="nav-number">1.</span> <span class="nav-text">进程间的管道通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-number">1.1.</span> <span class="nav-text">匿名管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-number">1.2.</span> <span class="nav-text">命名管道</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">进程间的通信方式实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E7%AE%A1%E9%81%93-1"><span class="nav-number">2.1.</span> <span class="nav-text">匿名管道</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#C-C-%E7%9B%B8%E5%85%B3-API"><span class="nav-number">2.1.1.</span> <span class="nav-text">C\C++ 相关 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-C-%E4%BE%8B%E7%A8%8B%E2%80%94%E2%80%94%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="nav-number">2.1.2.</span> <span class="nav-text">C\C++ 例程——父子进程间通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python-%E4%BE%8B%E7%A8%8B%E2%80%94%E2%80%94%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="nav-number">2.1.3.</span> <span class="nav-text">python 例程——父子进程间通信</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93-1"><span class="nav-number">2.2.</span> <span class="nav-text">命名管道</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#C-C-%E7%9B%B8%E5%85%B3-API-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">C\C++ 相关 API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E7%A8%8B%E2%80%94%E2%80%94%E4%B8%A4%E4%B8%AA-C-C-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="nav-number">2.2.2.</span> <span class="nav-text">例程——两个 C\C++ 进程间通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E7%A8%8B%E2%80%94%E2%80%94%E4%B8%A4%E4%B8%AA-python-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="nav-number">2.2.3.</span> <span class="nav-text">例程——两个 python 进程间通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E7%A8%8B%E2%80%94%E2%80%94python-%E8%BF%9B%E7%A8%8B%E4%B8%8E-C-C-%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="nav-number">2.2.4.</span> <span class="nav-text">例程——python 进程与 C\C++ 进程通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%A4%8D%E6%9D%82%E7%9A%84%E6%95%B0%E6%8D%AE%E2%80%94%E2%80%94numpy-%E6%95%B0%E7%BB%84"><span class="nav-number">2.2.5.</span> <span class="nav-text">传递复杂的数据——numpy 数组</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/06/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E4%BA%A4%E6%8D%A2%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="进程间交换数据的方式 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          进程间交换数据的方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-06 19:21:12" itemprop="dateCreated datePublished" datetime="2024-04-06T19:21:12+08:00">2024-04-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:20:29" itemprop="dateModified" datetime="2024-07-30T19:20:29+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="进程间的管道通信"><a href="#进程间的管道通信" class="headerlink" title="进程间的管道通信"></a>进程间的管道通信</h2><!-- ### 信号
+
+信号是最简单的进程间的通信方式。它的工作流程如下：
+
+1. 进程 A 需要预先知道 进程 B 的 PID，这样，进程 A 才能够向进程 B 发送信号。
+
+2. 进程 B 接收到信号后，做出相应的反应。
+
+通过信号进行进程间的通信有很大的局限性。因为信号只能传递动作指令而不能传递数据。在 Linux 系统中，信号的种类是有限的，可以通过命令`kill -l`来查询。由于本篇文章主要研究进程间的数据交换，所以不对信号进行详细介绍。 -->
+
+<h3 id="匿名管道"><a href="#匿名管道" class="headerlink" title="匿名管道"></a>匿名管道</h3><p>管道是两个进程之间的共享文件，数据能够在管道中单向传输。匿名管道由于无法被显示指定（因为它没有名字，所以只能在创建它的程序中以变量的形式用文件描述符指定）所以只能在具有公共祖先的进程之间使用（因为公共祖先的进程之间可以共享这个文件描述符）。这是匿名管道的局限之一。</p>
+<p>虽然管道是一个文件，但是它具有独特的特点：</p>
+<ol>
+<li>不支持文件指针的移动，所以只能读取当前位置。不能读取文件的任意位置。</li>
+<li>管道像一个队列，输入的数据遵循先进先出。</li>
+<li>数据被读取后就被管道删除掉。</li>
+<li>若管道为空，则 read 读取操作会被阻塞或返回 0 （取决于管道的模式）。</li>
+<li>若试图向一个没有读进程的管道写入数据，会收到 SIGPIPE 信号。若没有在写进程中捕捉该信号，则会造成写进程终止。</li>
+</ol>
+<h3 id="命名管道"><a href="#命名管道" class="headerlink" title="命名管道"></a>命名管道</h3><p>命名管道可以通过管道名称指定，因此可以在两个不相关进程之间使用，只要他们提前约定好管道名称即可。命名管道的写入读出特性同匿名管道。</p>
+<p>此外，匿名管道在读写进程结束后自动删除。而命名管道需要手动删除。</p>
+<h2 id="进程间的通信方式实现"><a href="#进程间的通信方式实现" class="headerlink" title="进程间的通信方式实现"></a>进程间的通信方式实现</h2><h3 id="匿名管道-1"><a href="#匿名管道-1" class="headerlink" title="匿名管道"></a>匿名管道</h3><h4 id="C-C-相关-API"><a href="#C-C-相关-API" class="headerlink" title="C\C++ 相关 API"></a>C\C++ 相关 API</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>         <span class="comment">// read、write、pipe、fork 函数所需</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>      <span class="comment">// ssize_t、pid_t 所需</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span>       <span class="comment">// wait 所需</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * filedes 表示两个文件描述符</span></span><br><span class="line"><span class="comment"> * filedes[0] 指向管道的读端</span></span><br><span class="line"><span class="comment"> * filedes[1] 指向管道的写端</span></span><br><span class="line"><span class="comment"> * 管道默认以阻塞模式打开。可以通过 fcuntl() 修改管道的阻塞属性</span></span><br><span class="line"><span class="comment"> * 创建成功返回 0 ，失败返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pipe</span><span class="params">(<span class="type">int</span> filedes[<span class="number">2</span>])</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * fd   读取文件的文件描述符</span></span><br><span class="line"><span class="comment"> * buf  读取数据的储存区</span></span><br><span class="line"><span class="comment"> * count读取的字节数</span></span><br><span class="line"><span class="comment"> * 成功时返回读取到的字节数，失败时返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">ssize_t</span> <span class="title">read</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span>* buf, <span class="type">size_t</span> count)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * fd   写入文件的文件描述符</span></span><br><span class="line"><span class="comment"> * buf  需要被写入的储存区指针</span></span><br><span class="line"><span class="comment"> * count需要写入的字节数</span></span><br><span class="line"><span class="comment"> * 成功时返回写入的字节数，失败时返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">ssize_t</span> <span class="title">write</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="type">void</span>* buf, <span class="type">size_t</span> count)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建一个子进程</span></span><br><span class="line"><span class="comment"> * 若创建成功，则父进程中该函数返回子进程的 PID，子进程中该函数返回0</span></span><br><span class="line"><span class="comment"> * 若创建失败，则调用该函数在调用进程中返回 -1.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">pid_t</span> <span class="title">fork</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 阻塞自身，并等待子进程结束</span></span><br><span class="line"><span class="comment"> * 子进程的结束状态由 status 返回</span></span><br><span class="line"><span class="comment"> * 执行成功返回子进程 pid，失败返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">pid_t</span> <span class="title">wait</span><span class="params">(<span class="type">int</span>* status)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="C-C-例程——父子进程间通信"><a href="#C-C-例程——父子进程间通信" class="headerlink" title="C\C++ 例程——父子进程间通信"></a>C\C++ 例程——父子进程间通信</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> fd[<span class="number">2</span>];</span><br><span class="line">    <span class="type">pid_t</span> pid;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">1024</span>];</span><br><span class="line">    <span class="type">char</span> msg[] = <span class="string">&quot;test for pipe&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">pipe</span>(fd)==<span class="number">-1</span>)&#123;               <span class="comment">// 创建管道</span></span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;匿名管道创建失败&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    pid = fork();                   <span class="comment">// 创建子进程</span></span><br><span class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;                      </span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;子进程创建失败&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;                <span class="comment">// 如果当前进程是子进程</span></span><br><span class="line">        <span class="built_in">close</span>(fd[<span class="number">1</span>]);               <span class="comment">// 关闭写描述符</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;child process ready to read ...\n&quot;</span>);</span><br><span class="line">        <span class="type">int</span> len = <span class="built_in">read</span>(fd[<span class="number">0</span>], buf, <span class="built_in">sizeof</span>(buf));        <span class="comment">// 等待读取管道上的数据</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;child get: %s\n&quot;</span>, buf);</span><br><span class="line">        <span class="built_in">close</span>(fd[<span class="number">0</span>]);               <span class="comment">// 关闭读描述符</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">close</span>(fd[<span class="number">0</span>]);                   <span class="comment">// 关闭读描述符</span></span><br><span class="line">        <span class="built_in">write</span>(fd[<span class="number">1</span>], msg, <span class="built_in">strlen</span>(msg)); <span class="comment">// 将数据写入管道</span></span><br><span class="line">        <span class="built_in">wait</span>(<span class="literal">NULL</span>);                     <span class="comment">// 等待子进程退出</span></span><br><span class="line">        <span class="built_in">close</span>(fd[<span class="number">1</span>]);                   <span class="comment">// 关闭写描述符</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="python-例程——父子进程间通信"><a href="#python-例程——父子进程间通信" class="headerlink" title="python 例程——父子进程间通信"></a>python 例程——父子进程间通信</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">r, w = os.pipe()    <span class="comment"># 创建管道</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    pid = os.fork() <span class="comment"># 创建子进程</span></span><br><span class="line"><span class="keyword">except</span> OSError:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> pid == <span class="number">0</span> :       <span class="comment"># 当前进程为子进程时</span></span><br><span class="line">    os.close(w)     <span class="comment"># 关闭写描述符</span></span><br><span class="line">    content = os.read(r, <span class="number">200</span>)   <span class="comment"># 等待读取内容</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;child get: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(content))</span><br><span class="line">    os.close(r)</span><br><span class="line">    exit(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">else</span>:               <span class="comment"># 当前进程为父进程时</span></span><br><span class="line">    os.close(r)     <span class="comment"># 关闭读描述符</span></span><br><span class="line">    write_bytes = os.write(w, <span class="string">&quot;test for pipe&quot;</span>)  <span class="comment"># 写入内容</span></span><br><span class="line">    pid, status = os.wait()                     <span class="comment"># 等待子进程退出</span></span><br><span class="line">    os.close(w)                                 <span class="comment"># 关闭写描述符</span></span><br><span class="line">    exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="命名管道-1"><a href="#命名管道-1" class="headerlink" title="命名管道"></a>命名管道</h3><h4 id="C-C-相关-API-1"><a href="#C-C-相关-API-1" class="headerlink" title="C\C++ 相关 API"></a>C\C++ 相关 API</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span>   <span class="comment">// mkfifo 所需</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>  <span class="comment">// mkfifo 所需</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span>      <span class="comment">// open 所需</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * filename 管道绝对路径</span></span><br><span class="line"><span class="comment"> * mode     管道文件权限（三位数字权限）</span></span><br><span class="line"><span class="comment"> * 默认创建管道，如果路径下管当文件已存在，则发出 EEXIST 错误。因此一般搭配 access 函数来判断管道是否存在</span></span><br><span class="line"><span class="comment"> * 管道创建成功返回 0， 失败返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">mkfifo</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* filename, <span class="type">mode_t</span> mode)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * pathname 被测试文件的路径</span></span><br><span class="line"><span class="comment"> * mode     测试权限</span></span><br><span class="line"><span class="comment"> * mode==R_OK   测试读权限</span></span><br><span class="line"><span class="comment"> * mode==W_OK   测试写权限</span></span><br><span class="line"><span class="comment"> * mode==X_OK   测试执行权限</span></span><br><span class="line"><span class="comment"> * mode==F_OK   测试文件是否存在</span></span><br><span class="line"><span class="comment"> * 测试成功返回 0，失败返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">access</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* pathname, <span class="type">int</span> mode)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * patchname    文件绝对路径</span></span><br><span class="line"><span class="comment"> * flags        打开方式（读、写...）</span></span><br><span class="line"><span class="comment"> * mode         当文件不存在时，open 会创建文件，使用 mode 设置文件权限</span></span><br><span class="line"><span class="comment"> * 执行成功返回文件描述符，失败返回 -1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* pathname, <span class="type">int</span> flags)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* pathname, <span class="type">int</span> flags, <span class="type">mode_t</span> mode)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="例程——两个-C-C-进程间通信"><a href="#例程——两个-C-C-进程间通信" class="headerlink" title="例程——两个 C\C++ 进程间通信"></a>例程——两个 C\C++ 进程间通信</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 进程 A，消息发送端</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> pipe_path[] = <span class="string">&quot;/home/torch/code/linux-c++/chat/anonymity/pipe.fifo&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 创建管道</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">access</span>(pipe_path, F_OK)==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">mkfifo</span>(pipe_path, <span class="number">0664</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;命名管道文件创建失败：&quot;</span>);</span><br><span class="line">            <span class="built_in">fflush</span>(stdout);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;管道创建完成\n&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 像匿名管道一样使用所创建的管道文件</span></span><br><span class="line">    <span class="type">int</span> fd = <span class="built_in">open</span>(pipe_path, O_WRONLY);     <span class="comment">// 以写入的方式打开管道</span></span><br><span class="line">    <span class="keyword">if</span>(fd==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;管道文件打开失败：&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buf[] = <span class="string">&quot;test for pipe&quot;</span>;</span><br><span class="line">    <span class="type">ssize_t</span> write_num = <span class="built_in">write</span>(fd, buf, <span class="built_in">strlen</span>(buf)+<span class="number">1</span>);  <span class="comment">// 把 &#x27;\0&#x27; 也写入管道</span></span><br><span class="line">    <span class="keyword">if</span>(write_num==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;写入数据失败：&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;写入 %lu 字节：%s\n&quot;</span>, write_num, buf);</span><br><span class="line">    <span class="built_in">close</span>(fd);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 进程 B，数据读取端</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> pipe_path[] = <span class="string">&quot;/home/torch/code/linux-c++/chat/anonymity/pipe.fifo&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 创建管道</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">access</span>(pipe_path, F_OK)==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">mkfifo</span>(pipe_path, <span class="number">0664</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;命名管道文件创建失败：&quot;</span>);</span><br><span class="line">            <span class="built_in">fflush</span>(stdout);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;管道创建完成\n&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 像匿名管道一样使用所创建的管道文件</span></span><br><span class="line">    <span class="type">int</span> fd = <span class="built_in">open</span>(pipe_path, O_RDONLY);     <span class="comment">// 以写入的方式打开管道</span></span><br><span class="line">    <span class="keyword">if</span>(fd==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;管道文件打开失败：&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">50</span>];</span><br><span class="line">    <span class="type">ssize_t</span> read_num = <span class="built_in">read</span>(fd, buf, <span class="built_in">sizeof</span>(buf));  <span class="comment">// 管道没有数据时，会阻塞</span></span><br><span class="line">    <span class="keyword">if</span>(read_num==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;读取数据失败：&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;读取 %lu 字节：%s\n&quot;</span>, read_num, buf);</span><br><span class="line">    <span class="built_in">fflush</span>(stdout);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">close</span>(fd);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进程结束后，pipe.fifo 仍然存在</p>
+<h4 id="例程——两个-python-进程间通信"><a href="#例程——两个-python-进程间通信" class="headerlink" title="例程——两个 python 进程间通信"></a>例程——两个 python 进程间通信</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A 进程 写入端</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">pipe_path = <span class="string">&quot;/home/torch/code/linux-c++/chat/anonymity/pipe.fifo&quot;</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">not</span> os.access(pipe_path, os.F_OK)):</span><br><span class="line">    os.mkfifo(pipe_path, <span class="number">664</span>)</span><br><span class="line"></span><br><span class="line">fd = os.<span class="built_in">open</span>(pipe_path, os.O_WRONLY)</span><br><span class="line"><span class="keyword">if</span>(fd == -<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;打开管道失败&quot;</span>)</span><br><span class="line">    exit(-<span class="number">1</span>)</span><br><span class="line">write_num = os.write(fd, <span class="string">&quot;test for pipe&quot;</span>)</span><br><span class="line"><span class="keyword">if</span>(write_num==-<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;写入管道失败&quot;</span>)</span><br><span class="line">    exit(-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;写入了 &#123;&#125; 字节：&#123;&#125;&quot;</span>.<span class="built_in">format</span>(write_num, <span class="string">&quot;test for pipe&quot;</span>))</span><br><span class="line">os.close(fd)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># B 进程 读取端</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">pipe_path = <span class="string">&quot;/home/torch/code/linux-c++/chat/anonymity/pipe.fifo&quot;</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">not</span> os.access(pipe_path, os.F_OK)):</span><br><span class="line">    os.mkfifo(pipe_path, <span class="number">664</span>)</span><br><span class="line"></span><br><span class="line">fd = os.<span class="built_in">open</span>(pipe_path, os.O_RDONLY)</span><br><span class="line"><span class="keyword">if</span>(fd == -<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;打开管道失败&quot;</span>)</span><br><span class="line">    exit(-<span class="number">1</span>)</span><br><span class="line">buf = os.read(fd, <span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;读取了 &#123;&#125; 字节：&#123;&#125;&quot;</span>.<span class="built_in">format</span>(<span class="built_in">len</span>(buf), buf.decode()))</span><br><span class="line">os.close(fd)</span><br></pre></td></tr></table></figure>
+
+<h4 id="例程——python-进程与-C-C-进程通信"><a href="#例程——python-进程与-C-C-进程通信" class="headerlink" title="例程——python 进程与 C\C++ 进程通信"></a>例程——python 进程与 C\C++ 进程通信</h4><p><a href="#%E4%BE%8B%E7%A8%8B%E4%B8%A4%E4%B8%AA-cc-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1">A 发送数据进程</a><br><a href="#%E4%BE%8B%E7%A8%8B%E4%B8%A4%E4%B8%AA-python-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1">B 接收数据进程</a></p>
+<h4 id="传递复杂的数据——numpy-数组"><a href="#传递复杂的数据——numpy-数组" class="headerlink" title="传递复杂的数据——numpy 数组"></a>传递复杂的数据——numpy 数组</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A 进程 写入numpy数组</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">pipe_path = <span class="string">&quot;/home/torch/code/linux-c++/chat/anonymity/pipe.fifo&quot;</span></span><br><span class="line">array = np.ones((<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line">array_list = array.tolist()                                     <span class="comment"># 需先转为 python 内置类型</span></span><br><span class="line">data = json.dumps(array_list, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">4</span>)     <span class="comment"># 转为 json 串</span></span><br><span class="line">data = data+<span class="string">&#x27;\0&#x27;</span>                                                <span class="comment"># 增加字符串结尾</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">not</span> os.access(pipe_path, os.F_OK)):</span><br><span class="line">    os.mkfifo(pipe_path, <span class="number">664</span>)</span><br><span class="line"></span><br><span class="line">fd = os.<span class="built_in">open</span>(pipe_path, os.O_WRONLY)</span><br><span class="line"><span class="keyword">if</span>(fd == -<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;打开管道失败&quot;</span>)</span><br><span class="line">    exit(-<span class="number">1</span>)</span><br><span class="line">write_num = os.write(fd, data.encode())</span><br><span class="line"><span class="keyword">if</span>(write_num==-<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;写入管道失败&quot;</span>)</span><br><span class="line">    exit(-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;写入了 &#123;&#125; 字节：&#123;&#125;&quot;</span>.<span class="built_in">format</span>(write_num, data))</span><br><span class="line">os.close(fd)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * B 进程，读取并解析 numpy 数组</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> Linux多进程编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/06/opengl/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="prev" title="环境配置">
+                  <i class="fa fa-angle-left"></i> 环境配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/06/hexo/hexo%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="进程间交换数据的方式">
+                  进程间交换数据的方式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="文件锁定当多个用户同时操作同一个文件时，为了避免共享资源产生竞争状态，我们可以给文件上锁。文件锁分为建议性锁和强制性锁。建议性锁会给文件设置一个标志位，但是，如果对文件操作之前不对该标志位进行检测，那么建议性锁就会形同虚设，其他进程依旧可以对文件进行操作。而强制性锁会让上锁的进程“霸占”这个文件的一些权限，比如一个进程A对文件F设置了一个只允许读操作的强制性锁（读取锁），那么进程B就只能对文件F进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux文件编程-文件锁定(fcntl)">
+<meta property="og:url" content="http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A(fcntl)/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="文件锁定当多个用户同时操作同一个文件时，为了避免共享资源产生竞争状态，我们可以给文件上锁。文件锁分为建议性锁和强制性锁。建议性锁会给文件设置一个标志位，但是，如果对文件操作之前不对该标志位进行检测，那么建议性锁就会形同虚设，其他进程依旧可以对文件进行操作。而强制性锁会让上锁的进程“霸占”这个文件的一些权限，比如一个进程A对文件F设置了一个只允许读操作的强制性锁（读取锁），那么进程B就只能对文件F进">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-19T04:15:20.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:20:11.181Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="Linux文件编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A(fcntl)/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A(fcntl)/","path":"2023/09/19/linux/linux文件编程/Linux文件编程-文件锁定(fcntl)/","title":"Linux文件编程-文件锁定(fcntl)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux文件编程-文件锁定(fcntl) | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A"><span class="nav-number">1.</span> <span class="nav-text">文件锁定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%92%8C%E5%8F%82%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">函数和参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE%E6%80%A7%E9%94%81"><span class="nav-number">1.2.</span> <span class="nav-text">建议性锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E6%80%A7%E9%94%81"><span class="nav-number">1.3.</span> <span class="nav-text">强制性锁</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A(fcntl)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux文件编程-文件锁定(fcntl) | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux文件编程-文件锁定(fcntl)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-19 12:15:20" itemprop="dateCreated datePublished" datetime="2023-09-19T12:15:20+08:00">2023-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:20:11" itemprop="dateModified" datetime="2024-07-30T19:20:11+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="文件锁定"><a href="#文件锁定" class="headerlink" title="文件锁定"></a>文件锁定</h2><p>当多个用户同时操作同一个文件时，为了避免共享资源产生<strong>竞争状态</strong>，我们可以给文件上锁。文件锁分为<strong>建议性锁</strong>和<strong>强制性锁</strong>。建议性锁会给文件设置一个标志位，但是，如果对文件操作之前不对该标志位进行检测，那么建议性锁就会形同虚设，其他进程依旧可以对文件进行操作。而强制性锁会让上锁的进程“霸占”这个文件的一些权限，比如一个进程A对文件F设置了一个只允许读操作的强制性锁（读取锁），那么进程B就只能对文件F进行读取，而不能写入或执行，这种锁定状态会一直持续到进程A给文件F解锁。强制性锁可以避免对文件的破坏性操作。当我们使用open、read、write等函数操作文件时，内核都会检测该文件是否被加了强制性锁，如果是，则会导致操作失败。除了锁定文件，文件的某一个状态记录也可以被上锁，称为<strong>记录锁</strong>。</p>
+<h3 id="函数和参数"><a href="#函数和参数" class="headerlink" title="函数和参数"></a>函数和参数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description 默认建议性锁，开启强制性锁需要对系统进行设置</span></span><br><span class="line"><span class="comment"> * @param fd    文件描述符</span></span><br><span class="line"><span class="comment"> * @param cmd   上锁的方式</span></span><br><span class="line"><span class="comment"> * @param lock  上各种锁，锁住哪里</span></span><br><span class="line"><span class="comment"> * @return int  执行成功返回0，执行失败返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">fcntl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, <span class="keyword">struct</span> flock* lock)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">cmd</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">F_GETLK</td>
+<td align="center">根据lock描述，决定是否上锁</td>
+</tr>
+<tr>
+<td align="center">F_SETLK</td>
+<td align="center">根据lock描述，设置锁</td>
+</tr>
+</tbody></table>
+<p>结构体<strong>flock</strong>的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">flock</span>&#123;</span></span><br><span class="line">    <span class="type">short</span> <span class="type">int</span> l_type;   <span class="comment">// 锁定状态</span></span><br><span class="line">    <span class="type">short</span> <span class="type">int</span> l_whence; <span class="comment">// 锁定的起始位置</span></span><br><span class="line">    <span class="type">off_t</span>     l_start;  <span class="comment">// 起始位置相对于l_whence的偏移量</span></span><br><span class="line">    <span class="type">off_t</span>     l_len;    <span class="comment">// 锁定区域的大小</span></span><br><span class="line">    <span class="type">pid_t</span>     l_pid;    <span class="comment">// 执行锁定动作的进程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">l_type</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">F_RDLCK</td>
+<td align="center">读取锁，多个进程可以同时建立读取锁</td>
+</tr>
+<tr>
+<td align="center">F_WRLCK</td>
+<td align="center">写入锁，任何时刻只有一个进程可以建立写入锁</td>
+</tr>
+<tr>
+<td align="center">F_UNLCK</td>
+<td align="center">解除锁定</td>
+</tr>
+</tbody></table>
+<h3 id="建议性锁"><a href="#建议性锁" class="headerlink" title="建议性锁"></a>建议性锁</h3><p>为了测试建议性锁，我们需要两个程序，程序”lockFile.cpp”负责给文件上锁，并持续占用文件；程序”writeFile.cpp”负责检测建议锁，并向文件中写入内容。由于linux默认建议性锁，所以不需要对系统进行额外配置。<br>“lockFile.cpp”的内容如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * file name:   lockFile.cpp</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;error.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">flock</span> <span class="title">lock</span>;</span></span><br><span class="line">    <span class="type">int</span> res, fd = open(<span class="string">&quot;myFile.txt&quot;</span>, O_RDWR|O_CREAT, S_IRWXU);</span><br><span class="line">    <span class="keyword">if</span>(fd &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        lock.l_type     = F_WRLCK;          <span class="comment">// 写入锁</span></span><br><span class="line">        lock.l_whence   = SEEK_SET;         <span class="comment">// 文件起始位置</span></span><br><span class="line">        lock.l_start    = <span class="number">0</span>;                <span class="comment">// 不偏移</span></span><br><span class="line">        lock.l_len      = <span class="number">0</span>;                <span class="comment">// 当len=0时代表锁定到文件的末尾；len=非零正整数时代表锁定的字符数</span></span><br><span class="line">        lock.l_pid      = getpid();         <span class="comment">// 获得当前进程pid号</span></span><br><span class="line"></span><br><span class="line">        res = fcntl(fd, F_SETLK, &amp;lock);    <span class="comment">// 设置写入锁，不允许其他进程写入</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(res==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;file has been locked. pid:%d\n&quot;</span>, getpid());</span><br><span class="line">            <span class="keyword">while</span>(<span class="literal">true</span>);                    <span class="comment">// 保持锁定占用状态</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序后，终端会陷入<strong>while</strong>函数中，同时输出该进程的<strong>PID值为1078</strong>。<br>我们打开另一个终端，键入命令，查看该进程是否对文件加锁：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo <span class="built_in">cat</span> /proc/locks | grep 1078</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>2: POSIX  ADVISORY  WRITE 1078 08:20:3446 0 EOF</p>
+</blockquote>
+<p>从输出中可以看出，该进程加了一个写入锁。</p>
+<p>而后，我们通过”writeFile.cpp”文件向”myFile.txt”中写入内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;error.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">flock</span> <span class="title">lock</span>;</span></span><br><span class="line">    <span class="type">int</span> res, fd = open(<span class="string">&quot;myFile.txt&quot;</span>, O_RDWR|O_CREAT, S_IRWXU);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(fd &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="type">char</span> buf[] = <span class="string">&quot;I have an apple.&quot;</span>;</span><br><span class="line">        <span class="type">int</span> count  = <span class="built_in">strlen</span>(buf);</span><br><span class="line">        <span class="type">int</span> size   = write(fd, buf, count);</span><br><span class="line">        <span class="keyword">if</span>(size==<span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;写入失败.\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;写入成功.\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        close(fd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行后发现，可以向”myFile.txt”中写入内容。这就证明了，虽然我们给文件加了写入锁，但由于该锁的性质是建议锁，所以其他进程仍然可以向文件中写入内容。</p>
+<h3 id="强制性锁"><a href="#强制性锁" class="headerlink" title="强制性锁"></a>强制性锁</h3><p>若要使用强制性锁，需要在root权限下通过mount命令，用-o mand选项来打开该机制。</p>
+<p>我们先将”lockFile.cpp”程序终止掉，然后在终端中执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mount -o remount,mand /</span><br></pre></td></tr></table></figure>
+
+<p>然后重复<a href="#%E5%BB%BA%E8%AE%AE%E6%80%A7%E9%94%81">建议性锁</a>的步骤，发现”writeFile.cpp”无法向”myFile.txt”中写入内容。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> Linux文件编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/18/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E7%8A%B6%E6%80%81/" rel="prev" title="Linux文件编程-文件状态">
+                  <i class="fa fa-angle-left"></i> Linux文件编程-文件状态
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84(mmap)/" rel="next" title="Linux文件编程-文件的内存映射(mmap)">
+                  Linux文件编程-文件的内存映射(mmap) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

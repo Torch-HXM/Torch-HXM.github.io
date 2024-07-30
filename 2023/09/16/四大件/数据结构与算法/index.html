@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="复杂度的渐进表示 最小上界复杂度：$T(n) &#x3D; O(f(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \le C \cdot f(n)$ 最大下界复杂度：$T(n) &#x3D; \Omega(g(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \ge C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法">
+<meta property="og:url" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="复杂度的渐进表示 最小上界复杂度：$T(n) &#x3D; O(f(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \le C \cdot f(n)$ 最大下界复杂度：$T(n) &#x3D; \Omega(g(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \ge C">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-1.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-3.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-2.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-4.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-5.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-6.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-7.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-8.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-9.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-10.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-11.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-12.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-13.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-14.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-15.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-16.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-17.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-18.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-19.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-21.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-22.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-23.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-24.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-25.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-26.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-27.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-28.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-29.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-30.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-31.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-32.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-33.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-34.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-35.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-36.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-42.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-45.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/202002091953256.gif">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-46.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-47.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-48.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-49.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-50.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-51.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-43.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-52.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-53.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-54.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-56.png">
+<meta property="og:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-55.png">
+<meta property="og:image" content="http://example.com/.%5C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%5Cimage57.png">
+<meta property="article:published_time" content="2023-09-16T04:39:50.000Z">
+<meta property="article:modified_time" content="2024-07-30T11:26:37.849Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="数据结构与算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image.png">
+
+
+<link rel="canonical" href="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/","path":"2023/09/16/四大件/数据结构与算法/","title":"数据结构与算法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据结构与算法 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%9A%84%E6%B8%90%E8%BF%9B%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.</span> <span class="nav-text">复杂度的渐进表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E9%80%92%E5%BD%92%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%A6%82%E4%BD%95%E5%8E%BB%E7%AE%97"><span class="nav-number">1.1.</span> <span class="nav-text">示例：递归的时间复杂度如何去算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E6%93%8D%E4%BD%9C%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%AF%94%E8%BE%83"><span class="nav-number">1.2.</span> <span class="nav-text">各种操作时间复杂度比较</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">线性表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%BF%E4%B9%89%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">广义表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D%E9%93%BE%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">多重链表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86%E6%A0%88-Stack"><span class="nav-number">5.</span> <span class="nav-text">堆栈(Stack)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%9F%E5%88%97-Queue"><span class="nav-number">6.</span> <span class="nav-text">队列(Queue)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%91"><span class="nav-number">7.</span> <span class="nav-text">树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E5%88%86%E7%B1%BB"><span class="nav-number">7.1.</span> <span class="nav-text">二叉树分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98"><span class="nav-number">7.2.</span> <span class="nav-text">二叉树的储存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">7.3.</span> <span class="nav-text">二叉树的遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%E5%BA%94%E7%94%A8"><span class="nav-number">7.4.</span> <span class="nav-text">二叉树遍历应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E8%A1%A8%E6%98%AF%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84"><span class="nav-number">7.5.</span> <span class="nav-text">静态链表是结构体数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="nav-number">7.6.</span> <span class="nav-text">二叉搜索树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%EF%BC%88AVL%E6%A0%91%EF%BC%89"><span class="nav-number">7.7.</span> <span class="nav-text">平衡二叉树（AVL树）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-number">7.7.1.</span> <span class="nav-text">平衡二叉树的调整</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86"><span class="nav-number">8.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91%EF%BC%88%E6%9C%80%E4%BC%98%E4%BA%8C%E5%8F%89%E6%A0%91%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">哈夫曼树（最优二叉树）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91"><span class="nav-number">9.1.</span> <span class="nav-text">构造一个哈夫曼树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81"><span class="nav-number">9.2.</span> <span class="nav-text">哈夫曼编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">10.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-number">10.1.</span> <span class="nav-text">并查集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE"><span class="nav-number">11.</span> <span class="nav-text">图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="nav-number">12.</span> <span class="nav-text">排序算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="nav-number">12.1.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="nav-number">12.2.</span> <span class="nav-text">插入排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F"><span class="nav-number">12.3.</span> <span class="nav-text">希尔排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="nav-number">12.4.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E6%8E%92%E5%BA%8F"><span class="nav-number">12.5.</span> <span class="nav-text">堆排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">12.6.</span> <span class="nav-text">归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6"><span class="nav-number">12.6.1.</span> <span class="nav-text">有序子序列的归并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="nav-number">12.6.2.</span> <span class="nav-text">归并排序的递归实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E9%9D%9E%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95"><span class="nav-number">12.6.3.</span> <span class="nav-text">归并排序的非递归算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-number">12.7.</span> <span class="nav-text">快速排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%85%83%E7%B4%A0%E6%8E%92%E5%BA%8F"><span class="nav-number">12.8.</span> <span class="nav-text">对大数据元素排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">12.9.</span> <span class="nav-text">桶排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">12.10.</span> <span class="nav-text">基数排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E6%8E%92%E5%BA%8F%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">12.11.</span> <span class="nav-text">各种排序的比较</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%A3%E5%88%97%E8%A1%A8%EF%BC%88%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%89"><span class="nav-number">13.</span> <span class="nav-text">散列表（哈希表）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0%E7%9A%84%E9%80%89%E5%8F%96%E6%96%B9%E6%B3%95"><span class="nav-number">13.1.</span> <span class="nav-text">哈希函数的选取方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">13.1.1.</span> <span class="nav-text">数字关键词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">13.1.2.</span> <span class="nav-text">字符关键词</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">13.2.</span> <span class="nav-text">解决冲突的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E5%9C%B0%E5%9D%80%E6%B3%95"><span class="nav-number">13.2.1.</span> <span class="nav-text">开放地址法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E9%93%BE%E6%8E%A5%E6%B3%95"><span class="nav-number">13.2.2.</span> <span class="nav-text">分离链接法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%A3%E5%88%97%E8%A1%A8%E6%9F%A5%E6%89%BE%E7%9A%84%E6%95%88%E7%8E%87%E8%AF%84%E4%BC%B0"><span class="nav-number">13.3.</span> <span class="nav-text">散列表查找的效率评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E7%8E%87%E7%9A%84%E8%AE%A1%E7%AE%97%E5%B9%B3%E5%9D%87%E6%9F%A5%E6%89%BE%E9%95%BF%E5%BA%A6"><span class="nav-number">13.3.1.</span> <span class="nav-text">效率的计算平均查找长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%84%E7%A7%8D%E6%8E%A2%E6%B5%8B%E6%96%B9%E6%B3%95%E7%9A%84%E6%9F%A5%E6%89%BE%E6%80%A7%E8%83%BD"><span class="nav-number">13.3.2.</span> <span class="nav-text">各种探测方法的查找性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E6%8E%A2%E6%B5%8B%E6%AC%A1%E6%95%B0%E4%B8%8E%E8%A3%85%E5%9C%A8%E5%9B%A0%E5%AD%90%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">13.3.3.</span> <span class="nav-text">期望探测次数与装在因子的关系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KMP-%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%B2%E5%8C%B9%E9%85%8D%EF%BC%89"><span class="nav-number">14.</span> <span class="nav-text">KMP 算法（串匹配）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#KMP-%E7%AE%97%E6%B3%95"><span class="nav-number">14.1.</span> <span class="nav-text">KMP 算法</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据结构与算法 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-16 12:39:50" itemprop="dateCreated datePublished" datetime="2023-09-16T12:39:50+08:00">2023-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:26:37" itemprop="dateModified" datetime="2024-07-30T19:26:37+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%9B%E5%A4%A7%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">四大件</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="复杂度的渐进表示"><a href="#复杂度的渐进表示" class="headerlink" title="复杂度的渐进表示"></a>复杂度的渐进表示</h1><ul>
+<li>最小上界复杂度：$T(n) &#x3D; O(f(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \le C \cdot f(n)$</li>
+<li>最大下界复杂度：$T(n) &#x3D; \Omega(g(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \ge C \cdot g(n)$</li>
+<li>等价复杂度：$T(n) &#x3D; \Theta(h(n))$ 表示同时满足 $T(n) &#x3D; O(h(n))$ 和 $T(n) &#x3D; \Omega(h(n))$</li>
+</ul>
+<p>各种常见时间复杂度函数的比较：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image.png" alt="各种常见时间复杂度函数的比较"></p>
+<p>当数据规模达到一定程度时，各类时间复杂度有如下关系：</p>
+<p>$1 &lt; log^n &lt; n &lt; n \cdot log^n &lt; n^2 &lt; 2^n &lt; n!$</p>
+<p>如果两个程序块的复杂度分别是 $T_1(n)&#x3D;O(f_1(n))$、$T_2(n)&#x3D;O(f_2(n))$，则：</p>
+<ul>
+<li>当两个程序前后拼接执行时：时间复杂度 $T(n) &#x3D; max(T_1(n), T_2(n))$</li>
+<li>当两个程序包含嵌套执行时：时间复杂度 $T(n) &#x3D; T_1(n) \cdot T_2(n)$</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>当 $T(n)$ 是一个 k 阶多项式时，$T(n)&#x3D;\Theta(n^k)$</li>
+<li>一个 for 循环的时间复杂度等于循环次数乘以循环体的时间复杂度</li>
+<li>if-else 的时间复杂度，取各个判断分支中时间复杂度最大的一个</li>
+</ul>
+<h2 id="示例：递归的时间复杂度如何去算"><a href="#示例：递归的时间复杂度如何去算" class="headerlink" title="示例：递归的时间复杂度如何去算"></a>示例：递归的时间复杂度如何去算</h2><p>问题：寻找一串数字的最大子列和？</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-1.png" alt="数字的最大子列和"></p>
+<p>将一个问题分为两半，原本的时间复杂度时是 $T(n)$，分为两半后，数据规模减半，两边的时间复杂度都是 $T(\frac{n}{2})$。另外，当综合两边的结果时，需要把全部元素“看一遍”，因此，综合两个 $T(n)$ 时的时间复杂度是 $O(n)$。因此有式子：</p>
+<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + O(n)$</p>
+<p>而 $O(n) &#x3D; c \cdot n$，因此，公式变为：</p>
+<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + c \cdot n$</p>
+<p>将 $n&#x3D;\frac{n}{2}$ 递推地带入公式即可推导出时间复杂度。</p>
+<h2 id="各种操作时间复杂度比较"><a href="#各种操作时间复杂度比较" class="headerlink" title="各种操作时间复杂度比较"></a>各种操作时间复杂度比较</h2><table>
+<thead>
+<tr>
+<th align="center">结构</th>
+<th align="center">操作</th>
+<th align="center">平均时间复杂度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数组</td>
+<td align="center">求表长</td>
+<td align="center">$\Theta(1)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按序号查找</td>
+<td align="center">$\Theta(1)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按值查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">插入指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">删除指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">链表</td>
+<td align="center">求表长</td>
+<td align="center">$\Theta(N)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按序号查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按值查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">插入指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">删除指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+</tbody></table>
+<h1 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h1><p>线性表的两种储存结构：</p>
+<ul>
+<li>顺序储存结构：数组</li>
+<li>链式储存结构：链表</li>
+</ul>
+<h1 id="广义表"><a href="#广义表" class="headerlink" title="广义表"></a>广义表</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> GNode* GList;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">GNode</span>&#123;</span><br><span class="line">  <span class="type">int</span> Tag;</span><br><span class="line">  <span class="keyword">union</span>&#123;</span><br><span class="line">      ElementType Data;</span><br><span class="line">      Glist SubList;</span><br><span class="line">  &#125;URegion;</span><br><span class="line">  GList Next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>广义表的数据项有可能是数据，也有可能是表，因此，使用联合体来表示数据域，使用 Tag 标签来表示该节点储存的是哪一种数据。</p>
+<h1 id="多重链表"><a href="#多重链表" class="headerlink" title="多重链表"></a>多重链表</h1><p>有多个指针域的链表。但注意，双向链表有两个指针域，分别指向前一个节点和后一个节点，但它不是多重链表。</p>
+<p>多重链表可以用来表示稀疏矩阵，相比于使用二维数组能够节省更多空间。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-3.png" alt="Alt text"></p>
+<p>图像中， Term 是矩阵的入口节点，4 和 5 代表矩阵拥有四行五列，7 代表矩阵拥有 7 个元素。Term 中包含两个指针域，分别指向右侧和下方。Head 节点是矩阵各行各列的头节点，Head 中包含两个指针域和一个值域，两个指针域与 Term 的指针域相同，值域中保存着指向下一个 Head 节点的指针，所以实际上 Head 节点中包含的是三个指针域。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-2.png" alt="Alt text"></p>
+<h1 id="堆栈-Stack"><a href="#堆栈-Stack" class="headerlink" title="堆栈(Stack)"></a>堆栈(Stack)</h1><p>后入先出</p>
+<h1 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列(Queue)"></a>队列(Queue)</h1><p>先入先出</p>
+<h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><p>儿子兄弟表示法，避免空指针浪费空间<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-4.png" alt="Alt text"><br>将任意的树通过这种方法表示后旋转45°<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-5.png" alt="Alt text"><br>可以得到二叉树，因此，任何一个树都可以表示为二叉树。</p>
+<h2 id="二叉树分类"><a href="#二叉树分类" class="headerlink" title="二叉树分类"></a>二叉树分类</h2><p>斜二叉树</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-6.png" alt="斜二叉树"></p>
+<p>完美二叉树（满二叉树）</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-7.png" alt="完美二叉树"></p>
+<p>完全二叉树</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-8.png" alt="完全二叉树"></p>
+<p>二叉树的特点：</p>
+<ul>
+<li>第 i 层最大节点数 $2^{i-1}$</li>
+<li>深度为 k 的二叉树最大节点数 $2^k-1$</li>
+<li>对于任何二叉树，若 $n_0$ 表示叶节点个数、$n_2$是度为 2 的非叶节点个数，那么两者满足关系式$n_0&#x3D;n_2+1$</li>
+</ul>
+<p>对于最后一点，我们可以从二叉树边的个数来考虑。我们设度为 2 的节点个数为 $n_2$，度为 1 的节点个数为 $n_1$ 度为 0 的节点个数为 $n_0$。那么，整个二叉树拥有的边的个数为 $n_0+n_1 +n_2-1$，同时，通过度来计算边的个数为 $0 \cdot n_0 + 1 \cdot n_1 + 2 \cdot n_2$，两侧相等得到$n_0&#x3D;n_2+1$</p>
+<h2 id="二叉树的储存"><a href="#二叉树的储存" class="headerlink" title="二叉树的储存"></a>二叉树的储存</h2><p>完全二叉树可以使用数组储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-9.png" alt="Alt text"><br>一般的二叉树，通过将其补全为完全二叉树，也可以使用数组储存，但是会浪费空间。</p>
+<p>所有类型的二叉树都可以使用链表来储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-10.png" alt="Alt text"></p>
+<h2 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h2><p>先序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-11.png" alt="Alt text"><br>中序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-12.png" alt="Alt text"><br>后序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-13.png" alt="Alt text"></p>
+<p>无论先序、中序还是后序，同一个节点我们都会经历三次<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-14.png" alt="Alt text"><br>先序是在第一次经历节点时就使用节点值、中序是第二次经历节点时就使用节点值、后续是第三次经历节点时就使用节点值。</p>
+<p>递归的算法都可以使用堆栈来实现。</p>
+<p>层序遍历</p>
+<p>使用队列遍历二叉树，压入父节点，弹出节点时再压入其左右儿子节点，如此反复，直到所有的节点全部被访问。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-15.png" alt="Alt text"></p>
+<h2 id="二叉树遍历应用"><a href="#二叉树遍历应用" class="headerlink" title="二叉树遍历应用"></a>二叉树遍历应用</h2><p>先序遍历：查找所有叶节点<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-16.png" alt="查找所有叶节点"><br>后序遍历：求二叉树的高度<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-17.png" alt="Alt text"><br>构造运算树<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-18.png" alt="Alt text"><br>虽然直接构造的中缀表达式会收到运算优先级的影响，但是可以通过每次遍历到父节点就为前面的式子加括号来解决问题。</p>
+<p>另外，只通过先序和后序遍历结果不能够唯一确定一个二叉树。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-19.png" alt="Alt text"><br>可以看到，我们无法根据先序和后序遍历结果对子树是左子树还是右子树进行判断。因此必须有两种遍历结果并且其中必须包含中序遍历结果才能判断。</p>
+<h2 id="静态链表是结构体数组"><a href="#静态链表是结构体数组" class="headerlink" title="静态链表是结构体数组"></a>静态链表是结构体数组</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType Element;</span><br><span class="line">    Tree Left;</span><br><span class="line">    Tree Right;</span><br><span class="line">&#125;T1[MaxTree], T2[MaxTree];</span><br></pre></td></tr></table></figure>
+
+<p>其中的 T1 和 T2 就是静态链表。</p>
+<h2 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h2><p>一种二叉树，可以为空，当不为空时需要满足以下条件：</p>
+<ul>
+<li>左儿子小于根节点</li>
+<li>右儿子大于根节点</li>
+<li>左右子树都是二叉搜索树</li>
+</ul>
+<p>查找指定元素：查找效率取决于树的高度。</p>
+<p>查找最大值：最大值一定在树的最右边</p>
+<p>查找最小值：最小值一定在树的最左边</p>
+<p>尾递归可以用循环来实现，尾递归是指在返回时调用递归</p>
+<p>插入元素：从根部向下一直比较，元素最终插入到树的最下面。</p>
+<p>删除元素：删除元素后，用右子树的最小值或左子树的最大值替代被删除元素。由于右子树的最小值和左子树的最大值最多只有一个儿子节点，因此，删除任意元素的问题转变为删除一个没有儿子节点或者只有一个儿子节点的元素问题。当删除没有儿子节点的元素时，直接删除即可；当删除有一个儿子节点的元素时，用儿子节点替代被删除元素即可。</p>
+<h2 id="平衡二叉树（AVL树）"><a href="#平衡二叉树（AVL树）" class="headerlink" title="平衡二叉树（AVL树）"></a>平衡二叉树（AVL树）</h2><p>平衡因子：$BF(T)&#x3D;h_L-h_R$，左子树高度减去右子树高度。</p>
+<p>平衡二叉树：对于任意一个子树而言$|BF(T)|\le1$。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-21.png" alt="Alt text"></p>
+<p>高度为 h 的平衡二叉树和其最少节点数 n 之间满足关系式：$h&#x3D;O(log_2^n)$。所以，一个平衡二叉树（AVL树）的查找时间复杂度为 $O(log_2^n)$。</p>
+<h3 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h3><p>右旋调整：RR 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-22.png" alt="RR 旋转"></p>
+<p>左旋调整：LL 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-23.png" alt="Alt text"></p>
+<p>LR 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-24.png" alt="Alt text"></p>
+<p>RL 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-25.png" alt="Alt text"></p>
+<p>上述旋转的命名方法：如果插入的节点在左子树的右子树上，则调整方式命名为 LR 旋转；如果插入节点在右子树的左子树上，则调整方式命名为 RL 旋转。</p>
+<h1 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h1><p>堆是一个具有优先级的特殊队列。</p>
+<p>堆的实现方式：</p>
+<ul>
+<li>数组<ul>
+<li>插入：插入到尾部，$\Theta(1)$</li>
+<li>删除：查找最大（后最小）优先级 $\Theta(n)$，删除元素后移动后面的元素 $O(n)$</li>
+</ul>
+</li>
+<li>链表<ul>
+<li>插入：总是插入到链表的头部 $\Theta(1)$</li>
+<li>删除：查找最大关键字后删除节点 $\Theta(n)$</li>
+</ul>
+</li>
+<li>有序数组（按优先级排序）<ul>
+<li>插入：找到合适的位置 $O(n)$ 或 $O(log_2^n)$，移动元素并插入 $O(n)$</li>
+<li>删除：删除最后一个元素 $\Theta(1)$</li>
+</ul>
+</li>
+<li>有序链表<ul>
+<li>插入：找到合适的元素位置插入元素 $O(n)$</li>
+<li>删除：删除首元或最后元素 $\Theta(1)$</li>
+</ul>
+</li>
+</ul>
+<p>实际的堆是通过完全二叉树实现的，这样插入和删除的时间复杂度都是 $O(log_2^n)$。为了减少删除操作的难度，对于该完全二叉树的所有子树而言，我们将最大或最小的元素放在根部，以满足我们对删除的需求。将最大元素放在根部，我们将获得最大堆；将最小元素放在根部，我们将获得最小堆。</p>
+<p>插入操作：先将元素插入到堆（完全二叉树）的最后，然后逐步和自己的父节点进行优先级比较，以安放到合适的位置。时间复杂度为 $O(log_2^n)$</p>
+<p>删除操作：删除堆（完全二叉树）的根，然后将完全二叉树的最后一个元素放到根部，然后逐步和子节点进行比较，以安放到合适位置。时间复杂度为 $O(log_2^n)$</p>
+<p>最大堆的建立：</p>
+<ul>
+<li>方案一：将元素一个一个的插入到空堆中。时间复杂度为 $O(n \cdot log_2^n)$</li>
+<li>方案二：先构造完全二叉树，然后调整大小构成堆。$O(n)$</li>
+</ul>
+<h1 id="哈夫曼树（最优二叉树）"><a href="#哈夫曼树（最优二叉树）" class="headerlink" title="哈夫曼树（最优二叉树）"></a>哈夫曼树（最优二叉树）</h1><p>带权路径长度（WPL）：每一个叶子结点的权重乘以其到根节点的路径长度之和。</p>
+<p>哈夫曼树：WPL 最小的二叉树。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-26.png" alt="Alt text"></p>
+<p>图中第一个 WPL：$1 \cdot 4 + 2 \cdot 4 + 3 \cdot 3 + 4 \cdot 2 + 5 \cdot 1 &#x3D; 34$</p>
+<p>图中第二个 WPL：$5 \cdot 4 + 4 \cdot 4 + 3 \cdot 3 + 2 \cdot 2 + 1 \cdot 1 &#x3D; 50$</p>
+<p>图中第三个 WPL：$1 \cdot 3 + 2 \cdot 3 + 3 \cdot 2 + 4 \cdot 2 + 5 \cdot 2 &#x3D; 33$</p>
+<h2 id="构造一个哈夫曼树"><a href="#构造一个哈夫曼树" class="headerlink" title="构造一个哈夫曼树"></a>构造一个哈夫曼树</h2><ul>
+<li><p>给定一个列表 [1, 2, 3, 4, 5]，将它们看作 5 个树的根节点。</p>
+</li>
+<li><p>在它们之中找到两个最小根节点的树进行合并。此处将 [1, 2] 进行合并，变为以 3 为根，1、2 为叶节点的树。此时根节点列表变为[3, 3, 4, 5]。</p>
+</li>
+<li><p>重复第二步，直到根节点列表中只有一个根节点。此时，原给定列表中的所有数值变成了所构建的树的叶节点，所构建的树是哈夫曼树。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-27.png" alt="森特佩"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-28.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-29.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-30.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-31.png" alt="Alt text"></p>
+</li>
+</ul>
+<p>哈夫曼树的特点：</p>
+<ul>
+<li>从哈夫曼树的构造过程可知，哈夫曼树中不存在度为一的节点。由公式 $n_0&#x3D;n_2+1$ 可得，叶节点数为 n 的哈夫曼树的总节点数为 $2 \cdot n-1$</li>
+<li>哈夫曼树交换左右子树仍然是哈夫曼树</li>
+<li>同一组权值可能出现两个不同构的哈夫曼树，但他们的 WPL 相同</li>
+</ul>
+<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>为了避免编码的二义性，应当避免一个字符的编码是另一个字符编码的前缀。使用二叉树的叶节点来构造这种编码可以避免二义性：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-32.png" alt="Alt text"></p>
+<p>其中，a 的编码是 00，u 的编码是 01，x 的编码是 10，z 的编码是 11。这个例子可能有点特殊，其实，即使编码不是等长码也可以。但编码的节点必须是二叉树的叶节点。</p>
+<p>这样的编码方式似乎很不错。但是，由于每一个字符出现的频率不相同，因此，这样的编码并不是效率最高的。我们假设我们要对下面的字符序列进行编码：[aaaxuaxz]，那么，a、u、x、z 使用上面的二叉树编码后的结果所包含的总位数为：$2 \cdot 4 + 2 \cdot 1 + 2 \cdot 2 + 2 \cdot 1 &#x3D; 16$。而，如果我们将字符出现的频率作为该字符的权重，并使用哈夫曼树构造这样的编码，则可以最小化编码后的位数，同时，因为哈夫曼树也是二叉树，且编码后的字符都位于哈夫曼树的叶结点上，所以得到的编码也具有唯一性。上面的例子写成哈夫曼树如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">a</th>
+<th align="center">u</th>
+<th align="center">x</th>
+<th align="center">z</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-33.png" alt="Alt text"></p>
+<p>所以字符应编码如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">a</th>
+<th align="center">u</th>
+<th align="center">x</th>
+<th align="center">z</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">110</td>
+<td align="center">10</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>只执行两个操作：</p>
+<ul>
+<li>将两个元素连线：通过将两个元素所在集合合并实现</li>
+<li>查询两个元素是否联通</li>
+</ul>
+<p>每一个集合可以用树来储存。通过合并两个树实现集合的合并；通过查找两个元素的根节点，并比较根节点是否相同，来判断两个元素是否在同一集合（联通）。这里的树是多叉树。</p>
+<p>用结构数组可以储存这样的树：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-34.png" alt="Alt text"></p>
+<p>合并两个树（集合）的过程如下：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-35.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-36.png" alt="Alt text"></p>
+<p>在合并的过程中，由于树越来越高会降低查找的效率，因此，我们尽量将小的树拼到高的树上。</p>
+<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><p>无向图的深度优先搜索 DFS 的时间复杂度：</p>
+<p>当图拥有 N 个节点 E 条边时</p>
+<ul>
+<li>用邻接表储存图：$O(N+E)$</li>
+<li>邻接矩阵储存图：$O(N^2)$</li>
+</ul>
+<p>无向图的广度优先搜索 BFS 的时间复杂度：</p>
+<p>当图拥有 N 个节点 E 条边时</p>
+<ul>
+<li>用邻接表储存图：$O(N+E)$</li>
+<li>邻接矩阵储存图：$O(N^2)$</li>
+</ul>
+<h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>从头开始两两比较，保证较大的数字在数字比较对的后一位。每一次遍历，整个序列最大的数字将被排到数列最后。</p>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况：$T&#x3D;O(N)$</li>
+<li>最坏情况：$T&#x3D;O(N^2)$</li>
+</ul>
+<p>由于只需要对相邻的两个元素进行操作，因此，它天然的适用于数组和链表。</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>一个数字一个数字的拿进来，然后和已经存在的有序序列进行比较插入。</p>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况：$T&#x3D;O(N)$</li>
+<li>最坏情况：$T&#x3D;O(N^2)$</li>
+</ul>
+<p>由于 N 个不同元素组成的序列平均有 N(N-1)&#x2F;4 个逆序对。<br>所以，任何以交换相邻两个元素来排序的算法，其平均时间复杂度为 $\Omega(N^2)$<br>因此，为了减小排序的平均时间复杂度，我们应该努力的让每一次基本操作消去不止一个逆序对。</p>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>首先设定一组间隔数，例如 5、3、1 ，这组间隔的最后一个数字必须是 1.而后对需要被排序的数组做如下操作：</p>
+<ul>
+<li>将数组的第 1、6、11、… 每隔 5 个元素选取一个，进行插入排序</li>
+<li>将数组的第 1、4、7、 … 每隔 3 个元素选取一个，进行插入排序</li>
+<li>将数组的第 1、2、3、 … 每隔 1 个元素选取一个，进行插入排序</li>
+</ul>
+<p>执行完上述操作后得到有序数组。</p>
+<p>在执行完间隔为 3 的排序后，间隔为 5 的序列仍然是有序的。</p>
+<p>需要注意的是，所选的间隔数最好互质，不然各个间隔的排序很可能不起作用，白白的增加时间复杂度。这一个原因也造成了原始的希尔排序的最坏时间复杂度为 $\Theta(N^2)$。因此，对于希尔排序间隔数的选择有以下方法：</p>
+<ul>
+<li>Hibbard 增量序列：间隔数选取 $2^k-1$，最坏时间复杂度 $\Theta(N^{\frac{3}{2}})$，猜想的平均时间复杂度 $\Omega(N^{\frac{5}{4}})$</li>
+<li>Sedgewick 增量序列：间隔选取 $9 \times 4^i - 9 \times 2^i + 1$ 或 $4^i - 3 \times 2^i +1$，猜想平均时间复杂度 $T_{avg}&#x3D;O(N^{\frac{7}{6}})$，最坏时间复杂度 $T_{worst}&#x3D;O(N^{\frac{4}{3}})$</li>
+</ul>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>每次找序列的最小元素，移动到序列的最后。</p>
+<p>由于无论如何都要一遍一遍的便利未排序的数组，所以时间复杂度：$T&#x3D;\Theta(N^2)$</p>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法一</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMinHeap(A);               <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)  </span><br><span class="line">        TmpA[i] = DeleteMin(A); <span class="comment">// 时间复杂度为 O(logN)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">        A[i] = TmpA[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法一的步骤如下：</p>
+<ol>
+<li>建立一个最小堆</li>
+<li>将最小堆中的根逐步弹出，放入暂存数组中</li>
+<li>将原数组替换为排序后的数组</li>
+</ol>
+<p>算法一的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p>该算法的时间复杂度还能够接受，唯一的问题是，该算法需要开辟一个和待排序数组同等大小的数组。因此我们提出了算法，算法二更加节省空间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法二</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMaxHeap(A);            <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=N<span class="number">-1</span>;i&gt;<span class="number">0</span>;i--)  </span><br><span class="line">        Swap(&amp;A[<span class="number">0</span>], &amp;A[i]);     <span class="comment">// 将最大堆的根和该堆的最后一个元素交换位置</span></span><br><span class="line">        AdjustMaxHeep(A, i)     <span class="comment">// 将最后一个元素排除在外，将剩余部分调整为最大堆</span></span><br><span class="line">                                <span class="comment">// 该步的时间复杂度是 O(logN) 树高</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法二的步骤如下：</p>
+<ol>
+<li>建立一个最大堆</li>
+<li>将当前堆的根与堆的最后一个元素交换</li>
+<li>将被交换的根排除在堆外，将剩余元素重新调整为最大堆。</li>
+<li>如果堆只剩下一个元素，则终止</li>
+<li>回到 2</li>
+</ol>
+<p>算法二的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p>算法二相比于算法一不需要开辟额外的空间。</p>
+<p>另外，虽然堆排序的时间复杂度小于希尔排序，但是在实际应用中不如使用：希尔排序+Sedgewick增量</p>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><h3 id="有序子序列的归并"><a href="#有序子序列的归并" class="headerlink" title="有序子序列的归并"></a>有序子序列的归并</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-42.png" alt="Alt text"></p>
+<p>开三个指针，分别指向序列一元素、序列二元素、储存空间元素。然后比较序列一元素和序列二元素，将较小的存入储存空间，然后较小的序列指针加 1 、储存空间的指针加 1。</p>
+<p>由于需要把两个子序列都看一遍，所以时间复杂度是 $O(N)$</p>
+<p>后面的归并排序，将使用该算法合并两个有序序列。</p>
+<h3 id="归并排序的递归实现"><a href="#归并排序的递归实现" class="headerlink" title="归并排序的递归实现"></a>归并排序的递归实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序的递归实现</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">MSort</span><span class="params">(ElementType A[], ElementType TmpA[], <span class="type">int</span> L, <span class="type">int</span> RightEnd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> Center;</span><br><span class="line">    <span class="keyword">if</span>(RightEnd-L&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        Center = (L+RightEnd)/<span class="number">2</span>;</span><br><span class="line">        MSort(A, Tmp, L, Center);</span><br><span class="line">        MSort(A, Tmp, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">        Merge(A, TmpA, L, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将无序数组一分为二，分别对左侧数组和右侧数组排序，然后使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并他们。递归的解决这个问题。</p>
+<p>最好、最坏、平均时间复杂度是 $O(Nlog^N)$</p>
+<h3 id="归并排序的非递归算法"><a href="#归并排序的非递归算法" class="headerlink" title="归并排序的非递归算法"></a>归并排序的非递归算法</h3><p>将无序数组切分为单个元素，我们将单个元素看作有序序列，然后两两元素（有序序列）使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并，重复执行，直到合并所有序列为止。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-45.png" alt="Alt text"></p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Quicksort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(N&lt;<span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">    pivot = 从 A 中选择主元;</span><br><span class="line">    将 S = &#123; A[]\pivot &#125; 分为两个独立子集:</span><br><span class="line">        A1 = &#123; a 在 S 中，且 a 小于等于 pivot &#125;</span><br><span class="line">        A2 = &#123; a 在 S 中，且 a 大于 pivot &#125;</span><br><span class="line">    A[] = Quicksort(A1, N1) 并 &#123;pivot&#125; 并 Quicksort(A2, N2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>选择一个主元</li>
+<li>将小于主元的数构成一个集合，大于主元的数构成一个集合，分别对这两个集合进行快速排序</li>
+<li>然后再将小于主元的有序集合、主元、大于主元的有序集合合并在一起，完成排序</li>
+</ul>
+<p>快速排序有两个主要工作分别是：</p>
+<ul>
+<li>选主元：取头、中、尾三个元素的中位数作为主元</li>
+<li>子集划分：选好主元后，在数组的头尾分别定义两个指针，将指针中的内容与主元比较大小。当左侧指针找到比主元大的元素时，左侧指针停止移动，等待右侧指针找到比主元小的元素。当右侧指针找到比主元小的元素后，两个指针交换内容。如果直到两个指针相遇，右侧指针都没找到比主元小的元素，则交换右侧指针所指元素和主元。此时，以主元为界，将数组划分为大于主元的部分和小于主元的部分。</li>
+</ul>
+<p>时间复杂度分析：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/202002091953256.gif" alt="image"></p>
+<h2 id="对大数据元素排序"><a href="#对大数据元素排序" class="headerlink" title="对大数据元素排序"></a>对大数据元素排序</h2><ol>
+<li>表排序（间接排序）</li>
+</ol>
+<p>有时，需要被排序的数据元素很大，不方便被频繁的移动，因此，我们定义一个表记录各个元素的原始位置，然后对元素排序时只移动表中的记录。最后表中的序列标示着各个数据元素的正确位置。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-46.png" alt="Alt text"></p>
+<ol start="2">
+<li>物理排序</li>
+</ol>
+<p>在获得表排序的结果后，我们需要对元素进行移动，我们希望移动的次数越少越好。</p>
+<p>因此引入了“环”的概念，他表示一组需要交换位置的元素的集合。对每一个环进行排序后，总体上的时间复杂度是 $O(mN)$，其中 m 是元素移动的时间。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-47.png" alt="Alt text"></p>
+<p>图中，不同的元素代表不同的环。</p>
+<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>为所有可能的数值创建一个空位置，然后将需要排序的数组中的元素插入到对应的位置，最后从头到尾，将所有位置中的元素输出，即可得到排序。</p>
+<p>若需要被排序的元素个数为 N，可能出现的数值个数为 M，则整个排序过程，需要插入 N 次，最后输出结果时需要读取 M 次，因此，时间复杂度是 $O(M+N)$</p>
+<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>有时，可能出现的数值数量要远远大于我们需要排序的元素个数，这个时候，用桶排序就不划算了。因此提出了基数排序。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-48.png" alt="Alt text"></p>
+<p>上述基数排序的流程如下：</p>
+<ol>
+<li><p>首先基于个位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-49.png" alt="Alt text"></p>
+</li>
+<li><p>将排序后的序列作为新的需要排序的序列</p>
+</li>
+<li><p>基于十位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-50.png" alt="Alt text"></p>
+<p>由于 0、1、8 的十位都是 0 ，所以他们都按照顺序排在了 0 下面。其他数字也按照这样的规则进行排序。</p>
+</li>
+<li><p>将排序后的序列作为新的需要排序的序列<br>这里的新序列是 [0, 1, 8, 512, 216, 125, 27, 729, 343, 64]</p>
+</li>
+<li><p>基于百位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-51.png" alt="Alt text"></p>
+</li>
+<li><p>读出排序后的序列</p>
+</li>
+</ol>
+<p>时间复杂度：$O(P(N+B))$，P 为排序的次数，B 为桶的个数，N 为元素个数。当桶的个数（基数）足够少时，近似于线性时间复杂度。</p>
+<h2 id="各种排序的比较"><a href="#各种排序的比较" class="headerlink" title="各种排序的比较"></a>各种排序的比较</h2><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-43.png" alt="Alt text"></p>
+<h1 id="散列表（哈希表）"><a href="#散列表（哈希表）" class="headerlink" title="散列表（哈希表）"></a>散列表（哈希表）</h1><p>有一组元素，元素个数为 N ，还有一个可以存放元素的空表，表的长度为 M。设计一种函数，能够将待查找的元素映射到空表的一个位置。这个函数称为<strong>哈希函数</strong>。元素的长度与空表的长度之比 $\frac{N}{M}$ 称为<strong>装填因子</strong>。</p>
+<h2 id="哈希函数的选取方法"><a href="#哈希函数的选取方法" class="headerlink" title="哈希函数的选取方法"></a>哈希函数的选取方法</h2><h3 id="数字关键词"><a href="#数字关键词" class="headerlink" title="数字关键词"></a>数字关键词</h3><ul>
+<li>直接定值法：待查找元素统一减去某个元素</li>
+<li>除留余数法：将关键词进行求余运算，将被除数取为一个素数，能够让映射更为均匀</li>
+<li>数字分析法：分析元素的关键位。当数字的关键位存在明显差异时，就可以将关键位取出，然后使用一些方法映射到哈希表。</li>
+<li>折叠法：把关键词拆分成几个部分，然后叠加</li>
+<li>平方取中法：对关键词平方，然后取中间的几位数</li>
+</ul>
+<h3 id="字符关键词"><a href="#字符关键词" class="headerlink" title="字符关键词"></a>字符关键词</h3><ul>
+<li>考虑字符串的前三个字符，分别作为百位、十位、个位，然后分别乘以 32，字符可以通过左移五位实现乘以 32。</li>
+</ul>
+<h2 id="解决冲突的方法"><a href="#解决冲突的方法" class="headerlink" title="解决冲突的方法"></a>解决冲突的方法</h2><h3 id="开放地址法"><a href="#开放地址法" class="headerlink" title="开放地址法"></a>开放地址法</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-52.png" alt="Alt text"></p>
+<p>如果位置发生冲突，就按照一定规则找下一个位置。</p>
+<ul>
+<li><p>线性探测法</p>
+<ul>
+<li>原理：插入位置发生冲突时，逐次向下 $+i^2$ 寻找能够储存的位置。超出散列表范围则求余，回到散列表的开始。</li>
+<li>问题线性探测的问题是，当某一个位置发生冲突后，该位置的冲突会越来越多，产生聚集现象。</li>
+</ul>
+</li>
+<li><p>平方探测</p>
+<ul>
+<li>原理：插入位置发生冲突时，逐次向下 $\pm i^2$ 寻找能够储存的位置，加和减交替出现。超出散列表范围则求余，回到散列表的开始。</li>
+<li>问题：平方探测的问题是，由于它是跳跃着查找的，所以当冲突发生时，某一个可能的空位可能始终无法被探测到。</li>
+<li>解决方案：解决方法是，将散列表的长度设计为 $4k+3$，这样可以保证在探测的过程中，每一个位置都可以被找到。</li>
+</ul>
+</li>
+<li><p>双散列探测</p>
+<ul>
+<li>原理：设置两个<strong>散列函数</strong>，第一个散列函数用来第一次插入的位置计算。当位置发生冲突时，则使用第二个散列函数计算平移量，然后原始插入位置与平移量相加得到最终位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="分离链接法"><a href="#分离链接法" class="headerlink" title="分离链接法"></a>分离链接法</h3><p>将发生冲突的元素通过链表串在一起。</p>
+<p>分离链表法的装载因子可以大于 1.</p>
+<h2 id="散列表查找的效率评估"><a href="#散列表查找的效率评估" class="headerlink" title="散列表查找的效率评估"></a>散列表查找的效率评估</h2><p>影响散列表的查找效率的主要因素是<strong>冲突</strong>，而产生冲突的多少主要由下列三个方面决定：</p>
+<ul>
+<li>散列函数是否均匀</li>
+<li>处理冲突的方法</li>
+<li>散列表的装填因子 $\alpha$</li>
+</ul>
+<h3 id="效率的计算平均查找长度"><a href="#效率的计算平均查找长度" class="headerlink" title="效率的计算平均查找长度"></a>效率的计算平均查找长度</h3><ul>
+<li>成功平均查找长度(ASLs)<ul>
+<li>定义：查找散列表中存在的元素所需要的平均时间。</li>
+<li>计算：对所有的存在的元素的查找次数求平均。</li>
+</ul>
+</li>
+<li>不成功平均查找长度(ASLu)<ul>
+<li>定义：查找散列表中不存在的元素，所需要的平均时间。</li>
+<li>计算：将哈希表中不存在的所有数值情况，按照哈希函数映射的结果进行分类。每一个类别的查找次数是相同的。将所有类别的查找次数相加求平均即可。</li>
+</ul>
+</li>
+</ul>
+<h3 id="各种探测方法的查找性能"><a href="#各种探测方法的查找性能" class="headerlink" title="各种探测方法的查找性能"></a>各种探测方法的查找性能</h3><ul>
+<li><p>线性探测法的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-53.png" alt="Alt text"></p>
+<p>反应一般情况下的查找次数，可能与真实次数存在差异。</p>
+</li>
+<li><p>平方探测法和双散列探测法的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-54.png" alt="Alt text"></p>
+</li>
+<li><p>分离链接发的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-56.png" alt="Alt text"></p>
+</li>
+</ul>
+<h3 id="期望探测次数与装在因子的关系"><a href="#期望探测次数与装在因子的关系" class="headerlink" title="期望探测次数与装在因子的关系"></a>期望探测次数与装在因子的关系</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-55.png" alt="Alt text"></p>
+<p>可以看到，双散列探测法 和 平方探测法 优于 线性探测法。</p>
+<h1 id="KMP-算法（串匹配）"><a href="#KMP-算法（串匹配）" class="headerlink" title="KMP 算法（串匹配）"></a>KMP 算法（串匹配）</h1><ol>
+<li><p>什么是串</p>
+<ul>
+<li>线性储存的一组数据（默认是字符）</li>
+</ul>
+</li>
+<li><p>串的模式匹配</p>
+<ul>
+<li>给定一个字符串，给定一个模式，查找这个模式在字符串中出现的位置。</li>
+</ul>
+</li>
+</ol>
+<h2 id="KMP-算法"><a href="#KMP-算法" class="headerlink" title="KMP 算法"></a>KMP 算法</h2><p><img src="/.%5C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%5Cimage57.png" alt="Alt text"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 数据结构与算法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" rel="prev" title="计算机组成原理">
+                  <i class="fa fa-angle-left"></i> 计算机组成原理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/16/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E5%9F%BA%E7%A1%80IO/" rel="next" title="Linux文件编程-基础IO">
+                  Linux文件编程-基础IO <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
