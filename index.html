@@ -151,18 +151,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -187,6 +187,484 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/" class="post-title-link" itemprop="url">sql语言-查询语句</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-08-04 14:52:52 / Modified: 19:12:27" itemprop="dateCreated datePublished" datetime="2024-08-04T14:52:52+08:00">2024-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="基础查询"><a href="#基础查询" class="headerlink" title="基础查询"></a>基础查询</h1><h2 id="查询指定字段"><a href="#查询指定字段" class="headerlink" title="查询指定字段"></a>查询指定字段</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sno, sname <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在查询时加入一些计算"><a href="#在查询时加入一些计算" class="headerlink" title="在查询时加入一些计算"></a>在查询时加入一些计算</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname,<span class="number">2024</span><span class="operator">-</span>sage <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在查询时以小写显示字段"><a href="#在查询时以小写显示字段" class="headerlink" title="在查询时以小写显示字段"></a>在查询时以小写显示字段</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname, <span class="number">2024</span><span class="operator">-</span>sage, <span class="built_in">lower</span>(sdept) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="输出查询结果时为键值取别名"><a href="#输出查询结果时为键值取别名" class="headerlink" title="输出查询结果时为键值取别名"></a>输出查询结果时为键值取别名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意，别名不需要加引号</span></span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">as</span> 姓名, sage <span class="keyword">as</span> 年龄 <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="消除取值重复的行"><a href="#消除取值重复的行" class="headerlink" title="消除取值重复的行"></a>消除取值重复的行</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- distinct 关键字将查询结果去重</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> sno <span class="keyword">from</span> sc;</span><br></pre></td></tr></table></figure>
+
+<h2 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sc.sno 学号,course.cno 课程,sc.grade 分数 <span class="keyword">from</span> course,sc;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询满足条件的元组"><a href="#查询满足条件的元组" class="headerlink" title="查询满足条件的元组"></a>查询满足条件的元组</h1><h2 id="常用的查询条件"><a href="#常用的查询条件" class="headerlink" title="常用的查询条件"></a>常用的查询条件</h2><table>
+<thead>
+<tr>
+<th align="center">查询条件</th>
+<th align="center">谓词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">比较</td>
+<td align="center">&#x3D;,&gt;,&lt;,&gt;&#x3D;,&lt;&#x3D;,!&#x3D;,&lt;&gt;,!&gt;,!&lt;;NOT+上述比较运算符</td>
+</tr>
+<tr>
+<td align="center">确定范围</td>
+<td align="center">BETWEEN AND,NOT BETWEEN AND</td>
+</tr>
+<tr>
+<td align="center">确定集合</td>
+<td align="center">IN,NOT IN</td>
+</tr>
+<tr>
+<td align="center">字符匹配</td>
+<td align="center">LIKE,NOT LIKE</td>
+</tr>
+<tr>
+<td align="center">空值</td>
+<td align="center">IS NULL,IS NOT NULL</td>
+</tr>
+<tr>
+<td align="center">多重条件</td>
+<td align="center">AND,OR,NOT</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sdept<span class="operator">=</span><span class="string">&#x27;nothing&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lower"><a href="#lower" class="headerlink" title="lower"></a>lower</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> <span class="built_in">lower</span>(sdept)<span class="operator">=</span><span class="string">&#x27;nothing&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title="&lt;"></a>&lt;</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage<span class="operator">&lt;</span><span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="between-and"><a href="#between-and" class="headerlink" title="between and"></a>between and</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage<span class="operator">&gt;</span><span class="number">20</span> <span class="keyword">AND</span> sage<span class="operator">&lt;</span><span class="number">23</span>;</span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">23</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="like"><a href="#like" class="headerlink" title="like"></a>like</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- like 模糊匹配</span></span><br><span class="line"><span class="comment">-- like 可以使用的通配符如下：</span></span><br><span class="line"><span class="comment">-- % 表示任意个字符</span></span><br><span class="line"><span class="comment">-- _ 表示一个字符</span></span><br><span class="line"><span class="comment">-- [^abc] 不在字符列表中的任意一个字符</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="is-null"><a href="#is-null" class="headerlink" title="is null"></a>is null</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询NULL行</span></span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> s_entrance <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将查询结果排序，默认升序</span></span><br><span class="line"><span class="keyword">select</span> sno, grade <span class="keyword">from</span> sc <span class="keyword">order</span> <span class="keyword">by</span> grade;</span><br><span class="line"><span class="comment">-- 按照降序排列</span></span><br><span class="line"><span class="keyword">select</span> sno, grade <span class="keyword">from</span> sc <span class="keyword">order</span> <span class="keyword">by</span> grade <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 多个排序</span></span><br><span class="line"><span class="comment">-- 先按照 sdept 升序来排序，然后按照 sage 降序来排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">order</span> <span class="keyword">by</span> sdept, sage <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="对列进行函数处理"><a href="#对列进行函数处理" class="headerlink" title="对列进行函数处理"></a>对列进行函数处理</h1><h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><table>
+<thead>
+<tr>
+<th align="center">函数名</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">COUNT</td>
+<td align="center">统计列中的行数</td>
+</tr>
+<tr>
+<td align="center">SUM</td>
+<td align="center">求一列的和（必须为数值类型）</td>
+</tr>
+<tr>
+<td align="center">AVG</td>
+<td align="center">求一列的平均值（必须为数值类型）</td>
+</tr>
+<tr>
+<td align="center">MAX，MIN</td>
+<td align="center">求一列的最大最小值</td>
+</tr>
+</tbody></table>
+<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h2><h3 id="count"><a href="#count" class="headerlink" title="count"></a>count</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="AVG"><a href="#AVG" class="headerlink" title="AVG"></a>AVG</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">avg</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MAX-MIN"><a href="#MAX-MIN" class="headerlink" title="MAX, MIN"></a>MAX, MIN</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">max</span>(sage) <span class="keyword">from</span> student;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">min</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="SUM"><a href="#SUM" class="headerlink" title="SUM"></a>SUM</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">sum</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h1 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h1><h2 id="对数据进行分组统计"><a href="#对数据进行分组统计" class="headerlink" title="对数据进行分组统计"></a>对数据进行分组统计</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> cno, <span class="built_in">count</span>(sno) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> cno;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组后的筛选"><a href="#分组后的筛选" class="headerlink" title="分组后的筛选"></a>分组后的筛选</h2><p>分组前得筛选用 where，分组后的筛选用 having</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sno,<span class="built_in">count</span>(cno) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> cno <span class="keyword">having</span> <span class="built_in">count</span>(cno)<span class="operator">&gt;</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询平均成绩大于等于70分得学生的学号和平均成绩</span></span><br><span class="line"><span class="keyword">select</span> sno,<span class="built_in">avg</span>(grade) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> sno <span class="keyword">having</span> <span class="built_in">avg</span>(grade)<span class="operator">&gt;=</span><span class="number">70</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> student.sno, sc.cno <span class="keyword">from</span> student,sc <span class="keyword">where</span> student.sno<span class="operator">=</span>sc.sno;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 不同表进行链接</span></span><br><span class="line"><span class="comment">-- 查询所有选择了1号课程且分数在80分以上的学生的学号和姓名</span></span><br><span class="line"><span class="keyword">select</span> student.sno, student.sname <span class="keyword">from</span> student,sc <span class="keyword">where</span> student.sno<span class="operator">=</span>sc.sno <span class="keyword">and</span> sc.course<span class="operator">=</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> sc.grade<span class="operator">&gt;</span><span class="number">80</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 相同表进行链接</span></span><br><span class="line"><span class="comment">-- 查询哪些课程是先修课程</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> c2.cno <span class="keyword">from</span> course c1, course c2 <span class="keyword">where</span> c1.cpno<span class="operator">=</span>c2.cno;</span><br></pre></td></tr></table></figure>
+
+<h1 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h1>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E8%A1%A8%E7%9A%84%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E4%B8%8E%E4%BF%AE%E6%94%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E8%A1%A8%E7%9A%84%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E4%B8%8E%E4%BF%AE%E6%94%B9/" class="post-title-link" itemprop="url">sql语言简介</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-03 23:52:34" itemprop="dateCreated datePublished" datetime="2024-08-03T23:52:34+08:00">2024-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-08-04 14:50:24" itemprop="dateModified" datetime="2024-08-04T14:50:24+08:00">2024-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h1><h2 id="前置内容"><a href="#前置内容" class="headerlink" title="前置内容"></a>前置内容</h2><ol>
+<li><p>什么是主键</p>
+<ul>
+<li>主键可以唯一的标识一行，主键可以是多个键，主键具有唯一性</li>
+<li>PRIMARY KEY 是主键的关键字</li>
+<li>&lt;列名&gt; 类型 PRIMARY KEY， 这是在创建表时指定单主键的方式</li>
+<li>PRIMARY KEY(&lt;列名1&gt;, &lt;列名2&gt;) 该语句通常位于建表语句的最后，用来将多个列指定为主键</li>
+</ul>
+</li>
+<li><p>表的外联</p>
+<ul>
+<li>对表的键进行外联，将其连接到另一个表的列上，让该表的该键列中的值都在其外链的列中</li>
+<li>foreign key (&lt;键值1&gt;) references &lt;表名2&gt;(&lt;键名2&gt;)</li>
+</ul>
+</li>
+<li><p>数据类型</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据类型</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">char(n)</td>
+<td align="center">定长字符串</td>
+</tr>
+<tr>
+<td align="center">vachar(n)</td>
+<td align="center">最大长度为n的变长字符串</td>
+</tr>
+<tr>
+<td align="center">CLOB</td>
+<td align="center">字符串大对象</td>
+</tr>
+<tr>
+<td align="center">BLOB</td>
+<td align="center">二进制大对象</td>
+</tr>
+<tr>
+<td align="center">INT</td>
+<td align="center">四字节整形</td>
+</tr>
+<tr>
+<td align="center">SMALLINT</td>
+<td align="center">二字节整形</td>
+</tr>
+<tr>
+<td align="center">BIGINT</td>
+<td align="center">八字节整形</td>
+</tr>
+<tr>
+<td align="center">NUMERIC(p, d)</td>
+<td align="center">定点数，小数点前p位整数，小数点后d位小数</td>
+</tr>
+<tr>
+<td align="center">DEC(p, d)</td>
+<td align="center">与NUMERIC(p, d)相同</td>
+</tr>
+<tr>
+<td align="center">REAL</td>
+<td align="center">取决于机器的单精度浮点数</td>
+</tr>
+<tr>
+<td align="center">DOUBLE PRECISION</td>
+<td align="center">取决于机器的双精度浮点数</td>
+</tr>
+<tr>
+<td align="center">FLOAT(n)</td>
+<td align="center">可选精度的浮点数，精度至少为n位</td>
+</tr>
+<tr>
+<td align="center">BOOLEAN</td>
+<td align="center">逻辑量</td>
+</tr>
+<tr>
+<td align="center">DATE</td>
+<td align="center">年月日格式为YYYY-MM-DD</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">时分秒格式为HH:MM:SS</td>
+</tr>
+<tr>
+<td align="center">TIMESTAMP</td>
+<td align="center">时间戳类型</td>
+</tr>
+<tr>
+<td align="center">INTERVAL</td>
+<td align="center">时间间隔类型</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h2 id="创建表-1"><a href="#创建表-1" class="headerlink" title="创建表"></a>创建表</h2><ol>
+<li><p>建表的语句模式</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span></span><br><span class="line">(</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> [<span class="operator">&lt;</span>列约束条件<span class="operator">&gt;</span>],</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> [<span class="operator">&lt;</span>列约束条件<span class="operator">&gt;</span>],</span><br><span class="line">    ...</span><br><span class="line">    <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> <span class="operator">&lt;</span>数据类型<span class="operator">&gt;</span> [<span class="operator">&lt;</span>列约束条件<span class="operator">&gt;</span>],</span><br><span class="line">    [<span class="operator">&lt;</span>表约束条件<span class="operator">&gt;</span>]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>简单建表示例</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> student</span><br><span class="line">(</span><br><span class="line">    sno <span class="type">char</span>(<span class="number">9</span>) <span class="keyword">primary</span> key,</span><br><span class="line">    sname <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">unique</span>,</span><br><span class="line">    ssex <span class="type">char</span>(<span class="number">2</span>),</span><br><span class="line">    sage <span class="type">smallint</span>,</span><br><span class="line">    sdept <span class="type">char</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在创建表时进行外联</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- foreign key(&lt;键名1&gt;) references &lt;表名2&gt;(键名2);</span></span><br><span class="line"><span class="comment">-- 表示该表的键名1应该包含于表明2的键名2中，键名1是键名2的一员</span></span><br><span class="line"><span class="comment">-- 表名2可以与当前表相同，也就是说可以参考自己</span></span><br><span class="line"><span class="comment">-- 是一种存在性判断</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> course(</span><br><span class="line">cno <span class="type">char</span>(<span class="number">4</span>) <span class="keyword">primary</span> key,</span><br><span class="line">cname <span class="type">char</span>(<span class="number">40</span>),</span><br><span class="line">cpno <span class="type">char</span>(<span class="number">4</span>),</span><br><span class="line">ccredit <span class="type">smallint</span>,</span><br><span class="line"><span class="keyword">foreign</span> key(cpno) <span class="keyword">references</span> course(cno)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> sc(</span><br><span class="line">sno <span class="type">char</span>(<span class="number">9</span>),</span><br><span class="line">cno <span class="type">char</span>(<span class="number">4</span>),</span><br><span class="line">grade <span class="type">smallint</span>,</span><br><span class="line"><span class="keyword">primary</span> key (sno, cno),</span><br><span class="line"><span class="keyword">foreign</span> key (sno) <span class="keyword">references</span> student (sno),</span><br><span class="line"><span class="keyword">foreign</span> key (cno) <span class="keyword">references</span> course (cno)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="修改表的键"><a href="#修改表的键" class="headerlink" title="修改表的键"></a>修改表的键</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 添加 s_entrance 键</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">add</span> s_entrance <span class="type">date</span>;</span><br><span class="line"><span class="comment">-- 修改键的数据类型</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student modify sage <span class="type">int</span>;    <span class="comment">-- oracle</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student <span class="keyword">alter</span> <span class="keyword">column</span> sage <span class="type">int</span>; <span class="comment">-- mysql</span></span><br><span class="line"><span class="comment">-- 为键增加约束条件</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> course <span class="keyword">add</span> <span class="keyword">unique</span>(cname);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93/Oracle/oracle%E5%85%A5%E9%97%A801-%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E5%92%8C%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93/Oracle/oracle%E5%85%A5%E9%97%A801-%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E5%92%8C%E8%A1%A8/" class="post-title-link" itemprop="url">oracle入门01-准备一张表</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-03 23:33:51" itemprop="dateCreated datePublished" datetime="2024-08-03T23:33:51+08:00">2024-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-08-04 16:06:44" itemprop="dateModified" datetime="2024-08-04T16:06:44+08:00">2024-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="创建公共用户"><a href="#创建公共用户" class="headerlink" title="创建公共用户"></a>创建公共用户</h1><h2 id="链接数据库"><a href="#链接数据库" class="headerlink" title="链接数据库"></a>链接数据库</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\<span class="number">24687</span>&gt; sqlplus</span><br><span class="line"></span><br><span class="line">SQL*Plus: Release <span class="number">19</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span> - Production on 星期日 <span class="number">8</span>月 <span class="number">4</span> <span class="number">11</span>:<span class="number">42</span>:<span class="number">51</span> <span class="number">2024</span></span><br><span class="line">Version <span class="number">19</span>.<span class="number">3</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span></span><br><span class="line"></span><br><span class="line">Copyright (c) <span class="number">1982</span>, <span class="number">2019</span>, Oracle.  All rights reserved.</span><br><span class="line"></span><br><span class="line">请输入用户名:  sys as sysdba</span><br><span class="line">输入口令:</span><br><span class="line"></span><br><span class="line">连接到:</span><br><span class="line">Oracle Database <span class="number">19</span>c Enterprise Edition Release <span class="number">19</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span> - Production</span><br><span class="line">Version <span class="number">19</span>.<span class="number">3</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建新的共用用户名"><a href="#创建新的共用用户名" class="headerlink" title="创建新的共用用户名"></a>创建新的共用用户名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 公共用户名必须以C##开头</span></span><br><span class="line"><span class="comment">-- identified by 后面加用户密码</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> C##TEST identified <span class="keyword">by</span> <span class="number">1234</span>;</span><br><span class="line"><span class="comment">-- 授予登录权限</span></span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">create</span> session <span class="keyword">to</span> C##TEST;</span><br><span class="line"><span class="comment">-- 授予建表权限</span></span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">to</span> C##TEST;</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h1><h2 id="创建表并申请空间"><a href="#创建表并申请空间" class="headerlink" title="创建表并申请空间"></a>创建表并申请空间</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 链接用户</span></span><br><span class="line">conn C##TEST<span class="operator">/</span><span class="number">1234</span>;</span><br><span class="line"><span class="comment">-- 创建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student (</span><br><span class="line">sno <span class="type">char</span>(<span class="number">9</span>) <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">sname <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">UNIQUE</span>,</span><br><span class="line">ssex <span class="type">char</span>(<span class="number">2</span>),</span><br><span class="line">sdept <span class="type">char</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>此时，如果创建表失败，则需要在超级用户中为表空间申请内存。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 连接到超级用户</span></span><br><span class="line">conn<span class="operator">/</span><span class="keyword">as</span> sysdba;</span><br><span class="line"><span class="comment">-- 给表空间申请内存</span></span><br><span class="line"><span class="comment">-- quota 表示申请内存的大小</span></span><br><span class="line"><span class="comment">-- unlimited 表示申请的内存不限制大小</span></span><br><span class="line"><span class="comment">-- on 表示在哪一个表空间申请内存</span></span><br><span class="line"><span class="comment">-- users 表示默认表空间</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">user</span> C##TEST quota unlimited <span class="keyword">on</span> users;</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除表或用户"><a href="#删除表或用户" class="headerlink" title="删除表或用户"></a>删除表或用户</h1><h2 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 进入超级用户</span></span><br><span class="line">conn<span class="operator">/</span><span class="keyword">as</span> sysdba;</span><br><span class="line"><span class="comment">-- 删除用户</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> C##TEST;</span><br></pre></td></tr></table></figure>
+
+<h1 id="其他基础操作"><a href="#其他基础操作" class="headerlink" title="其他基础操作"></a>其他基础操作</h1><h2 id="查询所有用户"><a href="#查询所有用户" class="headerlink" title="查询所有用户"></a>查询所有用户</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 首先进入超级用户</span></span><br><span class="line">conn<span class="operator">/</span><span class="keyword">as</span> sysdba;</span><br><span class="line"><span class="comment">-- 查询所有用户</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> all_users;</span><br></pre></td></tr></table></figure>
+<h2 id="查询当前用户"><a href="#查询当前用户" class="headerlink" title="查询当前用户"></a>查询当前用户</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="让-oracle-在-sqlplus-中输出格式更好看"><a href="#让-oracle-在-sqlplus-中输出格式更好看" class="headerlink" title="让 oracle 在 sqlplus 中输出格式更好看"></a>让 oracle 在 sqlplus 中输出格式更好看</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> linesize <span class="number">160</span>;</span><br><span class="line"><span class="built_in">set</span> pagesize <span class="number">50</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="sqlplus-清空屏幕"><a href="#sqlplus-清空屏幕" class="headerlink" title="sqlplus 清空屏幕"></a>sqlplus 清空屏幕</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clear screen;</span><br></pre></td></tr></table></figure>
+
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><p>对oracle进行修改后需要提交修改才能生效。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1238,641 +1716,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="何先生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北国回忆录">
-      <meta itemprop="description" content="东拼西凑、杂七杂八">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 北国回忆录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">Linux多进程编程-守护进程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-09-21 13:20:18" itemprop="dateCreated datePublished" datetime="2023-09-21T13:20:18+08:00">2023-09-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-07-30 19:18:10" itemprop="dateModified" datetime="2024-07-30T19:18:10+08:00">2024-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="守护进程的特点"><a href="#守护进程的特点" class="headerlink" title="守护进程的特点"></a>守护进程的特点</h2><h4 id="具有超级用户权限"><a href="#具有超级用户权限" class="headerlink" title="具有超级用户权限"></a>具有超级用户权限</h4><h4 id="父进程是init进程"><a href="#父进程是init进程" class="headerlink" title="父进程是init进程"></a>父进程是init进程</h4><h4 id="不使用控制终端"><a href="#不使用控制终端" class="headerlink" title="不使用控制终端"></a>不使用控制终端</h4><h4 id="是各自进程组和会话过程的唯一进程"><a href="#是各自进程组和会话过程的唯一进程" class="headerlink" title="是各自进程组和会话过程的唯一进程"></a>是各自进程组和会话过程的唯一进程</h4><h2 id="编写守护进程的基本步骤"><a href="#编写守护进程的基本步骤" class="headerlink" title="编写守护进程的基本步骤"></a>编写守护进程的基本步骤</h2><h3 id="创建子进程，退出父进程"><a href="#创建子进程，退出父进程" class="headerlink" title="创建子进程，退出父进程"></a>创建子进程，退出父进程</h3><ul>
-<li>父进程先于子进程退出会变为孤儿进程</li>
-<li>孤儿进程会被init进程收养——<a href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E6%98%AFinit%E8%BF%9B%E7%A8%8B">父进程是init进程</a></li>
-</ul>
-<h3 id="在子进程中创建新对话"><a href="#在子进程中创建新对话" class="headerlink" title="在子进程中创建新对话"></a>在子进程中创建新对话</h3><ul>
-<li>setsid函数用于创建新会话，并担任该会话的组长——<a href="#%E6%98%AF%E5%90%84%E8%87%AA%E8%BF%9B%E7%A8%8B%E7%BB%84%E5%92%8C%E4%BC%9A%E8%AF%9D%E8%BF%87%E7%A8%8B%E7%9A%84%E5%94%AF%E4%B8%80%E8%BF%9B%E7%A8%8B">是各自进程组和会话过程的唯一进程</a></li>
-<li>setsid函数让进程摆脱原会话、原进程组和原控制终端的控制——<a href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%88%E7%AB%AF">不使用控制终端</a></li>
-<li>setsid函数使进程完全独立出来</li>
-</ul>
-<h3 id="改变当前目录为根目录"><a href="#改变当前目录为根目录" class="headerlink" title="改变当前目录为根目录"></a>改变当前目录为根目录</h3><p>试想，如果我们的守护进程的工作目录是在一个U盘里，那当我们要弹出U盘时，由于守护进程的存在我们会失败。因此，守护进程的工作目录需要修改为非移动设备上，比如我们的根目录。</p>
-<ul>
-<li>chdir函数可以更改进程的工作路径</li>
-</ul>
-<h3 id="重新设置文件权限掩码"><a href="#重新设置文件权限掩码" class="headerlink" title="重新设置文件权限掩码"></a>重新设置文件权限掩码</h3><ul>
-<li>子进程会继承原父进程的文件权限掩码</li>
-<li>给子进程使用文件带来麻烦</li>
-<li>函数umask(0)重设文件权限掩码</li>
-</ul>
-<blockquote>
-<p>umask(0)所获得的权限是将0取反在与创建文件时的权限相与。相当于保留了文件的创建时权限。</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th align="center">权限</th>
-<th align="center">八进制值</th>
-<th align="center">二进制值</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">—</td>
-<td align="center">0</td>
-<td align="center">000</td>
-<td align="center">没有权限</td>
-</tr>
-<tr>
-<td align="center">–x</td>
-<td align="center">1</td>
-<td align="center">001</td>
-<td align="center">只有执行权限</td>
-</tr>
-<tr>
-<td align="center">-w-</td>
-<td align="center">2</td>
-<td align="center">010</td>
-<td align="center">只有写权限</td>
-</tr>
-<tr>
-<td align="center">-wx</td>
-<td align="center">3</td>
-<td align="center">011</td>
-<td align="center">写入和执行权限</td>
-</tr>
-<tr>
-<td align="center">r–</td>
-<td align="center">4</td>
-<td align="center">100</td>
-<td align="center">只有阅读权限</td>
-</tr>
-<tr>
-<td align="center">r-x</td>
-<td align="center">5</td>
-<td align="center">101</td>
-<td align="center">读取和执行权限</td>
-</tr>
-<tr>
-<td align="center">rw-</td>
-<td align="center">6</td>
-<td align="center">110</td>
-<td align="center">读写权限</td>
-</tr>
-<tr>
-<td align="center">rwx</td>
-<td align="center">7</td>
-<td align="center">111</td>
-<td align="center">执行所有三项操作的权限，即读取、写入和执行</td>
-</tr>
-</tbody></table>
-<h3 id="关闭文件描述符"><a href="#关闭文件描述符" class="headerlink" title="关闭文件描述符"></a>关闭文件描述符</h3><ul>
-<li>子进程会继承父进程已打开的文件，但这些文件可能不再使用，但依旧占据系统资源</li>
-<li>比如标准输入输出和错误文件0,1,2，守护进程永远无法输出内容到屏幕，这三个文件失去作用</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);    <span class="comment">//关闭文件描述符, MAXFILE是系统能够提供的文件描述符的最大值</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>相关阅读：子进程能否访问父进程上锁的文件？<br>在操作系统中，Fork会创建一个与父进程几乎相同的子进程。这意味着子进程继承了父进程的许多属性，例如打开的文件描述符和虚拟内存。然而，在Fork后，子进程和父进程是两个完全独立的进程，它们共享的只有一个初始状态。因此，子进程不能继承父进程的锁。如果父进程在Fork之前持有一个锁，它会继续持有该锁，但是在子进程中，锁的状态将被重置。在子进程中，锁不再处于锁定状态，因此需要重新获取锁才能访问共享资源。此外，锁的互斥量被存储在内存中，子进程会得到它自己的内存副本，这意味着子进程和父进程中的锁不会是相同的锁。<br>因此，子进程需要重新获取锁才能访问共享资源。如果在父进程中的锁是一个进程之间共享的锁（例如POSIX 有名信号量），则可以再次打开该锁，使得父子进程都可以使用这个锁，但必须小心以避免锁的竞争条件。</p>
-</blockquote>
-<h3 id="让守护进程能够被退出"><a href="#让守护进程能够被退出" class="headerlink" title="让守护进程能够被退出"></a>让守护进程能够被退出</h3><ul>
-<li>使用kill命令来终止守护进程</li>
-<li>kill命令会向进程发送signal信号，我们需要让守护进程能够接收信号<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// SIGTERM是kill命令发出的信号</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<blockquote>
-<p>相关阅读：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55752775/article/details/130853402">Linux中的信号</a></p>
-</blockquote>
-<h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>         <span class="comment">// 包含 exit</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span>         <span class="comment">// 包含 strlen</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span>          <span class="comment">// 包含 open</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>      <span class="comment">// 包含 pid_t</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>         <span class="comment">// 包含 read, write, close, usleep, setsid, chdir</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span>         <span class="comment">// 包含 signal, SIGTERM</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span>       <span class="comment">// 包含 umask</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXFILE 1024        <span class="comment">// 使用ulimit -n命令查看</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">sig_atomic_t</span> _running = <span class="number">1</span>;     <span class="comment">// volatile告诉编译器，_running随时可能被更改。_running标志着我们守护进程的运行状态，1代表在运行，0代表需要终止。</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123;</span><br><span class="line">    _running = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pc;</span><br><span class="line">    <span class="type">int</span> fd, len;</span><br><span class="line">    <span class="type">char</span>* buf = <span class="string">&quot;This is a Dameon.\n&quot;</span>;</span><br><span class="line">    len = <span class="built_in">strlen</span>(buf);</span><br><span class="line">    pc = fork();                        <span class="comment">// **创建子进程**</span></span><br><span class="line">    <span class="keyword">if</span>(pc&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;ERROR: create process failed.\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pc&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;PID: %d\n&quot;</span>, pc);        <span class="comment">// 输出子进程PID</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);                        <span class="comment">// **退出父进程**</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">setsid</span>();                           <span class="comment">// **创建新会话**</span></span><br><span class="line">    <span class="built_in">chdir</span>(<span class="string">&quot;/&quot;</span>);                         <span class="comment">// **将工作目录转移到根目录**</span></span><br><span class="line">    <span class="built_in">umask</span>(<span class="number">0</span>);                           <span class="comment">// **重置文件权限掩码**</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">3</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);<span class="comment">// **关闭所有文件描述符**   //这里没有关闭标准输入输出和错误，方便我们debug。</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// **处理kill事件**</span></span><br><span class="line">    <span class="keyword">while</span>(_running)&#123;</span><br><span class="line">        fd = <span class="built_in">open</span>(<span class="string">&quot;/home/torch/code/linux-c++/clion/dameon.log&quot;</span>, O_CREAT|O_WRONLY|O_APPEND);    <span class="comment">// 文件不存在时创建，仅写入，追加</span></span><br><span class="line">        <span class="keyword">if</span>(fd&lt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">1</span>);                                                <span class="comment">// 文件打开失败</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">write</span>(fd, buf, len);</span><br><span class="line">        <span class="built_in">close</span>(fd);</span><br><span class="line">        <span class="built_in">usleep</span>(<span class="number">10</span>*<span class="number">1000</span>);                                            <span class="comment">// 10ms延时</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>将代码编译后用sudo权限执行——<a href="#%E5%85%B7%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">具有超级用户权限</a></p>
-<blockquote>
-<p>PID: 9259</p>
-</blockquote>
-<p>可以通过ps axj命令查看守护进程，可以找到我们的进程就在其中。可以使用sudo kill 9259杀死我们的进程。使用管理员权限打开dameon.log文件，可以看到里面的内容。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="何先生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北国回忆录">
-      <meta itemprop="description" content="东拼西凑、杂七杂八">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 北国回忆录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">Linux多进程编程-创建进程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-09-20 15:31:11" itemprop="dateCreated datePublished" datetime="2023-09-20T15:31:11+08:00">2023-09-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-07-30 19:18:24" itemprop="dateModified" datetime="2024-07-30T19:18:24+08:00">2024-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="进程的基础操作"><a href="#进程的基础操作" class="headerlink" title="进程的基础操作"></a>进程的基础操作</h2><h3 id="获得当前进程的PID"><a href="#获得当前进程的PID" class="headerlink" title="获得当前进程的PID"></a>获得当前进程的PID</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid = getpid();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;进程的PID是：%d\n&quot;</span>, pid);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>进程的PID是：4830</p>
-</blockquote>
-<h3 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h3><ol>
-<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">fork</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>该函数用于创建子进程，子进程被创建后复制父进程的程序内容和变量内容（但不共享变量内存，不继承文件锁），包括该fork函数。如果进程创建成功，在父进程中，fork函数的返回值为子进程的PID；在子进程中fork函数的返回值为0。看起来就像是fork有两个返回值一样。如果进程创建失败，子进程没有产生，父进程中的fork函数返回-1。</p>
-<ol start="2">
-<li>示例代码</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;                          <span class="comment">// 用以记录进程的PID</span></span><br><span class="line">    <span class="type">int</span> counter = <span class="number">0</span>;                    <span class="comment">// 用以证明子进程复制了父进程的程序，但并不是内存共享</span></span><br><span class="line"></span><br><span class="line">    pid = fork();                       <span class="comment">// 创建子进程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;                          <span class="comment">// 进程创建失败</span></span><br><span class="line">        cerr&lt;&lt; <span class="string">&quot;进程创建失败！&quot;</span>&lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;                    <span class="comment">// 该进程为子进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是子进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;                               <span class="comment">// 该进程为父进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是父进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; <span class="string">&quot;  我获得的子进程PID为：&quot;</span>&lt;&lt; pid&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;子进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;父进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>我是父进程，PID：7825  我获得的子进程PID为：7826<br>父进程中的counter：1<br>我是子进程，PID：7826<br>子进程中的counter：1    </p>
-</blockquote>
-<ol start="3">
-<li>分析</li>
-</ol>
-<p>可以看到，在父进程中我们所获得的子进程的PID和在子进程中所获得的PID是一致的(7826)。同时，子进程虽然在创建时拷贝了父进程的变量，但是，由于子进程与父进程之间不存在内存共享，所以在子进程和父进程中分别修改counter并不能互相影响。<strong>另外，子进程和父进程的执行并没有先后顺序，一切都取决于操作系统的调度策略。</strong></p>
-<h3 id="如何控制父进程与子进程的时序关系？"><a href="#如何控制父进程与子进程的时序关系？" class="headerlink" title="如何控制父进程与子进程的时序关系？"></a>如何控制父进程与子进程的时序关系？</h3><p>很多时候，我们希望子进程先行结束，然后再结束父进程。这样做有三点好处：</p>
-<ul>
-<li>能够确保交给子进程的任务在父进程结束之前完满完成。</li>
-<li>同时也可以避免父进程先行结束，子进程成为孤儿进程。</li>
-<li>在父进程中回收子进程的task_struct，以免子进程成为僵尸进程。</li>
-</ul>
-<p>在C\C++中，我们通过wait()或waitpid()函数来实现这一目的。wait()和waitpid()函数都能够阻塞调用他们的进程，直到接收到子进程的状态才会结束阻塞。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     阻塞父进程，等待任意一个子进程退出，停止阻塞并回收子进程资源</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @return          执行成功返回子进程的PID，失败返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">wait</span><span class="params">(<span class="type">int</span>* status)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     高配版wait，函数的行为由pid和options参数决定</span></span><br><span class="line"><span class="comment"> * @param pid       子进程的PID号</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @param options   函数控制选项</span></span><br><span class="line"><span class="comment"> * @return          由options的设定决定</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span>* status, <span class="type">int</span> options)</span>;</span><br></pre></td></tr></table></figure>
-
-<p>在waitpid()函数中，参数pid有以下几种状态：</p>
-<table>
-<thead>
-<tr>
-<th align="center">pid</th>
-<th align="center">意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">&gt;0</td>
-<td align="center">需要等待的子进程的PID号</td>
-</tr>
-<tr>
-<td align="center">&#x3D;0</td>
-<td align="center">等待与当前进程相同组的任何子进程进程</td>
-</tr>
-<tr>
-<td align="center">&#x3D;-1</td>
-<td align="center">等待任何子进程，与 wait() 相似</td>
-</tr>
-<tr>
-<td align="center">&lt;-1</td>
-<td align="center">等待进程组识别码为-pid的任何子进程</td>
-</tr>
-</tbody></table>
-<p>options参数设定与函数行为的对应关系如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">options</th>
-<th align="center">意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">WNOHANG</td>
-<td align="center"><strong>非阻塞</strong>形式：若pid表示的子进程没有结束，则不予等待，返回0；若结束，则返回该子进程进程PID。发生错误返回-1。</td>
-</tr>
-<tr>
-<td align="center">WUNTRACED</td>
-<td align="center">若pid表示的子进程进入暂停状态，则立即返回子进程PID；若子进程处于结束状态，则不予理会。发生错误返回-1。</td>
-</tr>
-</tbody></table>
-<h3 id="替换进程"><a href="#替换进程" class="headerlink" title="替换进程"></a>替换进程</h3><ol>
-<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execle</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ..., <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">execv</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvpe</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[], <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>exec函数族同样可以创建进程，与fork不同的是，exec创建的进程会取代父进程，甚至会占有父进程的PID，实打实的进程界的“鬼上身”。exec函数族中常用的两个函数分别是execl和execlp，下面将通过实例详细介绍。</p>
-<ul>
-<li>execl</li>
-</ul>
-<p>execl的第一个参数是执行文件的路径，第二个参数是该执行文件所需的输入（执行文件传参），和我们main(int argc, char** argv)中的argv部分一样，执行文件传参的第一个参数argv[0]一般是文件名（可以是任何字符，一般设置为文件名或命令名）。从第二个参数argv[1]起才是真正能够在执行文件中发挥作用的参数。当argv中出现NULL时则认为传参结束。一般情况下，执行文件都需要一个argv[0]文件名参数，也就是说argv至少需要一个非null参数（就是我们说的文件名），否则不能正确执行。<br>函数执行成功时无返回值，执行失败时返回-1.</p>
-<p><strong>$ 执行一个不需要传参的执行文件</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;==========================&quot;</span>&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
-</blockquote>
-<p>在这个例子中，我们执行了pwd命令，他是一个不需要参数的命令，因此我们的argv[0]为命令名，并没有实际作用，但必须要有；argv[1]为NULL，表示传参结束。另外，程序并没有输出一串”&#x3D;”号，说明程序被替换为了pwd命令，原来的程序已经不存在了。</p>
-<p><strong>$ 执行一个需要传参的执行文件</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/ls&quot;</span>, <span class="string">&quot;ls -al&quot;</span>, <span class="string">&quot;-al&quot;</span>, <span class="string">&quot;/etc/passwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
-</blockquote>
-<p>在这个例子中，我们执行了ls -al &#x2F;etc&#x2F;passwd命令，所以我们的argv[0]为”ls -al”并没有实际作用，但必须要有；argv[1]为”-al”，argv[2]为”&#x2F;etc&#x2F;passwd”，argv[3]为NULL，表示传参结束。</p>
-<p><strong>$ 如果argv没有任何参数会发生什么？</strong></p>
-<p>我们首先写一个被执行程序，并把他编译为test.out，然后执行</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * file name: test.cpp</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;argc: &quot;</span>&lt;&lt; argc&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;argc;i++)&#123;</span><br><span class="line">        cout&lt;&lt; argv[i]&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>argc: 1<br>.&#x2F;test.out</p>
-</blockquote>
-<p>系统自动传递了一个文件名参数给我们的程序，因此检测到一个参数，参数为文件名。</p>
-<p>我们再写一个程序通过execl函数执行我们的test.out</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>argc：1    </p>
-</blockquote>
-<p>可以看到，当我们不传递任何参数给执行文件时，编译时会给我们警告，并且函数会自动传递一个空字符参数给我们的执行文件。我们对程序进行修改：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="string">&quot;test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>argc：1<br>test.out</p>
-</blockquote>
-<p>此时编译器不再发出警告，test.out获得了我们传递给他的”test.out”字符串。</p>
-<ul>
-<li>execlp</li>
-</ul>
-<p>execlp的第一个参数是环境变量中的文件名，第二个参数和execl一致。相比于execl，execlp专门用来执行已经加入到环境变量中的程序。</p>
-<p><strong>$ 示例</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execlp</span>(<span class="string">&quot;pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="何先生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北国回忆录">
-      <meta itemprop="description" content="东拼西凑、杂七杂八">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 北国回忆录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" class="post-title-link" itemprop="url">Linux文件编程-C++</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-09-19 15:57:48" itemprop="dateCreated datePublished" datetime="2023-09-19T15:57:48+08:00">2023-09-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-07-30 19:20:21" itemprop="dateModified" datetime="2024-07-30T19:20:21+08:00">2024-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="流的概念"><a href="#流的概念" class="headerlink" title="流的概念"></a>流的概念</h2><p>在C++语言中，数据的输入和输出（I&#x2F;O）包括对标准输入设备（键盘）和标准输出设备（显示器）、外存磁盘文件、内存中指定字符串储存空间进行输入和输出三个方面，分别简称为标准I&#x2F;O，文件I&#x2F;O，串I&#x2F;O。C++将写入文件和读取文件抽象的说为<strong>文件流</strong>，三种I&#x2F;O对应着三种文件流，分别是标准I&#x2F;O流，文件I&#x2F;O流和字符串I&#x2F;O流。</p>
-<table>
-<thead>
-<tr>
-<th align="center">流</th>
-<th align="center">解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">标准I&#x2F;O流</td>
-<td align="center">内存与标准输入输出设备之间的信息传递</td>
-</tr>
-<tr>
-<td align="center">文件I&#x2F;O流</td>
-<td align="center">内存与外部文件之间的信息传递</td>
-</tr>
-<tr>
-<td align="center">字符串I&#x2F;O流</td>
-<td align="center">内存变量与表示字符串流的数组之间的传递</td>
-</tr>
-</tbody></table>
-<h2 id="流的类库"><a href="#流的类库" class="headerlink" title="流的类库"></a>流的类库</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th align="center">头文件’&lt;fstream&gt;‘所提供的文件流</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">ifstream</td>
-<td align="center">输入文件流，用于从文件读取信息</td>
-</tr>
-<tr>
-<td align="center">ofstream</td>
-<td align="center">输出文件流，用于创建文件和向文件写入信息</td>
-</tr>
-<tr>
-<td align="center">fstream</td>
-<td align="center">文件流，包含输入文件流和输出文件流的功能</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>虽然fstream看起来很全能，但是实际应用中并不好用。ifstream和ofstream再打开文件时如果文件不存在则会创建文件，而fstream当文件不存在时虽然不报错，但是后续对文件的操作无法生效。</p>
-</blockquote>
-<h2 id="流操作"><a href="#流操作" class="headerlink" title="流操作"></a>流操作</h2><blockquote>
-<p>所有代码都是示意代码，并不能运行。</p>
-</blockquote>
-<h3 id="基础文件I-O"><a href="#基础文件I-O" class="headerlink" title="基础文件I&#x2F;O"></a>基础文件I&#x2F;O</h3><p>这里我们以ifstream为例，ofstream具有相同的成员函数和操作方式。</p>
-<ul>
-<li><p>打开文件</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一种打开文件的方式——构造函数</span></span><br><span class="line"><span class="function">ifstream <span class="title">infile</span><span class="params">(file_name, open_mode)</span></span>;</span><br><span class="line"><span class="comment">// 第二种打开文件的方式——成员函数</span></span><br><span class="line">ifstream infile;</span><br><span class="line">infile.<span class="built_in">open</span>(file_name, open_mode);</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th align="center">open_mode[^1]</th>
-<th align="center">速记</th>
-<th align="center">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">ios::out</td>
-<td align="center">output (输出)</td>
-<td align="center">指定文件的打开方式为写入，一般为必要参数，但在使用 ofstream 对象时，为默认参数</td>
-</tr>
-<tr>
-<td align="center">ios::app</td>
-<td align="center">append (添加)</td>
-<td align="center">当打开文件用于写入时，会在已有数据之后写入，不覆盖原有内容。使用此种打开方式，每次写入都会置于文件末尾，即便之前更改了位置。</td>
-</tr>
-<tr>
-<td align="center">ios::trunc</td>
-<td align="center">truncate (截断)</td>
-<td align="center">当打开文件时，如果文件存在内容则清空文件内容</td>
-</tr>
-<tr>
-<td align="center">ios::ate</td>
-<td align="center">at end (在结束处)</td>
-<td align="center">以写入方式打开文件，并将文件指针置于末尾。与 ios::app不同之处为，如果改变了指针位置，写入不一定会在文件末尾</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>判断文件是否打开成功</p>
-</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line">infile.<span class="built_in">open</span>(file_name, open_mode);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一种</span></span><br><span class="line"><span class="keyword">if</span>(infile) &#123;<span class="comment">/*文件打开成功*/</span>&#125;;</span><br><span class="line"><span class="comment">// 第二种</span></span><br><span class="line"><span class="keyword">if</span>(infile.<span class="built_in">is_open</span>()) &#123;<span class="comment">/*文件打开成功*/</span>&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>关闭文件</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">close</span>();</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>读取文件</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span>       <span class="comment">// getline函数需要包含头文件</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取一行内容，遇到\n停止，读取成功返回true，遇到文件结尾返回false</span></span><br><span class="line"><span class="built_in">getline</span>(infile, <span class="type">char</span>* c);</span><br><span class="line"><span class="comment">// 读取一个字符，读取成功返回true，遇到文件结尾返回false</span></span><br><span class="line">infile.<span class="built_in">get</span>(<span class="type">char</span> c);</span><br><span class="line"><span class="comment">// 读取内容直到分隔符（空格、换行...）</span></span><br><span class="line">infile&gt;&gt; <span class="type">char</span>* c;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>写入文件</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入字符串c中的全部内容</span></span><br><span class="line">outfile&lt;&lt; <span class="type">char</span>* c;</span><br><span class="line"><span class="comment">// 写入一个字符</span></span><br><span class="line">outfile.<span class="built_in">put</span>(<span class="type">char</span> c);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>获取文件偏移量</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ofstream和ifstream的获取文件偏移的方法不可混用</span></span><br><span class="line"><span class="comment">// 两个函数都返回所处位置处的字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">tellp</span>();</span><br><span class="line">infile.<span class="built_in">tellg</span>();</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>设置文件偏移量</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ofstream和ifstream的设置文件偏移的方法不可混用</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streampos pos);                       <span class="comment">// pos为字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streamoff off, ios::seek_dir dir);    <span class="comment">// dir为起始搜索位置，off为相对于dir向文件末尾的偏移量</span></span><br><span class="line"></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streampos pos);                       <span class="comment">// pos为字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streamoff off, ios::seek_dir dir);    <span class="comment">// dir为起始搜索位置，off为相对于dir向文件末尾的偏移量</span></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th align="center">dir</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">ios::beg</td>
-<td align="center">文件流的起始位置（默认值）</td>
-</tr>
-<tr>
-<td align="center">ios::cur</td>
-<td align="center">文件流的当前位置</td>
-</tr>
-<tr>
-<td align="center">ios::end</td>
-<td align="center">文件流的结束位置</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>由于ios是ifstream和ofstream的一个父类，所以也可以使用ifstream::beg等来使用这些枚举</p>
-</blockquote>
-<ul>
-<li>文件状态判断</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读写的过程中出错则返回true</span></span><br><span class="line">infile.<span class="built_in">bad</span>();</span><br><span class="line"><span class="comment">// 包含bad的情况，另外，读入的数据与容器格式不符时也会报错，例如想读入一个整数却得到一个字母</span></span><br><span class="line">infile.<span class="built_in">fail</span>();</span><br><span class="line"><span class="comment">// 文件达到末尾时返回true</span></span><br><span class="line">infile.<span class="built_in">eof</span>();</span><br><span class="line"><span class="comment">// 文件没有读写和格式不符错误，且没有达到文件末尾。即fail和eof都是false时，该函数为true</span></span><br><span class="line">infile.<span class="built_in">good</span>();</span><br></pre></td></tr></table></figure>
-
-<h3 id="更精细的文件I-O"><a href="#更精细的文件I-O" class="headerlink" title="更精细的文件I&#x2F;O"></a>更精细的文件I&#x2F;O</h3><ul>
-<li>获得文件的大小</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>如若想获得某一部分的大小，则可以该部分内容的起始位置和终止位置的序号相减。</p>
-</blockquote>
-<ul>
-<li>将文件读入内存</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* buffer = <span class="keyword">new</span> <span class="type">char</span>[file_length];</span><br><span class="line">infile.<span class="built_in">read</span>(buffer, file_length);</span><br><span class="line"><span class="keyword">delete</span>[] buffer;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将内存写入文件</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 先将内容读入到内存中</span></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* buffer = <span class="keyword">new</span> <span class="type">char</span>[file_length];</span><br><span class="line">infile.<span class="built_in">read</span>(buffer, file_length);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再将内容写入到文件中</span></span><br><span class="line">ofstream outfile;</span><br><span class="line">outfile.<span class="built_in">write</span>(buffer, file_length);</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[] buffer;</span><br></pre></td></tr></table></figure>
-
-
-<p>[^1]:<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44488341/article/details/131466397">【C++】标准库 - 文件的读写 ifstream, ofstream, fstream</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基础查询查询指定字段1select sno, sname from student;  在查询时加入一些计算1select sname,2024-sage from student;  在查询时以小写显示字段1select sname, 2024-sage, lower(sdept) from student;  输出查询结果时为键值取别名12-- 注意，别名不需要加引号select sname">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql语言-查询语句">
+<meta property="og:url" content="http://example.com/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/index.html">
+<meta property="og:site_name" content="北国回忆录">
+<meta property="og:description" content="基础查询查询指定字段1select sno, sname from student;  在查询时加入一些计算1select sname,2024-sage from student;  在查询时以小写显示字段1select sname, 2024-sage, lower(sdept) from student;  输出查询结果时为键值取别名12-- 注意，别名不需要加引号select sname">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-04T06:52:52.000Z">
+<meta property="article:modified_time" content="2024-08-04T11:12:27.853Z">
+<meta property="article:author" content="何先生">
+<meta property="article:tag" content="SQL语言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/","path":"2024/08/04/数据库/SQL语言/sql语言-查询语句/","title":"sql语言-查询语句"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sql语言-查询语句 | 北国回忆录</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">北国回忆录</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">北国的冬日尚有余温</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">基础查询</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5"><span class="nav-number">1.1.</span> <span class="nav-text">查询指定字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%9F%A5%E8%AF%A2%E6%97%B6%E5%8A%A0%E5%85%A5%E4%B8%80%E4%BA%9B%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">在查询时加入一些计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%9F%A5%E8%AF%A2%E6%97%B6%E4%BB%A5%E5%B0%8F%E5%86%99%E6%98%BE%E7%A4%BA%E5%AD%97%E6%AE%B5"><span class="nav-number">1.3.</span> <span class="nav-text">在查询时以小写显示字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C%E6%97%B6%E4%B8%BA%E9%94%AE%E5%80%BC%E5%8F%96%E5%88%AB%E5%90%8D"><span class="nav-number">1.4.</span> <span class="nav-text">输出查询结果时为键值取别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E9%99%A4%E5%8F%96%E5%80%BC%E9%87%8D%E5%A4%8D%E7%9A%84%E8%A1%8C"><span class="nav-number">1.5.</span> <span class="nav-text">消除取值重复的行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.6.</span> <span class="nav-text">多表查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%BB%A1%E8%B6%B3%E6%9D%A1%E4%BB%B6%E7%9A%84%E5%85%83%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">查询满足条件的元组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">常用的查询条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#where"><span class="nav-number">2.2.1.</span> <span class="nav-text">where</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lower"><span class="nav-number">2.2.2.</span> <span class="nav-text">lower</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.3.</span> <span class="nav-text">&lt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#between-and"><span class="nav-number">2.2.4.</span> <span class="nav-text">between and</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#like"><span class="nav-number">2.2.5.</span> <span class="nav-text">like</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#is-null"><span class="nav-number">2.2.6.</span> <span class="nav-text">is null</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order-by"><span class="nav-number">2.2.7.</span> <span class="nav-text">order by</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E5%88%97%E8%BF%9B%E8%A1%8C%E5%87%BD%E6%95%B0%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">对列进行函数处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">常用函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">3.2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#count"><span class="nav-number">3.2.1.</span> <span class="nav-text">count</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AVG"><span class="nav-number">3.2.2.</span> <span class="nav-text">AVG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAX-MIN"><span class="nav-number">3.2.3.</span> <span class="nav-text">MAX, MIN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUM"><span class="nav-number">3.2.4.</span> <span class="nav-text">SUM</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#group-by"><span class="nav-number">4.</span> <span class="nav-text">group by</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1"><span class="nav-number">4.1.</span> <span class="nav-text">对数据进行分组统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%90%8E%E7%9A%84%E7%AD%9B%E9%80%89"><span class="nav-number">4.2.</span> <span class="nav-text">分组后的筛选</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.</span> <span class="nav-text">内连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">外连接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">何先生</p>
+  <div class="site-description" itemprop="description">东拼西凑、杂七杂八</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Torch-HXM" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Torch-HXM" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hxm_htjt@163.com" title="E-Mail → mailto:hxm_htjt@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/08/04/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="sql语言-查询语句 | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sql语言-查询语句
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-08-04 14:52:52 / Modified: 19:12:27" itemprop="dateCreated datePublished" datetime="2024-08-04T14:52:52+08:00">2024-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="基础查询"><a href="#基础查询" class="headerlink" title="基础查询"></a>基础查询</h1><h2 id="查询指定字段"><a href="#查询指定字段" class="headerlink" title="查询指定字段"></a>查询指定字段</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sno, sname <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在查询时加入一些计算"><a href="#在查询时加入一些计算" class="headerlink" title="在查询时加入一些计算"></a>在查询时加入一些计算</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname,<span class="number">2024</span><span class="operator">-</span>sage <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在查询时以小写显示字段"><a href="#在查询时以小写显示字段" class="headerlink" title="在查询时以小写显示字段"></a>在查询时以小写显示字段</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname, <span class="number">2024</span><span class="operator">-</span>sage, <span class="built_in">lower</span>(sdept) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="输出查询结果时为键值取别名"><a href="#输出查询结果时为键值取别名" class="headerlink" title="输出查询结果时为键值取别名"></a>输出查询结果时为键值取别名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注意，别名不需要加引号</span></span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">as</span> 姓名, sage <span class="keyword">as</span> 年龄 <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="消除取值重复的行"><a href="#消除取值重复的行" class="headerlink" title="消除取值重复的行"></a>消除取值重复的行</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- distinct 关键字将查询结果去重</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> sno <span class="keyword">from</span> sc;</span><br></pre></td></tr></table></figure>
+
+<h2 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sc.sno 学号,course.cno 课程,sc.grade 分数 <span class="keyword">from</span> course,sc;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询满足条件的元组"><a href="#查询满足条件的元组" class="headerlink" title="查询满足条件的元组"></a>查询满足条件的元组</h1><h2 id="常用的查询条件"><a href="#常用的查询条件" class="headerlink" title="常用的查询条件"></a>常用的查询条件</h2><table>
+<thead>
+<tr>
+<th align="center">查询条件</th>
+<th align="center">谓词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">比较</td>
+<td align="center">&#x3D;,&gt;,&lt;,&gt;&#x3D;,&lt;&#x3D;,!&#x3D;,&lt;&gt;,!&gt;,!&lt;;NOT+上述比较运算符</td>
+</tr>
+<tr>
+<td align="center">确定范围</td>
+<td align="center">BETWEEN AND,NOT BETWEEN AND</td>
+</tr>
+<tr>
+<td align="center">确定集合</td>
+<td align="center">IN,NOT IN</td>
+</tr>
+<tr>
+<td align="center">字符匹配</td>
+<td align="center">LIKE,NOT LIKE</td>
+</tr>
+<tr>
+<td align="center">空值</td>
+<td align="center">IS NULL,IS NOT NULL</td>
+</tr>
+<tr>
+<td align="center">多重条件</td>
+<td align="center">AND,OR,NOT</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sdept<span class="operator">=</span><span class="string">&#x27;nothing&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lower"><a href="#lower" class="headerlink" title="lower"></a>lower</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> <span class="built_in">lower</span>(sdept)<span class="operator">=</span><span class="string">&#x27;nothing&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title="&lt;"></a>&lt;</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage<span class="operator">&lt;</span><span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="between-and"><a href="#between-and" class="headerlink" title="between and"></a>between and</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage<span class="operator">&gt;</span><span class="number">20</span> <span class="keyword">AND</span> sage<span class="operator">&lt;</span><span class="number">23</span>;</span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> sage <span class="keyword">between</span> <span class="number">20</span> <span class="keyword">and</span> <span class="number">23</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="like"><a href="#like" class="headerlink" title="like"></a>like</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- like 模糊匹配</span></span><br><span class="line"><span class="comment">-- like 可以使用的通配符如下：</span></span><br><span class="line"><span class="comment">-- % 表示任意个字符</span></span><br><span class="line"><span class="comment">-- _ 表示一个字符</span></span><br><span class="line"><span class="comment">-- [^abc] 不在字符列表中的任意一个字符</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="is-null"><a href="#is-null" class="headerlink" title="is null"></a>is null</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询NULL行</span></span><br><span class="line"><span class="keyword">select</span> sname <span class="keyword">from</span> student <span class="keyword">where</span> s_entrance <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将查询结果排序，默认升序</span></span><br><span class="line"><span class="keyword">select</span> sno, grade <span class="keyword">from</span> sc <span class="keyword">order</span> <span class="keyword">by</span> grade;</span><br><span class="line"><span class="comment">-- 按照降序排列</span></span><br><span class="line"><span class="keyword">select</span> sno, grade <span class="keyword">from</span> sc <span class="keyword">order</span> <span class="keyword">by</span> grade <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 多个排序</span></span><br><span class="line"><span class="comment">-- 先按照 sdept 升序来排序，然后按照 sage 降序来排序</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student <span class="keyword">order</span> <span class="keyword">by</span> sdept, sage <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="对列进行函数处理"><a href="#对列进行函数处理" class="headerlink" title="对列进行函数处理"></a>对列进行函数处理</h1><h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><table>
+<thead>
+<tr>
+<th align="center">函数名</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">COUNT</td>
+<td align="center">统计列中的行数</td>
+</tr>
+<tr>
+<td align="center">SUM</td>
+<td align="center">求一列的和（必须为数值类型）</td>
+</tr>
+<tr>
+<td align="center">AVG</td>
+<td align="center">求一列的平均值（必须为数值类型）</td>
+</tr>
+<tr>
+<td align="center">MAX，MIN</td>
+<td align="center">求一列的最大最小值</td>
+</tr>
+</tbody></table>
+<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h2><h3 id="count"><a href="#count" class="headerlink" title="count"></a>count</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="AVG"><a href="#AVG" class="headerlink" title="AVG"></a>AVG</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">avg</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MAX-MIN"><a href="#MAX-MIN" class="headerlink" title="MAX, MIN"></a>MAX, MIN</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">max</span>(sage) <span class="keyword">from</span> student;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">min</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h3 id="SUM"><a href="#SUM" class="headerlink" title="SUM"></a>SUM</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">sum</span>(sage) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h1 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h1><h2 id="对数据进行分组统计"><a href="#对数据进行分组统计" class="headerlink" title="对数据进行分组统计"></a>对数据进行分组统计</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> cno, <span class="built_in">count</span>(sno) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> cno;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组后的筛选"><a href="#分组后的筛选" class="headerlink" title="分组后的筛选"></a>分组后的筛选</h2><p>分组前得筛选用 where，分组后的筛选用 having</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sno,<span class="built_in">count</span>(cno) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> cno <span class="keyword">having</span> <span class="built_in">count</span>(cno)<span class="operator">&gt;</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询平均成绩大于等于70分得学生的学号和平均成绩</span></span><br><span class="line"><span class="keyword">select</span> sno,<span class="built_in">avg</span>(grade) <span class="keyword">from</span> sc <span class="keyword">group</span> <span class="keyword">by</span> sno <span class="keyword">having</span> <span class="built_in">avg</span>(grade)<span class="operator">&gt;=</span><span class="number">70</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> student.sno, sc.cno <span class="keyword">from</span> student,sc <span class="keyword">where</span> student.sno<span class="operator">=</span>sc.sno;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 不同表进行链接</span></span><br><span class="line"><span class="comment">-- 查询所有选择了1号课程且分数在80分以上的学生的学号和姓名</span></span><br><span class="line"><span class="keyword">select</span> student.sno, student.sname <span class="keyword">from</span> student,sc <span class="keyword">where</span> student.sno<span class="operator">=</span>sc.sno <span class="keyword">and</span> sc.course<span class="operator">=</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> sc.grade<span class="operator">&gt;</span><span class="number">80</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 相同表进行链接</span></span><br><span class="line"><span class="comment">-- 查询哪些课程是先修课程</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> c2.cno <span class="keyword">from</span> course c1, course c2 <span class="keyword">where</span> c1.cpno<span class="operator">=</span>c2.cno;</span><br></pre></td></tr></table></figure>
+
+<h1 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h1>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SQL%E8%AF%AD%E8%A8%80/" rel="tag"><i class="fa fa-tag"></i> SQL语言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%E8%AF%AD%E8%A8%80/sql%E8%AF%AD%E8%A8%80-%E8%A1%A8%E7%9A%84%E5%AE%9A%E4%B9%89%E5%88%A0%E9%99%A4%E4%B8%8E%E4%BF%AE%E6%94%B9/" rel="prev" title="sql语言简介">
+                  <i class="fa fa-angle-left"></i> sql语言简介
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">何先生</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

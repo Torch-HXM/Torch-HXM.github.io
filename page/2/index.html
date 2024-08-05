@@ -151,18 +151,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -187,6 +187,639 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/09/21/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">Linux多进程编程-守护进程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-21 13:20:18" itemprop="dateCreated datePublished" datetime="2023-09-21T13:20:18+08:00">2023-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:18:10" itemprop="dateModified" datetime="2024-07-30T19:18:10+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="守护进程的特点"><a href="#守护进程的特点" class="headerlink" title="守护进程的特点"></a>守护进程的特点</h2><h4 id="具有超级用户权限"><a href="#具有超级用户权限" class="headerlink" title="具有超级用户权限"></a>具有超级用户权限</h4><h4 id="父进程是init进程"><a href="#父进程是init进程" class="headerlink" title="父进程是init进程"></a>父进程是init进程</h4><h4 id="不使用控制终端"><a href="#不使用控制终端" class="headerlink" title="不使用控制终端"></a>不使用控制终端</h4><h4 id="是各自进程组和会话过程的唯一进程"><a href="#是各自进程组和会话过程的唯一进程" class="headerlink" title="是各自进程组和会话过程的唯一进程"></a>是各自进程组和会话过程的唯一进程</h4><h2 id="编写守护进程的基本步骤"><a href="#编写守护进程的基本步骤" class="headerlink" title="编写守护进程的基本步骤"></a>编写守护进程的基本步骤</h2><h3 id="创建子进程，退出父进程"><a href="#创建子进程，退出父进程" class="headerlink" title="创建子进程，退出父进程"></a>创建子进程，退出父进程</h3><ul>
+<li>父进程先于子进程退出会变为孤儿进程</li>
+<li>孤儿进程会被init进程收养——<a href="#%E7%88%B6%E8%BF%9B%E7%A8%8B%E6%98%AFinit%E8%BF%9B%E7%A8%8B">父进程是init进程</a></li>
+</ul>
+<h3 id="在子进程中创建新对话"><a href="#在子进程中创建新对话" class="headerlink" title="在子进程中创建新对话"></a>在子进程中创建新对话</h3><ul>
+<li>setsid函数用于创建新会话，并担任该会话的组长——<a href="#%E6%98%AF%E5%90%84%E8%87%AA%E8%BF%9B%E7%A8%8B%E7%BB%84%E5%92%8C%E4%BC%9A%E8%AF%9D%E8%BF%87%E7%A8%8B%E7%9A%84%E5%94%AF%E4%B8%80%E8%BF%9B%E7%A8%8B">是各自进程组和会话过程的唯一进程</a></li>
+<li>setsid函数让进程摆脱原会话、原进程组和原控制终端的控制——<a href="#%E4%B8%8D%E4%BD%BF%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%88%E7%AB%AF">不使用控制终端</a></li>
+<li>setsid函数使进程完全独立出来</li>
+</ul>
+<h3 id="改变当前目录为根目录"><a href="#改变当前目录为根目录" class="headerlink" title="改变当前目录为根目录"></a>改变当前目录为根目录</h3><p>试想，如果我们的守护进程的工作目录是在一个U盘里，那当我们要弹出U盘时，由于守护进程的存在我们会失败。因此，守护进程的工作目录需要修改为非移动设备上，比如我们的根目录。</p>
+<ul>
+<li>chdir函数可以更改进程的工作路径</li>
+</ul>
+<h3 id="重新设置文件权限掩码"><a href="#重新设置文件权限掩码" class="headerlink" title="重新设置文件权限掩码"></a>重新设置文件权限掩码</h3><ul>
+<li>子进程会继承原父进程的文件权限掩码</li>
+<li>给子进程使用文件带来麻烦</li>
+<li>函数umask(0)重设文件权限掩码</li>
+</ul>
+<blockquote>
+<p>umask(0)所获得的权限是将0取反在与创建文件时的权限相与。相当于保留了文件的创建时权限。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">权限</th>
+<th align="center">八进制值</th>
+<th align="center">二进制值</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">—</td>
+<td align="center">0</td>
+<td align="center">000</td>
+<td align="center">没有权限</td>
+</tr>
+<tr>
+<td align="center">–x</td>
+<td align="center">1</td>
+<td align="center">001</td>
+<td align="center">只有执行权限</td>
+</tr>
+<tr>
+<td align="center">-w-</td>
+<td align="center">2</td>
+<td align="center">010</td>
+<td align="center">只有写权限</td>
+</tr>
+<tr>
+<td align="center">-wx</td>
+<td align="center">3</td>
+<td align="center">011</td>
+<td align="center">写入和执行权限</td>
+</tr>
+<tr>
+<td align="center">r–</td>
+<td align="center">4</td>
+<td align="center">100</td>
+<td align="center">只有阅读权限</td>
+</tr>
+<tr>
+<td align="center">r-x</td>
+<td align="center">5</td>
+<td align="center">101</td>
+<td align="center">读取和执行权限</td>
+</tr>
+<tr>
+<td align="center">rw-</td>
+<td align="center">6</td>
+<td align="center">110</td>
+<td align="center">读写权限</td>
+</tr>
+<tr>
+<td align="center">rwx</td>
+<td align="center">7</td>
+<td align="center">111</td>
+<td align="center">执行所有三项操作的权限，即读取、写入和执行</td>
+</tr>
+</tbody></table>
+<h3 id="关闭文件描述符"><a href="#关闭文件描述符" class="headerlink" title="关闭文件描述符"></a>关闭文件描述符</h3><ul>
+<li>子进程会继承父进程已打开的文件，但这些文件可能不再使用，但依旧占据系统资源</li>
+<li>比如标准输入输出和错误文件0,1,2，守护进程永远无法输出内容到屏幕，这三个文件失去作用</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);    <span class="comment">//关闭文件描述符, MAXFILE是系统能够提供的文件描述符的最大值</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相关阅读：子进程能否访问父进程上锁的文件？<br>在操作系统中，Fork会创建一个与父进程几乎相同的子进程。这意味着子进程继承了父进程的许多属性，例如打开的文件描述符和虚拟内存。然而，在Fork后，子进程和父进程是两个完全独立的进程，它们共享的只有一个初始状态。因此，子进程不能继承父进程的锁。如果父进程在Fork之前持有一个锁，它会继续持有该锁，但是在子进程中，锁的状态将被重置。在子进程中，锁不再处于锁定状态，因此需要重新获取锁才能访问共享资源。此外，锁的互斥量被存储在内存中，子进程会得到它自己的内存副本，这意味着子进程和父进程中的锁不会是相同的锁。<br>因此，子进程需要重新获取锁才能访问共享资源。如果在父进程中的锁是一个进程之间共享的锁（例如POSIX 有名信号量），则可以再次打开该锁，使得父子进程都可以使用这个锁，但必须小心以避免锁的竞争条件。</p>
+</blockquote>
+<h3 id="让守护进程能够被退出"><a href="#让守护进程能够被退出" class="headerlink" title="让守护进程能够被退出"></a>让守护进程能够被退出</h3><ul>
+<li>使用kill命令来终止守护进程</li>
+<li>kill命令会向进程发送signal信号，我们需要让守护进程能够接收信号<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// SIGTERM是kill命令发出的信号</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>相关阅读：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55752775/article/details/130853402">Linux中的信号</a></p>
+</blockquote>
+<h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>         <span class="comment">// 包含 exit</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span>         <span class="comment">// 包含 strlen</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span>          <span class="comment">// 包含 open</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span>      <span class="comment">// 包含 pid_t</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>         <span class="comment">// 包含 read, write, close, usleep, setsid, chdir</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span>         <span class="comment">// 包含 signal, SIGTERM</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span>       <span class="comment">// 包含 umask</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXFILE 1024        <span class="comment">// 使用ulimit -n命令查看</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">sig_atomic_t</span> _running = <span class="number">1</span>;     <span class="comment">// volatile告诉编译器，_running随时可能被更改。_running标志着我们守护进程的运行状态，1代表在运行，0代表需要终止。</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sigterm_handler</span><span class="params">(<span class="type">int</span> arg)</span></span>&#123;</span><br><span class="line">    _running = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pc;</span><br><span class="line">    <span class="type">int</span> fd, len;</span><br><span class="line">    <span class="type">char</span>* buf = <span class="string">&quot;This is a Dameon.\n&quot;</span>;</span><br><span class="line">    len = <span class="built_in">strlen</span>(buf);</span><br><span class="line">    pc = fork();                        <span class="comment">// **创建子进程**</span></span><br><span class="line">    <span class="keyword">if</span>(pc&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;ERROR: create process failed.\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pc&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;PID: %d\n&quot;</span>, pc);        <span class="comment">// 输出子进程PID</span></span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);                        <span class="comment">// **退出父进程**</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">setsid</span>();                           <span class="comment">// **创建新会话**</span></span><br><span class="line">    <span class="built_in">chdir</span>(<span class="string">&quot;/&quot;</span>);                         <span class="comment">// **将工作目录转移到根目录**</span></span><br><span class="line">    <span class="built_in">umask</span>(<span class="number">0</span>);                           <span class="comment">// **重置文件权限掩码**</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">3</span>;i&lt;MAXFILE;i++) <span class="built_in">close</span>(i);<span class="comment">// **关闭所有文件描述符**   //这里没有关闭标准输入输出和错误，方便我们debug。</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">signal</span>(SIGTERM, sigterm_handler);   <span class="comment">// **处理kill事件**</span></span><br><span class="line">    <span class="keyword">while</span>(_running)&#123;</span><br><span class="line">        fd = <span class="built_in">open</span>(<span class="string">&quot;/home/torch/code/linux-c++/clion/dameon.log&quot;</span>, O_CREAT|O_WRONLY|O_APPEND);    <span class="comment">// 文件不存在时创建，仅写入，追加</span></span><br><span class="line">        <span class="keyword">if</span>(fd&lt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">perror</span>(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">1</span>);                                                <span class="comment">// 文件打开失败</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">write</span>(fd, buf, len);</span><br><span class="line">        <span class="built_in">close</span>(fd);</span><br><span class="line">        <span class="built_in">usleep</span>(<span class="number">10</span>*<span class="number">1000</span>);                                            <span class="comment">// 10ms延时</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>将代码编译后用sudo权限执行——<a href="#%E5%85%B7%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90">具有超级用户权限</a></p>
+<blockquote>
+<p>PID: 9259</p>
+</blockquote>
+<p>可以通过ps axj命令查看守护进程，可以找到我们的进程就在其中。可以使用sudo kill 9259杀死我们的进程。使用管理员权限打开dameon.log文件，可以看到里面的内容。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/09/20/linux/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/Linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B-%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">Linux多进程编程-创建进程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-20 15:31:11" itemprop="dateCreated datePublished" datetime="2023-09-20T15:31:11+08:00">2023-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:18:24" itemprop="dateModified" datetime="2024-07-30T19:18:24+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="进程的基础操作"><a href="#进程的基础操作" class="headerlink" title="进程的基础操作"></a>进程的基础操作</h2><h3 id="获得当前进程的PID"><a href="#获得当前进程的PID" class="headerlink" title="获得当前进程的PID"></a>获得当前进程的PID</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid = getpid();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;进程的PID是：%d\n&quot;</span>, pid);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>进程的PID是：4830</p>
+</blockquote>
+<h3 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h3><ol>
+<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">fork</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>该函数用于创建子进程，子进程被创建后复制父进程的程序内容和变量内容（但不共享变量内存，不继承文件锁），包括该fork函数。如果进程创建成功，在父进程中，fork函数的返回值为子进程的PID；在子进程中fork函数的返回值为0。看起来就像是fork有两个返回值一样。如果进程创建失败，子进程没有产生，父进程中的fork函数返回-1。</p>
+<ol start="2">
+<li>示例代码</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;                          <span class="comment">// 用以记录进程的PID</span></span><br><span class="line">    <span class="type">int</span> counter = <span class="number">0</span>;                    <span class="comment">// 用以证明子进程复制了父进程的程序，但并不是内存共享</span></span><br><span class="line"></span><br><span class="line">    pid = fork();                       <span class="comment">// 创建子进程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid&lt;<span class="number">0</span>)&#123;                          <span class="comment">// 进程创建失败</span></span><br><span class="line">        cerr&lt;&lt; <span class="string">&quot;进程创建失败！&quot;</span>&lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;                    <span class="comment">// 该进程为子进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是子进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;                               <span class="comment">// 该进程为父进程</span></span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;我是父进程，PID：&quot;</span>&lt;&lt; <span class="built_in">getpid</span>()&lt;&lt; <span class="string">&quot;  我获得的子进程PID为：&quot;</span>&lt;&lt; pid&lt;&lt; endl;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;子进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        cout&lt;&lt; <span class="string">&quot;父进程中的counter：&quot;</span>&lt;&lt; counter&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我是父进程，PID：7825  我获得的子进程PID为：7826<br>父进程中的counter：1<br>我是子进程，PID：7826<br>子进程中的counter：1    </p>
+</blockquote>
+<ol start="3">
+<li>分析</li>
+</ol>
+<p>可以看到，在父进程中我们所获得的子进程的PID和在子进程中所获得的PID是一致的(7826)。同时，子进程虽然在创建时拷贝了父进程的变量，但是，由于子进程与父进程之间不存在内存共享，所以在子进程和父进程中分别修改counter并不能互相影响。<strong>另外，子进程和父进程的执行并没有先后顺序，一切都取决于操作系统的调度策略。</strong></p>
+<h3 id="如何控制父进程与子进程的时序关系？"><a href="#如何控制父进程与子进程的时序关系？" class="headerlink" title="如何控制父进程与子进程的时序关系？"></a>如何控制父进程与子进程的时序关系？</h3><p>很多时候，我们希望子进程先行结束，然后再结束父进程。这样做有三点好处：</p>
+<ul>
+<li>能够确保交给子进程的任务在父进程结束之前完满完成。</li>
+<li>同时也可以避免父进程先行结束，子进程成为孤儿进程。</li>
+<li>在父进程中回收子进程的task_struct，以免子进程成为僵尸进程。</li>
+</ul>
+<p>在C\C++中，我们通过wait()或waitpid()函数来实现这一目的。wait()和waitpid()函数都能够阻塞调用他们的进程，直到接收到子进程的状态才会结束阻塞。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     阻塞父进程，等待任意一个子进程退出，停止阻塞并回收子进程资源</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @return          执行成功返回子进程的PID，失败返回-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">wait</span><span class="params">(<span class="type">int</span>* status)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description     高配版wait，函数的行为由pid和options参数决定</span></span><br><span class="line"><span class="comment"> * @param pid       子进程的PID号</span></span><br><span class="line"><span class="comment"> * @param status    存放子进程的结束状态</span></span><br><span class="line"><span class="comment"> * @param options   函数控制选项</span></span><br><span class="line"><span class="comment"> * @return          由options的设定决定</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span>* status, <span class="type">int</span> options)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在waitpid()函数中，参数pid有以下几种状态：</p>
+<table>
+<thead>
+<tr>
+<th align="center">pid</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&gt;0</td>
+<td align="center">需要等待的子进程的PID号</td>
+</tr>
+<tr>
+<td align="center">&#x3D;0</td>
+<td align="center">等待与当前进程相同组的任何子进程进程</td>
+</tr>
+<tr>
+<td align="center">&#x3D;-1</td>
+<td align="center">等待任何子进程，与 wait() 相似</td>
+</tr>
+<tr>
+<td align="center">&lt;-1</td>
+<td align="center">等待进程组识别码为-pid的任何子进程</td>
+</tr>
+</tbody></table>
+<p>options参数设定与函数行为的对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">options</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">WNOHANG</td>
+<td align="center"><strong>非阻塞</strong>形式：若pid表示的子进程没有结束，则不予等待，返回0；若结束，则返回该子进程进程PID。发生错误返回-1。</td>
+</tr>
+<tr>
+<td align="center">WUNTRACED</td>
+<td align="center">若pid表示的子进程进入暂停状态，则立即返回子进程PID；若子进程处于结束状态，则不予理会。发生错误返回-1。</td>
+</tr>
+</tbody></table>
+<h3 id="替换进程"><a href="#替换进程" class="headerlink" title="替换进程"></a>替换进程</h3><ol>
+<li>函数<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execlp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">const</span> <span class="type">char</span>* arg, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execle</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">const</span> <span class="type">char</span>* arg, ..., <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">execv</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* path, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvp</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[])</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execvpe</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* file, <span class="type">char</span>* <span class="type">const</span> arg[], <span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>exec函数族同样可以创建进程，与fork不同的是，exec创建的进程会取代父进程，甚至会占有父进程的PID，实打实的进程界的“鬼上身”。exec函数族中常用的两个函数分别是execl和execlp，下面将通过实例详细介绍。</p>
+<ul>
+<li>execl</li>
+</ul>
+<p>execl的第一个参数是执行文件的路径，第二个参数是该执行文件所需的输入（执行文件传参），和我们main(int argc, char** argv)中的argv部分一样，执行文件传参的第一个参数argv[0]一般是文件名（可以是任何字符，一般设置为文件名或命令名）。从第二个参数argv[1]起才是真正能够在执行文件中发挥作用的参数。当argv中出现NULL时则认为传参结束。一般情况下，执行文件都需要一个argv[0]文件名参数，也就是说argv至少需要一个非null参数（就是我们说的文件名），否则不能正确执行。<br>函数执行成功时无返回值，执行失败时返回-1.</p>
+<p><strong>$ 执行一个不需要传参的执行文件</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;==========================&quot;</span>&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+<p>在这个例子中，我们执行了pwd命令，他是一个不需要参数的命令，因此我们的argv[0]为命令名，并没有实际作用，但必须要有；argv[1]为NULL，表示传参结束。另外，程序并没有输出一串”&#x3D;”号，说明程序被替换为了pwd命令，原来的程序已经不存在了。</p>
+<p><strong>$ 执行一个需要传参的执行文件</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;/bin/ls&quot;</span>, <span class="string">&quot;ls -al&quot;</span>, <span class="string">&quot;-al&quot;</span>, <span class="string">&quot;/etc/passwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+<p>在这个例子中，我们执行了ls -al &#x2F;etc&#x2F;passwd命令，所以我们的argv[0]为”ls -al”并没有实际作用，但必须要有；argv[1]为”-al”，argv[2]为”&#x2F;etc&#x2F;passwd”，argv[3]为NULL，表示传参结束。</p>
+<p><strong>$ 如果argv没有任何参数会发生什么？</strong></p>
+<p>我们首先写一个被执行程序，并把他编译为test.out，然后执行</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * file name: test.cpp</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;argc: &quot;</span>&lt;&lt; argc&lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;argc;i++)&#123;</span><br><span class="line">        cout&lt;&lt; argv[i]&lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc: 1<br>.&#x2F;test.out</p>
+</blockquote>
+<p>系统自动传递了一个文件名参数给我们的程序，因此检测到一个参数，参数为文件名。</p>
+<p>我们再写一个程序通过execl函数执行我们的test.out</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc：1    </p>
+</blockquote>
+<p>可以看到，当我们不传递任何参数给执行文件时，编译时会给我们警告，并且函数会自动传递一个空字符参数给我们的执行文件。我们对程序进行修改：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execl</span>(<span class="string">&quot;./test.out&quot;</span>, <span class="string">&quot;test.out&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>argc：1<br>test.out</p>
+</blockquote>
+<p>此时编译器不再发出警告，test.out获得了我们传递给他的”test.out”字符串。</p>
+<ul>
+<li>execlp</li>
+</ul>
+<p>execlp的第一个参数是环境变量中的文件名，第二个参数和execl一致。相比于execl，execlp专门用来执行已经加入到环境变量中的程序。</p>
+<p><strong>$ 示例</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span>&#123;</span><br><span class="line">    <span class="built_in">execlp</span>(<span class="string">&quot;pwd&quot;</span>, <span class="string">&quot;pwd&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>&#x2F;home&#x2F;torch&#x2F;code&#x2F;linux-c++&#x2F;clion&#x2F;cmake-build-debug</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/09/19/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-C++/" class="post-title-link" itemprop="url">Linux文件编程-C++</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-19 15:57:48" itemprop="dateCreated datePublished" datetime="2023-09-19T15:57:48+08:00">2023-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:20:21" itemprop="dateModified" datetime="2024-07-30T19:20:21+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="流的概念"><a href="#流的概念" class="headerlink" title="流的概念"></a>流的概念</h2><p>在C++语言中，数据的输入和输出（I&#x2F;O）包括对标准输入设备（键盘）和标准输出设备（显示器）、外存磁盘文件、内存中指定字符串储存空间进行输入和输出三个方面，分别简称为标准I&#x2F;O，文件I&#x2F;O，串I&#x2F;O。C++将写入文件和读取文件抽象的说为<strong>文件流</strong>，三种I&#x2F;O对应着三种文件流，分别是标准I&#x2F;O流，文件I&#x2F;O流和字符串I&#x2F;O流。</p>
+<table>
+<thead>
+<tr>
+<th align="center">流</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">标准I&#x2F;O流</td>
+<td align="center">内存与标准输入输出设备之间的信息传递</td>
+</tr>
+<tr>
+<td align="center">文件I&#x2F;O流</td>
+<td align="center">内存与外部文件之间的信息传递</td>
+</tr>
+<tr>
+<td align="center">字符串I&#x2F;O流</td>
+<td align="center">内存变量与表示字符串流的数组之间的传递</td>
+</tr>
+</tbody></table>
+<h2 id="流的类库"><a href="#流的类库" class="headerlink" title="流的类库"></a>流的类库</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">头文件’&lt;fstream&gt;‘所提供的文件流</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ifstream</td>
+<td align="center">输入文件流，用于从文件读取信息</td>
+</tr>
+<tr>
+<td align="center">ofstream</td>
+<td align="center">输出文件流，用于创建文件和向文件写入信息</td>
+</tr>
+<tr>
+<td align="center">fstream</td>
+<td align="center">文件流，包含输入文件流和输出文件流的功能</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>虽然fstream看起来很全能，但是实际应用中并不好用。ifstream和ofstream再打开文件时如果文件不存在则会创建文件，而fstream当文件不存在时虽然不报错，但是后续对文件的操作无法生效。</p>
+</blockquote>
+<h2 id="流操作"><a href="#流操作" class="headerlink" title="流操作"></a>流操作</h2><blockquote>
+<p>所有代码都是示意代码，并不能运行。</p>
+</blockquote>
+<h3 id="基础文件I-O"><a href="#基础文件I-O" class="headerlink" title="基础文件I&#x2F;O"></a>基础文件I&#x2F;O</h3><p>这里我们以ifstream为例，ofstream具有相同的成员函数和操作方式。</p>
+<ul>
+<li><p>打开文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一种打开文件的方式——构造函数</span></span><br><span class="line"><span class="function">ifstream <span class="title">infile</span><span class="params">(file_name, open_mode)</span></span>;</span><br><span class="line"><span class="comment">// 第二种打开文件的方式——成员函数</span></span><br><span class="line">ifstream infile;</span><br><span class="line">infile.<span class="built_in">open</span>(file_name, open_mode);</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center">open_mode[^1]</th>
+<th align="center">速记</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ios::out</td>
+<td align="center">output (输出)</td>
+<td align="center">指定文件的打开方式为写入，一般为必要参数，但在使用 ofstream 对象时，为默认参数</td>
+</tr>
+<tr>
+<td align="center">ios::app</td>
+<td align="center">append (添加)</td>
+<td align="center">当打开文件用于写入时，会在已有数据之后写入，不覆盖原有内容。使用此种打开方式，每次写入都会置于文件末尾，即便之前更改了位置。</td>
+</tr>
+<tr>
+<td align="center">ios::trunc</td>
+<td align="center">truncate (截断)</td>
+<td align="center">当打开文件时，如果文件存在内容则清空文件内容</td>
+</tr>
+<tr>
+<td align="center">ios::ate</td>
+<td align="center">at end (在结束处)</td>
+<td align="center">以写入方式打开文件，并将文件指针置于末尾。与 ios::app不同之处为，如果改变了指针位置，写入不一定会在文件末尾</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>判断文件是否打开成功</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line">infile.<span class="built_in">open</span>(file_name, open_mode);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一种</span></span><br><span class="line"><span class="keyword">if</span>(infile) &#123;<span class="comment">/*文件打开成功*/</span>&#125;;</span><br><span class="line"><span class="comment">// 第二种</span></span><br><span class="line"><span class="keyword">if</span>(infile.<span class="built_in">is_open</span>()) &#123;<span class="comment">/*文件打开成功*/</span>&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>关闭文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">close</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>读取文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span>       <span class="comment">// getline函数需要包含头文件</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取一行内容，遇到\n停止，读取成功返回true，遇到文件结尾返回false</span></span><br><span class="line"><span class="built_in">getline</span>(infile, <span class="type">char</span>* c);</span><br><span class="line"><span class="comment">// 读取一个字符，读取成功返回true，遇到文件结尾返回false</span></span><br><span class="line">infile.<span class="built_in">get</span>(<span class="type">char</span> c);</span><br><span class="line"><span class="comment">// 读取内容直到分隔符（空格、换行...）</span></span><br><span class="line">infile&gt;&gt; <span class="type">char</span>* c;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写入文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入字符串c中的全部内容</span></span><br><span class="line">outfile&lt;&lt; <span class="type">char</span>* c;</span><br><span class="line"><span class="comment">// 写入一个字符</span></span><br><span class="line">outfile.<span class="built_in">put</span>(<span class="type">char</span> c);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取文件偏移量</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ofstream和ifstream的获取文件偏移的方法不可混用</span></span><br><span class="line"><span class="comment">// 两个函数都返回所处位置处的字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">tellp</span>();</span><br><span class="line">infile.<span class="built_in">tellg</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置文件偏移量</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ofstream outfile;</span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ofstream和ifstream的设置文件偏移的方法不可混用</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streampos pos);                       <span class="comment">// pos为字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streamoff off, ios::seek_dir dir);    <span class="comment">// dir为起始搜索位置，off为相对于dir向文件末尾的偏移量</span></span><br><span class="line"></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streampos pos);                       <span class="comment">// pos为字符在文件中的编号位置</span></span><br><span class="line">outfile.<span class="built_in">seekp</span>(streamoff off, ios::seek_dir dir);    <span class="comment">// dir为起始搜索位置，off为相对于dir向文件末尾的偏移量</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">dir</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ios::beg</td>
+<td align="center">文件流的起始位置（默认值）</td>
+</tr>
+<tr>
+<td align="center">ios::cur</td>
+<td align="center">文件流的当前位置</td>
+</tr>
+<tr>
+<td align="center">ios::end</td>
+<td align="center">文件流的结束位置</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>由于ios是ifstream和ofstream的一个父类，所以也可以使用ifstream::beg等来使用这些枚举</p>
+</blockquote>
+<ul>
+<li>文件状态判断</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读写的过程中出错则返回true</span></span><br><span class="line">infile.<span class="built_in">bad</span>();</span><br><span class="line"><span class="comment">// 包含bad的情况，另外，读入的数据与容器格式不符时也会报错，例如想读入一个整数却得到一个字母</span></span><br><span class="line">infile.<span class="built_in">fail</span>();</span><br><span class="line"><span class="comment">// 文件达到末尾时返回true</span></span><br><span class="line">infile.<span class="built_in">eof</span>();</span><br><span class="line"><span class="comment">// 文件没有读写和格式不符错误，且没有达到文件末尾。即fail和eof都是false时，该函数为true</span></span><br><span class="line">infile.<span class="built_in">good</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="更精细的文件I-O"><a href="#更精细的文件I-O" class="headerlink" title="更精细的文件I&#x2F;O"></a>更精细的文件I&#x2F;O</h3><ul>
+<li>获得文件的大小</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如若想获得某一部分的大小，则可以该部分内容的起始位置和终止位置的序号相减。</p>
+</blockquote>
+<ul>
+<li>将文件读入内存</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* buffer = <span class="keyword">new</span> <span class="type">char</span>[file_length];</span><br><span class="line">infile.<span class="built_in">read</span>(buffer, file_length);</span><br><span class="line"><span class="keyword">delete</span>[] buffer;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将内存写入文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 先将内容读入到内存中</span></span><br><span class="line">ifstream infile;</span><br><span class="line"></span><br><span class="line">infile.<span class="built_in">seekg</span>(<span class="number">0</span>, infile.end);</span><br><span class="line"><span class="type">int</span> file_length = infile.<span class="built_in">tellg</span>();</span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* buffer = <span class="keyword">new</span> <span class="type">char</span>[file_length];</span><br><span class="line">infile.<span class="built_in">read</span>(buffer, file_length);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再将内容写入到文件中</span></span><br><span class="line">ofstream outfile;</span><br><span class="line">outfile.<span class="built_in">write</span>(buffer, file_length);</span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span>[] buffer;</span><br></pre></td></tr></table></figure>
+
+
+<p>[^1]:<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44488341/article/details/131466397">【C++】标准库 - 文件的读写 ifstream, ofstream, fstream</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -784,6 +1417,559 @@
 </ul>
 </li>
 </ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="何先生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北国回忆录">
+      <meta itemprop="description" content="东拼西凑、杂七杂八">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 北国回忆录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">数据结构与算法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-16 12:39:50" itemprop="dateCreated datePublished" datetime="2023-09-16T12:39:50+08:00">2023-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-07-30 19:26:37" itemprop="dateModified" datetime="2024-07-30T19:26:37+08:00">2024-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%9B%9B%E5%A4%A7%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">四大件</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="复杂度的渐进表示"><a href="#复杂度的渐进表示" class="headerlink" title="复杂度的渐进表示"></a>复杂度的渐进表示</h1><ul>
+<li>最小上界复杂度：$T(n) &#x3D; O(f(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \le C \cdot f(n)$</li>
+<li>最大下界复杂度：$T(n) &#x3D; \Omega(g(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \ge C \cdot g(n)$</li>
+<li>等价复杂度：$T(n) &#x3D; \Theta(h(n))$ 表示同时满足 $T(n) &#x3D; O(h(n))$ 和 $T(n) &#x3D; \Omega(h(n))$</li>
+</ul>
+<p>各种常见时间复杂度函数的比较：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image.png" alt="各种常见时间复杂度函数的比较"></p>
+<p>当数据规模达到一定程度时，各类时间复杂度有如下关系：</p>
+<p>$1 &lt; log^n &lt; n &lt; n \cdot log^n &lt; n^2 &lt; 2^n &lt; n!$</p>
+<p>如果两个程序块的复杂度分别是 $T_1(n)&#x3D;O(f_1(n))$、$T_2(n)&#x3D;O(f_2(n))$，则：</p>
+<ul>
+<li>当两个程序前后拼接执行时：时间复杂度 $T(n) &#x3D; max(T_1(n), T_2(n))$</li>
+<li>当两个程序包含嵌套执行时：时间复杂度 $T(n) &#x3D; T_1(n) \cdot T_2(n)$</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>当 $T(n)$ 是一个 k 阶多项式时，$T(n)&#x3D;\Theta(n^k)$</li>
+<li>一个 for 循环的时间复杂度等于循环次数乘以循环体的时间复杂度</li>
+<li>if-else 的时间复杂度，取各个判断分支中时间复杂度最大的一个</li>
+</ul>
+<h2 id="示例：递归的时间复杂度如何去算"><a href="#示例：递归的时间复杂度如何去算" class="headerlink" title="示例：递归的时间复杂度如何去算"></a>示例：递归的时间复杂度如何去算</h2><p>问题：寻找一串数字的最大子列和？</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-1.png" alt="数字的最大子列和"></p>
+<p>将一个问题分为两半，原本的时间复杂度时是 $T(n)$，分为两半后，数据规模减半，两边的时间复杂度都是 $T(\frac{n}{2})$。另外，当综合两边的结果时，需要把全部元素“看一遍”，因此，综合两个 $T(n)$ 时的时间复杂度是 $O(n)$。因此有式子：</p>
+<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + O(n)$</p>
+<p>而 $O(n) &#x3D; c \cdot n$，因此，公式变为：</p>
+<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + c \cdot n$</p>
+<p>将 $n&#x3D;\frac{n}{2}$ 递推地带入公式即可推导出时间复杂度。</p>
+<h2 id="各种操作时间复杂度比较"><a href="#各种操作时间复杂度比较" class="headerlink" title="各种操作时间复杂度比较"></a>各种操作时间复杂度比较</h2><table>
+<thead>
+<tr>
+<th align="center">结构</th>
+<th align="center">操作</th>
+<th align="center">平均时间复杂度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数组</td>
+<td align="center">求表长</td>
+<td align="center">$\Theta(1)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按序号查找</td>
+<td align="center">$\Theta(1)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按值查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">插入指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">删除指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">链表</td>
+<td align="center">求表长</td>
+<td align="center">$\Theta(N)$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按序号查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">按值查找</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">插入指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+<tr>
+<td align="center">–</td>
+<td align="center">删除指定位置</td>
+<td align="center">$\Theta(\frac{N}{2})$</td>
+</tr>
+</tbody></table>
+<h1 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h1><p>线性表的两种储存结构：</p>
+<ul>
+<li>顺序储存结构：数组</li>
+<li>链式储存结构：链表</li>
+</ul>
+<h1 id="广义表"><a href="#广义表" class="headerlink" title="广义表"></a>广义表</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> GNode* GList;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">GNode</span>&#123;</span><br><span class="line">  <span class="type">int</span> Tag;</span><br><span class="line">  <span class="keyword">union</span>&#123;</span><br><span class="line">      ElementType Data;</span><br><span class="line">      Glist SubList;</span><br><span class="line">  &#125;URegion;</span><br><span class="line">  GList Next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>广义表的数据项有可能是数据，也有可能是表，因此，使用联合体来表示数据域，使用 Tag 标签来表示该节点储存的是哪一种数据。</p>
+<h1 id="多重链表"><a href="#多重链表" class="headerlink" title="多重链表"></a>多重链表</h1><p>有多个指针域的链表。但注意，双向链表有两个指针域，分别指向前一个节点和后一个节点，但它不是多重链表。</p>
+<p>多重链表可以用来表示稀疏矩阵，相比于使用二维数组能够节省更多空间。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-3.png" alt="Alt text"></p>
+<p>图像中， Term 是矩阵的入口节点，4 和 5 代表矩阵拥有四行五列，7 代表矩阵拥有 7 个元素。Term 中包含两个指针域，分别指向右侧和下方。Head 节点是矩阵各行各列的头节点，Head 中包含两个指针域和一个值域，两个指针域与 Term 的指针域相同，值域中保存着指向下一个 Head 节点的指针，所以实际上 Head 节点中包含的是三个指针域。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-2.png" alt="Alt text"></p>
+<h1 id="堆栈-Stack"><a href="#堆栈-Stack" class="headerlink" title="堆栈(Stack)"></a>堆栈(Stack)</h1><p>后入先出</p>
+<h1 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列(Queue)"></a>队列(Queue)</h1><p>先入先出</p>
+<h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><p>儿子兄弟表示法，避免空指针浪费空间<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-4.png" alt="Alt text"><br>将任意的树通过这种方法表示后旋转45°<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-5.png" alt="Alt text"><br>可以得到二叉树，因此，任何一个树都可以表示为二叉树。</p>
+<h2 id="二叉树分类"><a href="#二叉树分类" class="headerlink" title="二叉树分类"></a>二叉树分类</h2><p>斜二叉树</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-6.png" alt="斜二叉树"></p>
+<p>完美二叉树（满二叉树）</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-7.png" alt="完美二叉树"></p>
+<p>完全二叉树</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-8.png" alt="完全二叉树"></p>
+<p>二叉树的特点：</p>
+<ul>
+<li>第 i 层最大节点数 $2^{i-1}$</li>
+<li>深度为 k 的二叉树最大节点数 $2^k-1$</li>
+<li>对于任何二叉树，若 $n_0$ 表示叶节点个数、$n_2$是度为 2 的非叶节点个数，那么两者满足关系式$n_0&#x3D;n_2+1$</li>
+</ul>
+<p>对于最后一点，我们可以从二叉树边的个数来考虑。我们设度为 2 的节点个数为 $n_2$，度为 1 的节点个数为 $n_1$ 度为 0 的节点个数为 $n_0$。那么，整个二叉树拥有的边的个数为 $n_0+n_1 +n_2-1$，同时，通过度来计算边的个数为 $0 \cdot n_0 + 1 \cdot n_1 + 2 \cdot n_2$，两侧相等得到$n_0&#x3D;n_2+1$</p>
+<h2 id="二叉树的储存"><a href="#二叉树的储存" class="headerlink" title="二叉树的储存"></a>二叉树的储存</h2><p>完全二叉树可以使用数组储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-9.png" alt="Alt text"><br>一般的二叉树，通过将其补全为完全二叉树，也可以使用数组储存，但是会浪费空间。</p>
+<p>所有类型的二叉树都可以使用链表来储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-10.png" alt="Alt text"></p>
+<h2 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h2><p>先序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-11.png" alt="Alt text"><br>中序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-12.png" alt="Alt text"><br>后序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-13.png" alt="Alt text"></p>
+<p>无论先序、中序还是后序，同一个节点我们都会经历三次<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-14.png" alt="Alt text"><br>先序是在第一次经历节点时就使用节点值、中序是第二次经历节点时就使用节点值、后续是第三次经历节点时就使用节点值。</p>
+<p>递归的算法都可以使用堆栈来实现。</p>
+<p>层序遍历</p>
+<p>使用队列遍历二叉树，压入父节点，弹出节点时再压入其左右儿子节点，如此反复，直到所有的节点全部被访问。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-15.png" alt="Alt text"></p>
+<h2 id="二叉树遍历应用"><a href="#二叉树遍历应用" class="headerlink" title="二叉树遍历应用"></a>二叉树遍历应用</h2><p>先序遍历：查找所有叶节点<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-16.png" alt="查找所有叶节点"><br>后序遍历：求二叉树的高度<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-17.png" alt="Alt text"><br>构造运算树<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-18.png" alt="Alt text"><br>虽然直接构造的中缀表达式会收到运算优先级的影响，但是可以通过每次遍历到父节点就为前面的式子加括号来解决问题。</p>
+<p>另外，只通过先序和后序遍历结果不能够唯一确定一个二叉树。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-19.png" alt="Alt text"><br>可以看到，我们无法根据先序和后序遍历结果对子树是左子树还是右子树进行判断。因此必须有两种遍历结果并且其中必须包含中序遍历结果才能判断。</p>
+<h2 id="静态链表是结构体数组"><a href="#静态链表是结构体数组" class="headerlink" title="静态链表是结构体数组"></a>静态链表是结构体数组</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType Element;</span><br><span class="line">    Tree Left;</span><br><span class="line">    Tree Right;</span><br><span class="line">&#125;T1[MaxTree], T2[MaxTree];</span><br></pre></td></tr></table></figure>
+
+<p>其中的 T1 和 T2 就是静态链表。</p>
+<h2 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h2><p>一种二叉树，可以为空，当不为空时需要满足以下条件：</p>
+<ul>
+<li>左儿子小于根节点</li>
+<li>右儿子大于根节点</li>
+<li>左右子树都是二叉搜索树</li>
+</ul>
+<p>查找指定元素：查找效率取决于树的高度。</p>
+<p>查找最大值：最大值一定在树的最右边</p>
+<p>查找最小值：最小值一定在树的最左边</p>
+<p>尾递归可以用循环来实现，尾递归是指在返回时调用递归</p>
+<p>插入元素：从根部向下一直比较，元素最终插入到树的最下面。</p>
+<p>删除元素：删除元素后，用右子树的最小值或左子树的最大值替代被删除元素。由于右子树的最小值和左子树的最大值最多只有一个儿子节点，因此，删除任意元素的问题转变为删除一个没有儿子节点或者只有一个儿子节点的元素问题。当删除没有儿子节点的元素时，直接删除即可；当删除有一个儿子节点的元素时，用儿子节点替代被删除元素即可。</p>
+<h2 id="平衡二叉树（AVL树）"><a href="#平衡二叉树（AVL树）" class="headerlink" title="平衡二叉树（AVL树）"></a>平衡二叉树（AVL树）</h2><p>平衡因子：$BF(T)&#x3D;h_L-h_R$，左子树高度减去右子树高度。</p>
+<p>平衡二叉树：对于任意一个子树而言$|BF(T)|\le1$。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-21.png" alt="Alt text"></p>
+<p>高度为 h 的平衡二叉树和其最少节点数 n 之间满足关系式：$h&#x3D;O(log_2^n)$。所以，一个平衡二叉树（AVL树）的查找时间复杂度为 $O(log_2^n)$。</p>
+<h3 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h3><p>右旋调整：RR 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-22.png" alt="RR 旋转"></p>
+<p>左旋调整：LL 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-23.png" alt="Alt text"></p>
+<p>LR 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-24.png" alt="Alt text"></p>
+<p>RL 旋转</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-25.png" alt="Alt text"></p>
+<p>上述旋转的命名方法：如果插入的节点在左子树的右子树上，则调整方式命名为 LR 旋转；如果插入节点在右子树的左子树上，则调整方式命名为 RL 旋转。</p>
+<h1 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h1><p>堆是一个具有优先级的特殊队列。</p>
+<p>堆的实现方式：</p>
+<ul>
+<li>数组<ul>
+<li>插入：插入到尾部，$\Theta(1)$</li>
+<li>删除：查找最大（后最小）优先级 $\Theta(n)$，删除元素后移动后面的元素 $O(n)$</li>
+</ul>
+</li>
+<li>链表<ul>
+<li>插入：总是插入到链表的头部 $\Theta(1)$</li>
+<li>删除：查找最大关键字后删除节点 $\Theta(n)$</li>
+</ul>
+</li>
+<li>有序数组（按优先级排序）<ul>
+<li>插入：找到合适的位置 $O(n)$ 或 $O(log_2^n)$，移动元素并插入 $O(n)$</li>
+<li>删除：删除最后一个元素 $\Theta(1)$</li>
+</ul>
+</li>
+<li>有序链表<ul>
+<li>插入：找到合适的元素位置插入元素 $O(n)$</li>
+<li>删除：删除首元或最后元素 $\Theta(1)$</li>
+</ul>
+</li>
+</ul>
+<p>实际的堆是通过完全二叉树实现的，这样插入和删除的时间复杂度都是 $O(log_2^n)$。为了减少删除操作的难度，对于该完全二叉树的所有子树而言，我们将最大或最小的元素放在根部，以满足我们对删除的需求。将最大元素放在根部，我们将获得最大堆；将最小元素放在根部，我们将获得最小堆。</p>
+<p>插入操作：先将元素插入到堆（完全二叉树）的最后，然后逐步和自己的父节点进行优先级比较，以安放到合适的位置。时间复杂度为 $O(log_2^n)$</p>
+<p>删除操作：删除堆（完全二叉树）的根，然后将完全二叉树的最后一个元素放到根部，然后逐步和子节点进行比较，以安放到合适位置。时间复杂度为 $O(log_2^n)$</p>
+<p>最大堆的建立：</p>
+<ul>
+<li>方案一：将元素一个一个的插入到空堆中。时间复杂度为 $O(n \cdot log_2^n)$</li>
+<li>方案二：先构造完全二叉树，然后调整大小构成堆。$O(n)$</li>
+</ul>
+<h1 id="哈夫曼树（最优二叉树）"><a href="#哈夫曼树（最优二叉树）" class="headerlink" title="哈夫曼树（最优二叉树）"></a>哈夫曼树（最优二叉树）</h1><p>带权路径长度（WPL）：每一个叶子结点的权重乘以其到根节点的路径长度之和。</p>
+<p>哈夫曼树：WPL 最小的二叉树。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-26.png" alt="Alt text"></p>
+<p>图中第一个 WPL：$1 \cdot 4 + 2 \cdot 4 + 3 \cdot 3 + 4 \cdot 2 + 5 \cdot 1 &#x3D; 34$</p>
+<p>图中第二个 WPL：$5 \cdot 4 + 4 \cdot 4 + 3 \cdot 3 + 2 \cdot 2 + 1 \cdot 1 &#x3D; 50$</p>
+<p>图中第三个 WPL：$1 \cdot 3 + 2 \cdot 3 + 3 \cdot 2 + 4 \cdot 2 + 5 \cdot 2 &#x3D; 33$</p>
+<h2 id="构造一个哈夫曼树"><a href="#构造一个哈夫曼树" class="headerlink" title="构造一个哈夫曼树"></a>构造一个哈夫曼树</h2><ul>
+<li><p>给定一个列表 [1, 2, 3, 4, 5]，将它们看作 5 个树的根节点。</p>
+</li>
+<li><p>在它们之中找到两个最小根节点的树进行合并。此处将 [1, 2] 进行合并，变为以 3 为根，1、2 为叶节点的树。此时根节点列表变为[3, 3, 4, 5]。</p>
+</li>
+<li><p>重复第二步，直到根节点列表中只有一个根节点。此时，原给定列表中的所有数值变成了所构建的树的叶节点，所构建的树是哈夫曼树。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-27.png" alt="森特佩"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-28.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-29.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-30.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-31.png" alt="Alt text"></p>
+</li>
+</ul>
+<p>哈夫曼树的特点：</p>
+<ul>
+<li>从哈夫曼树的构造过程可知，哈夫曼树中不存在度为一的节点。由公式 $n_0&#x3D;n_2+1$ 可得，叶节点数为 n 的哈夫曼树的总节点数为 $2 \cdot n-1$</li>
+<li>哈夫曼树交换左右子树仍然是哈夫曼树</li>
+<li>同一组权值可能出现两个不同构的哈夫曼树，但他们的 WPL 相同</li>
+</ul>
+<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>为了避免编码的二义性，应当避免一个字符的编码是另一个字符编码的前缀。使用二叉树的叶节点来构造这种编码可以避免二义性：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-32.png" alt="Alt text"></p>
+<p>其中，a 的编码是 00，u 的编码是 01，x 的编码是 10，z 的编码是 11。这个例子可能有点特殊，其实，即使编码不是等长码也可以。但编码的节点必须是二叉树的叶节点。</p>
+<p>这样的编码方式似乎很不错。但是，由于每一个字符出现的频率不相同，因此，这样的编码并不是效率最高的。我们假设我们要对下面的字符序列进行编码：[aaaxuaxz]，那么，a、u、x、z 使用上面的二叉树编码后的结果所包含的总位数为：$2 \cdot 4 + 2 \cdot 1 + 2 \cdot 2 + 2 \cdot 1 &#x3D; 16$。而，如果我们将字符出现的频率作为该字符的权重，并使用哈夫曼树构造这样的编码，则可以最小化编码后的位数，同时，因为哈夫曼树也是二叉树，且编码后的字符都位于哈夫曼树的叶结点上，所以得到的编码也具有唯一性。上面的例子写成哈夫曼树如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">a</th>
+<th align="center">u</th>
+<th align="center">x</th>
+<th align="center">z</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-33.png" alt="Alt text"></p>
+<p>所以字符应编码如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">a</th>
+<th align="center">u</th>
+<th align="center">x</th>
+<th align="center">z</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">110</td>
+<td align="center">10</td>
+<td align="center">111</td>
+</tr>
+</tbody></table>
+<h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>只执行两个操作：</p>
+<ul>
+<li>将两个元素连线：通过将两个元素所在集合合并实现</li>
+<li>查询两个元素是否联通</li>
+</ul>
+<p>每一个集合可以用树来储存。通过合并两个树实现集合的合并；通过查找两个元素的根节点，并比较根节点是否相同，来判断两个元素是否在同一集合（联通）。这里的树是多叉树。</p>
+<p>用结构数组可以储存这样的树：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-34.png" alt="Alt text"></p>
+<p>合并两个树（集合）的过程如下：</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-35.png" alt="Alt text"></p>
+<p>$\downarrow$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-36.png" alt="Alt text"></p>
+<p>在合并的过程中，由于树越来越高会降低查找的效率，因此，我们尽量将小的树拼到高的树上。</p>
+<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><p>无向图的深度优先搜索 DFS 的时间复杂度：</p>
+<p>当图拥有 N 个节点 E 条边时</p>
+<ul>
+<li>用邻接表储存图：$O(N+E)$</li>
+<li>邻接矩阵储存图：$O(N^2)$</li>
+</ul>
+<p>无向图的广度优先搜索 BFS 的时间复杂度：</p>
+<p>当图拥有 N 个节点 E 条边时</p>
+<ul>
+<li>用邻接表储存图：$O(N+E)$</li>
+<li>邻接矩阵储存图：$O(N^2)$</li>
+</ul>
+<h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>从头开始两两比较，保证较大的数字在数字比较对的后一位。每一次遍历，整个序列最大的数字将被排到数列最后。</p>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况：$T&#x3D;O(N)$</li>
+<li>最坏情况：$T&#x3D;O(N^2)$</li>
+</ul>
+<p>由于只需要对相邻的两个元素进行操作，因此，它天然的适用于数组和链表。</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>一个数字一个数字的拿进来，然后和已经存在的有序序列进行比较插入。</p>
+<p>时间复杂度：</p>
+<ul>
+<li>最好情况：$T&#x3D;O(N)$</li>
+<li>最坏情况：$T&#x3D;O(N^2)$</li>
+</ul>
+<p>由于 N 个不同元素组成的序列平均有 N(N-1)&#x2F;4 个逆序对。<br>所以，任何以交换相邻两个元素来排序的算法，其平均时间复杂度为 $\Omega(N^2)$<br>因此，为了减小排序的平均时间复杂度，我们应该努力的让每一次基本操作消去不止一个逆序对。</p>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>首先设定一组间隔数，例如 5、3、1 ，这组间隔的最后一个数字必须是 1.而后对需要被排序的数组做如下操作：</p>
+<ul>
+<li>将数组的第 1、6、11、… 每隔 5 个元素选取一个，进行插入排序</li>
+<li>将数组的第 1、4、7、 … 每隔 3 个元素选取一个，进行插入排序</li>
+<li>将数组的第 1、2、3、 … 每隔 1 个元素选取一个，进行插入排序</li>
+</ul>
+<p>执行完上述操作后得到有序数组。</p>
+<p>在执行完间隔为 3 的排序后，间隔为 5 的序列仍然是有序的。</p>
+<p>需要注意的是，所选的间隔数最好互质，不然各个间隔的排序很可能不起作用，白白的增加时间复杂度。这一个原因也造成了原始的希尔排序的最坏时间复杂度为 $\Theta(N^2)$。因此，对于希尔排序间隔数的选择有以下方法：</p>
+<ul>
+<li>Hibbard 增量序列：间隔数选取 $2^k-1$，最坏时间复杂度 $\Theta(N^{\frac{3}{2}})$，猜想的平均时间复杂度 $\Omega(N^{\frac{5}{4}})$</li>
+<li>Sedgewick 增量序列：间隔选取 $9 \times 4^i - 9 \times 2^i + 1$ 或 $4^i - 3 \times 2^i +1$，猜想平均时间复杂度 $T_{avg}&#x3D;O(N^{\frac{7}{6}})$，最坏时间复杂度 $T_{worst}&#x3D;O(N^{\frac{4}{3}})$</li>
+</ul>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>每次找序列的最小元素，移动到序列的最后。</p>
+<p>由于无论如何都要一遍一遍的便利未排序的数组，所以时间复杂度：$T&#x3D;\Theta(N^2)$</p>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法一</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMinHeap(A);               <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)  </span><br><span class="line">        TmpA[i] = DeleteMin(A); <span class="comment">// 时间复杂度为 O(logN)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">        A[i] = TmpA[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法一的步骤如下：</p>
+<ol>
+<li>建立一个最小堆</li>
+<li>将最小堆中的根逐步弹出，放入暂存数组中</li>
+<li>将原数组替换为排序后的数组</li>
+</ol>
+<p>算法一的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p>该算法的时间复杂度还能够接受，唯一的问题是，该算法需要开辟一个和待排序数组同等大小的数组。因此我们提出了算法，算法二更加节省空间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法二</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMaxHeap(A);            <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=N<span class="number">-1</span>;i&gt;<span class="number">0</span>;i--)  </span><br><span class="line">        Swap(&amp;A[<span class="number">0</span>], &amp;A[i]);     <span class="comment">// 将最大堆的根和该堆的最后一个元素交换位置</span></span><br><span class="line">        AdjustMaxHeep(A, i)     <span class="comment">// 将最后一个元素排除在外，将剩余部分调整为最大堆</span></span><br><span class="line">                                <span class="comment">// 该步的时间复杂度是 O(logN) 树高</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法二的步骤如下：</p>
+<ol>
+<li>建立一个最大堆</li>
+<li>将当前堆的根与堆的最后一个元素交换</li>
+<li>将被交换的根排除在堆外，将剩余元素重新调整为最大堆。</li>
+<li>如果堆只剩下一个元素，则终止</li>
+<li>回到 2</li>
+</ol>
+<p>算法二的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p>算法二相比于算法一不需要开辟额外的空间。</p>
+<p>另外，虽然堆排序的时间复杂度小于希尔排序，但是在实际应用中不如使用：希尔排序+Sedgewick增量</p>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><h3 id="有序子序列的归并"><a href="#有序子序列的归并" class="headerlink" title="有序子序列的归并"></a>有序子序列的归并</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-42.png" alt="Alt text"></p>
+<p>开三个指针，分别指向序列一元素、序列二元素、储存空间元素。然后比较序列一元素和序列二元素，将较小的存入储存空间，然后较小的序列指针加 1 、储存空间的指针加 1。</p>
+<p>由于需要把两个子序列都看一遍，所以时间复杂度是 $O(N)$</p>
+<p>后面的归并排序，将使用该算法合并两个有序序列。</p>
+<h3 id="归并排序的递归实现"><a href="#归并排序的递归实现" class="headerlink" title="归并排序的递归实现"></a>归并排序的递归实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序的递归实现</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">MSort</span><span class="params">(ElementType A[], ElementType TmpA[], <span class="type">int</span> L, <span class="type">int</span> RightEnd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> Center;</span><br><span class="line">    <span class="keyword">if</span>(RightEnd-L&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        Center = (L+RightEnd)/<span class="number">2</span>;</span><br><span class="line">        MSort(A, Tmp, L, Center);</span><br><span class="line">        MSort(A, Tmp, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">        Merge(A, TmpA, L, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将无序数组一分为二，分别对左侧数组和右侧数组排序，然后使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并他们。递归的解决这个问题。</p>
+<p>最好、最坏、平均时间复杂度是 $O(Nlog^N)$</p>
+<h3 id="归并排序的非递归算法"><a href="#归并排序的非递归算法" class="headerlink" title="归并排序的非递归算法"></a>归并排序的非递归算法</h3><p>将无序数组切分为单个元素，我们将单个元素看作有序序列，然后两两元素（有序序列）使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并，重复执行，直到合并所有序列为止。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-45.png" alt="Alt text"></p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Quicksort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(N&lt;<span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">    pivot = 从 A 中选择主元;</span><br><span class="line">    将 S = &#123; A[]\pivot &#125; 分为两个独立子集:</span><br><span class="line">        A1 = &#123; a 在 S 中，且 a 小于等于 pivot &#125;</span><br><span class="line">        A2 = &#123; a 在 S 中，且 a 大于 pivot &#125;</span><br><span class="line">    A[] = Quicksort(A1, N1) 并 &#123;pivot&#125; 并 Quicksort(A2, N2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>选择一个主元</li>
+<li>将小于主元的数构成一个集合，大于主元的数构成一个集合，分别对这两个集合进行快速排序</li>
+<li>然后再将小于主元的有序集合、主元、大于主元的有序集合合并在一起，完成排序</li>
+</ul>
+<p>快速排序有两个主要工作分别是：</p>
+<ul>
+<li>选主元：取头、中、尾三个元素的中位数作为主元</li>
+<li>子集划分：选好主元后，在数组的头尾分别定义两个指针，将指针中的内容与主元比较大小。当左侧指针找到比主元大的元素时，左侧指针停止移动，等待右侧指针找到比主元小的元素。当右侧指针找到比主元小的元素后，两个指针交换内容。如果直到两个指针相遇，右侧指针都没找到比主元小的元素，则交换右侧指针所指元素和主元。此时，以主元为界，将数组划分为大于主元的部分和小于主元的部分。</li>
+</ul>
+<p>时间复杂度分析：$T(N)&#x3D;O(N \cdot logN)$</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/202002091953256.gif" alt="image"></p>
+<h2 id="对大数据元素排序"><a href="#对大数据元素排序" class="headerlink" title="对大数据元素排序"></a>对大数据元素排序</h2><ol>
+<li>表排序（间接排序）</li>
+</ol>
+<p>有时，需要被排序的数据元素很大，不方便被频繁的移动，因此，我们定义一个表记录各个元素的原始位置，然后对元素排序时只移动表中的记录。最后表中的序列标示着各个数据元素的正确位置。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-46.png" alt="Alt text"></p>
+<ol start="2">
+<li>物理排序</li>
+</ol>
+<p>在获得表排序的结果后，我们需要对元素进行移动，我们希望移动的次数越少越好。</p>
+<p>因此引入了“环”的概念，他表示一组需要交换位置的元素的集合。对每一个环进行排序后，总体上的时间复杂度是 $O(mN)$，其中 m 是元素移动的时间。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-47.png" alt="Alt text"></p>
+<p>图中，不同的元素代表不同的环。</p>
+<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>为所有可能的数值创建一个空位置，然后将需要排序的数组中的元素插入到对应的位置，最后从头到尾，将所有位置中的元素输出，即可得到排序。</p>
+<p>若需要被排序的元素个数为 N，可能出现的数值个数为 M，则整个排序过程，需要插入 N 次，最后输出结果时需要读取 M 次，因此，时间复杂度是 $O(M+N)$</p>
+<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>有时，可能出现的数值数量要远远大于我们需要排序的元素个数，这个时候，用桶排序就不划算了。因此提出了基数排序。</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-48.png" alt="Alt text"></p>
+<p>上述基数排序的流程如下：</p>
+<ol>
+<li><p>首先基于个位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-49.png" alt="Alt text"></p>
+</li>
+<li><p>将排序后的序列作为新的需要排序的序列</p>
+</li>
+<li><p>基于十位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-50.png" alt="Alt text"></p>
+<p>由于 0、1、8 的十位都是 0 ，所以他们都按照顺序排在了 0 下面。其他数字也按照这样的规则进行排序。</p>
+</li>
+<li><p>将排序后的序列作为新的需要排序的序列<br>这里的新序列是 [0, 1, 8, 512, 216, 125, 27, 729, 343, 64]</p>
+</li>
+<li><p>基于百位数进行排序</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-51.png" alt="Alt text"></p>
+</li>
+<li><p>读出排序后的序列</p>
+</li>
+</ol>
+<p>时间复杂度：$O(P(N+B))$，P 为排序的次数，B 为桶的个数，N 为元素个数。当桶的个数（基数）足够少时，近似于线性时间复杂度。</p>
+<h2 id="各种排序的比较"><a href="#各种排序的比较" class="headerlink" title="各种排序的比较"></a>各种排序的比较</h2><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-43.png" alt="Alt text"></p>
+<h1 id="散列表（哈希表）"><a href="#散列表（哈希表）" class="headerlink" title="散列表（哈希表）"></a>散列表（哈希表）</h1><p>有一组元素，元素个数为 N ，还有一个可以存放元素的空表，表的长度为 M。设计一种函数，能够将待查找的元素映射到空表的一个位置。这个函数称为<strong>哈希函数</strong>。元素的长度与空表的长度之比 $\frac{N}{M}$ 称为<strong>装填因子</strong>。</p>
+<h2 id="哈希函数的选取方法"><a href="#哈希函数的选取方法" class="headerlink" title="哈希函数的选取方法"></a>哈希函数的选取方法</h2><h3 id="数字关键词"><a href="#数字关键词" class="headerlink" title="数字关键词"></a>数字关键词</h3><ul>
+<li>直接定值法：待查找元素统一减去某个元素</li>
+<li>除留余数法：将关键词进行求余运算，将被除数取为一个素数，能够让映射更为均匀</li>
+<li>数字分析法：分析元素的关键位。当数字的关键位存在明显差异时，就可以将关键位取出，然后使用一些方法映射到哈希表。</li>
+<li>折叠法：把关键词拆分成几个部分，然后叠加</li>
+<li>平方取中法：对关键词平方，然后取中间的几位数</li>
+</ul>
+<h3 id="字符关键词"><a href="#字符关键词" class="headerlink" title="字符关键词"></a>字符关键词</h3><ul>
+<li>考虑字符串的前三个字符，分别作为百位、十位、个位，然后分别乘以 32，字符可以通过左移五位实现乘以 32。</li>
+</ul>
+<h2 id="解决冲突的方法"><a href="#解决冲突的方法" class="headerlink" title="解决冲突的方法"></a>解决冲突的方法</h2><h3 id="开放地址法"><a href="#开放地址法" class="headerlink" title="开放地址法"></a>开放地址法</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-52.png" alt="Alt text"></p>
+<p>如果位置发生冲突，就按照一定规则找下一个位置。</p>
+<ul>
+<li><p>线性探测法</p>
+<ul>
+<li>原理：插入位置发生冲突时，逐次向下 $+i^2$ 寻找能够储存的位置。超出散列表范围则求余，回到散列表的开始。</li>
+<li>问题线性探测的问题是，当某一个位置发生冲突后，该位置的冲突会越来越多，产生聚集现象。</li>
+</ul>
+</li>
+<li><p>平方探测</p>
+<ul>
+<li>原理：插入位置发生冲突时，逐次向下 $\pm i^2$ 寻找能够储存的位置，加和减交替出现。超出散列表范围则求余，回到散列表的开始。</li>
+<li>问题：平方探测的问题是，由于它是跳跃着查找的，所以当冲突发生时，某一个可能的空位可能始终无法被探测到。</li>
+<li>解决方案：解决方法是，将散列表的长度设计为 $4k+3$，这样可以保证在探测的过程中，每一个位置都可以被找到。</li>
+</ul>
+</li>
+<li><p>双散列探测</p>
+<ul>
+<li>原理：设置两个<strong>散列函数</strong>，第一个散列函数用来第一次插入的位置计算。当位置发生冲突时，则使用第二个散列函数计算平移量，然后原始插入位置与平移量相加得到最终位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="分离链接法"><a href="#分离链接法" class="headerlink" title="分离链接法"></a>分离链接法</h3><p>将发生冲突的元素通过链表串在一起。</p>
+<p>分离链表法的装载因子可以大于 1.</p>
+<h2 id="散列表查找的效率评估"><a href="#散列表查找的效率评估" class="headerlink" title="散列表查找的效率评估"></a>散列表查找的效率评估</h2><p>影响散列表的查找效率的主要因素是<strong>冲突</strong>，而产生冲突的多少主要由下列三个方面决定：</p>
+<ul>
+<li>散列函数是否均匀</li>
+<li>处理冲突的方法</li>
+<li>散列表的装填因子 $\alpha$</li>
+</ul>
+<h3 id="效率的计算平均查找长度"><a href="#效率的计算平均查找长度" class="headerlink" title="效率的计算平均查找长度"></a>效率的计算平均查找长度</h3><ul>
+<li>成功平均查找长度(ASLs)<ul>
+<li>定义：查找散列表中存在的元素所需要的平均时间。</li>
+<li>计算：对所有的存在的元素的查找次数求平均。</li>
+</ul>
+</li>
+<li>不成功平均查找长度(ASLu)<ul>
+<li>定义：查找散列表中不存在的元素，所需要的平均时间。</li>
+<li>计算：将哈希表中不存在的所有数值情况，按照哈希函数映射的结果进行分类。每一个类别的查找次数是相同的。将所有类别的查找次数相加求平均即可。</li>
+</ul>
+</li>
+</ul>
+<h3 id="各种探测方法的查找性能"><a href="#各种探测方法的查找性能" class="headerlink" title="各种探测方法的查找性能"></a>各种探测方法的查找性能</h3><ul>
+<li><p>线性探测法的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-53.png" alt="Alt text"></p>
+<p>反应一般情况下的查找次数，可能与真实次数存在差异。</p>
+</li>
+<li><p>平方探测法和双散列探测法的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-54.png" alt="Alt text"></p>
+</li>
+<li><p>分离链接发的查找性能</p>
+<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-56.png" alt="Alt text"></p>
+</li>
+</ul>
+<h3 id="期望探测次数与装在因子的关系"><a href="#期望探测次数与装在因子的关系" class="headerlink" title="期望探测次数与装在因子的关系"></a>期望探测次数与装在因子的关系</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-55.png" alt="Alt text"></p>
+<p>可以看到，双散列探测法 和 平方探测法 优于 线性探测法。</p>
+<h1 id="KMP-算法（串匹配）"><a href="#KMP-算法（串匹配）" class="headerlink" title="KMP 算法（串匹配）"></a>KMP 算法（串匹配）</h1><ol>
+<li><p>什么是串</p>
+<ul>
+<li>线性储存的一组数据（默认是字符）</li>
+</ul>
+</li>
+<li><p>串的模式匹配</p>
+<ul>
+<li>给定一个字符串，给定一个模式，查找这个模式在字符串中出现的位置。</li>
+</ul>
+</li>
+</ol>
+<h2 id="KMP-算法"><a href="#KMP-算法" class="headerlink" title="KMP 算法"></a>KMP 算法</h2><p><img src="/.%5C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%5Cimage57.png" alt="Alt text"></p>
 
       
     </div>
@@ -2635,823 +3821,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="何先生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北国回忆录">
-      <meta itemprop="description" content="东拼西凑、杂七杂八">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 北国回忆录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/16/linux/linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B/Linux%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">Linux文件编程-基本概念</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-09-16 12:39:50" itemprop="dateCreated datePublished" datetime="2023-09-16T12:39:50+08:00">2023-09-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-07-30 19:19:30" itemprop="dateModified" datetime="2024-07-30T19:19:30+08:00">2024-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="文件属性信息"><a href="#文件属性信息" class="headerlink" title="文件属性信息"></a>文件属性信息</h2><p>“Linux系统中万物皆文件”，当我们进入家目录并键入命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l</span><br></pre></td></tr></table></figure>
-
-<p>终端会输出目录下文件的一些信息。但是在这些信息中，作为小白的我只能看出来，输出中包含<strong>时间</strong>和<strong>文件名</strong>，其余的项就不知道代表什么了。</p>
-<blockquote>
-<p>(base) torch@torch:~$ ls -l<br>  total 20<br>  drwxr-xr-x 28 torch torch 4096 Aug 16 16:57 anaconda3<br>  drwxr-xr-x  6 torch torch 4096 Aug 21 13:43 code<br>  drwxrwxr-x 13 torch torch 4096 Nov 18  2022 opencv<br>  drwxr-xr-x  2 torch torch 4096 Mar 18 18:36 proxy<br>  drwxr-xr-x  2 torch torch 4096 May 19 09:17 virtualenv</p>
-</blockquote>
-<p>我们以输出中的第二行为例：</p>
-<blockquote>
-<p>drwxr-xr-x 28 torch torch 4096 Aug 16 16:57 anaconda3</p>
-</blockquote>
-<p>从左到右，字符的意义依次是：</p>
-<table>
-<thead>
-<tr>
-<th align="center">字符</th>
-<th align="center">意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">d</td>
-<td align="center">文件类型</td>
-</tr>
-<tr>
-<td align="center">rwx</td>
-<td align="center">文件所有者权限</td>
-</tr>
-<tr>
-<td align="center">r-x</td>
-<td align="center">文件所属用户组权限</td>
-</tr>
-<tr>
-<td align="center">r-x</td>
-<td align="center">其他用户权限</td>
-</tr>
-<tr>
-<td align="center">28</td>
-<td align="center">连接数</td>
-</tr>
-<tr>
-<td align="center">torch</td>
-<td align="center">所属用户</td>
-</tr>
-<tr>
-<td align="center">torch</td>
-<td align="center">所属用户组</td>
-</tr>
-<tr>
-<td align="center">4096</td>
-<td align="center">文件大小</td>
-</tr>
-<tr>
-<td align="center">Aug 16 16:57</td>
-<td align="center">文件最新修改日期</td>
-</tr>
-<tr>
-<td align="center">anaconda3</td>
-<td align="center">文件名</td>
-</tr>
-</tbody></table>
-<p>这其中有一些名词需要解释和扩充，我们整理如下</p>
-<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>其中，我们经常会去操作的是普通文件和目录文件。以后的重心也会放在普通文件和目录文件上。如果对其他文件类型不清楚也没关系，用到的很少。</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">-</td>
-<td align="center">普通文件</td>
-</tr>
-<tr>
-<td align="center">d</td>
-<td align="center">目录文件</td>
-</tr>
-<tr>
-<td align="center">b</td>
-<td align="center">硬盘、光驱等块设备文件</td>
-</tr>
-<tr>
-<td align="center">c</td>
-<td align="center">光猫、串口设备等字符设备文件</td>
-</tr>
-<tr>
-<td align="center">l</td>
-<td align="center">链接文件</td>
-</tr>
-<tr>
-<td align="center">p</td>
-<td align="center">管道文件</td>
-</tr>
-<tr>
-<td align="center">s</td>
-<td align="center">套接口文件&#x2F;数据接口文件</td>
-</tr>
-</tbody></table>
-<h3 id="文件所有者与文件所属用户组"><a href="#文件所有者与文件所属用户组" class="headerlink" title="文件所有者与文件所属用户组"></a>文件所有者与文件所属用户组</h3><p>文件所有者默认情况下是文件创建者，所属用户组为文件创建者所属的组。</p>
-<h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><p>虽然普通文件和目录文件的权限种类和代表字符相同，但是却代表着不同的含义[^1]。</p>
-<table>
-<thead>
-<tr>
-<th align="center">类型</th>
-<th align="center">文件权限</th>
-<th align="center">目录权限</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">r</td>
-<td align="center">可读</td>
-<td align="center">可查看目录下的文件</td>
-</tr>
-<tr>
-<td align="center">w</td>
-<td align="center">可写</td>
-<td align="center">可以对目录内容进行创建、删除和重命名</td>
-</tr>
-<tr>
-<td align="center">x</td>
-<td align="center">可执行</td>
-<td align="center">可以进入目录</td>
-</tr>
-</tbody></table>
-<h3 id="奇怪的4096-2"><a href="#奇怪的4096-2" class="headerlink" title="奇怪的4096[^2]"></a>奇怪的<strong>4096</strong>[^2]</h3><p>可以看到，我们的目录文件大小都是4096B，但是我们的目录中明明存放了不同的东西，不应该一样大呀？而且这4096B也就是4kb是不是太小了？值得注意的是，我们的目录文件的大小并不表示该目录内所有文件大小的总和，而是该目录的<strong>i节点</strong>和目录下所有的文件名字符的大小（这么说也不准确，但是可以这么理解）。文件名可以理解，i节点又是啥？这个后面说。总之，目录文件所包含的信息总共就这两部分，其实占不了多大的空间，所以不会像我们在windows中看目录属性那样显示大小有几百兆。但是，即使是这样，也不应该相等，都是4kb呀？这就是另一个问题了，涉及到linux系统文件存取的最小单位——<strong>块</strong>。这个最小存储单元的存在意味着，linux系统中的文件最小也的是4kb，而我们的目录，<strong>i节点</strong>占用的空间很小，一般是128B或256B，主要的空间都用在记录文件名上了，只要该目录下的文件名没有多到一定程度，突破了一个<strong>块</strong>的记录限制，那么这个目录文件的大小就只能是4096B。</p>
-<h2 id="i节点"><a href="#i节点" class="headerlink" title="i节点"></a>i节点</h2><p>上面一节中，我们有说到目录中包含一个i节点。其实linux系统中的所有文件都有一个i节点（索引节点，index node）。它的具体内容如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">内容</th>
-<th align="center">解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">i节点号</td>
-<td align="center">在系统中该文件的唯一编号，是系统访问文件的途径</td>
-</tr>
-<tr>
-<td align="center">文件类型</td>
-<td align="center">——————</td>
-</tr>
-<tr>
-<td align="center">权限</td>
-<td align="center">——————</td>
-</tr>
-<tr>
-<td align="center">文件字节数</td>
-<td align="center">——————</td>
-</tr>
-<tr>
-<td align="center">uid</td>
-<td align="center">文件拥有者</td>
-</tr>
-<tr>
-<td align="center">gid</td>
-<td align="center">文件所属组</td>
-</tr>
-<tr>
-<td align="center">文件时间戳</td>
-<td align="center">包含i节点变动时间、文件内容变动时间、最近一次无变动访问时间</td>
-</tr>
-<tr>
-<td align="center">硬链接数</td>
-<td align="center">该文件的别名数量</td>
-</tr>
-<tr>
-<td align="center">储存位置</td>
-<td align="center">存放该文件的<strong>块</strong>的位置</td>
-</tr>
-</tbody></table>
-<p>可以看到，文件的i节点中并不包含文件名的信息，我们在上一节中也说到过，文件名信息是包含在目录文件中的。i节点是计算机查找文件的途径，文件名只是方便我们人类记忆的符号，那当我们按照文件名去操作文件时，系统是如何将文件名与文件的i节点号对应的呢？</p>
-<h2 id="目录文件"><a href="#目录文件" class="headerlink" title="目录文件"></a>目录文件</h2><p>  我们之前说到，目录文件由<strong>i节点</strong>和<strong>包含的文件名</strong>两部分组成，其实目录也可以像普通文件一样被打开。我们在终端中键入以下命令</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim anaconda3/</span><br></pre></td></tr></table></figure>
-
-<p>  获得如下输出：</p>
-<blockquote>
-<p>“ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>    “ Netrw Directory Listing                                        (netrw v156)<br>    “   &#x2F;home&#x2F;torch&#x2F;anaconda3<br>    “   Sorted by      name<br>    “   Sort sequence: [/]$,&lt;core%(.\d+)=&gt;,.h$,.c$,.cpp$,~=*$,*,.o$,.obj$,.info$,.swp$,.bak$,”   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special<br>    “ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>    ..&#x2F;                                                                              .&#x2F;<br>    bin&#x2F;<br>    compiler_compat&#x2F;<br>    conda-meta&#x2F;<br>    condabin&#x2F;<br>    doc&#x2F;<br>    envs&#x2F;<br>    etc&#x2F;<br>    include&#x2F;<br>    lib&#x2F;<br>    libexec&#x2F;<br>    licensing&#x2F;<br>    man&#x2F;<br>    mkspecs&#x2F;<br>    phrasebooks&#x2F;<br>    pkgs&#x2F;<br>    plugins&#x2F;<br>    qml&#x2F;<br>    resources&#x2F;</p>
-</blockquote>
-<p>  可以看到，其实这个目录文件中的文字内容就是该目录下所包含的文件名称。而实际上，这些输出已经被vim处理过了，实际的内容不只是文件名，还有文件名所对应的<strong>i节点号</strong>。文件名与<strong>i节点号</strong>构成了一个查询列表，当我们通过文件名操作文件时，计算机就可以通过查询列表找到文件的i节点号来完成操作。而这个查询列表就保存在目录文件中。</p>
-<p>[^1]:<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_57558097/article/details/127498309">Linux 实操篇⑤（组管理：文件所有者、所属组、其他组；权限管理：rwx 权限详解 0-9 位说明 、修改文件权限 chmod、修改文件&#x2F;目录所有者 chown、修改文件&#x2F;目录所在组 chgrp）</a><br>[^2]:<a target="_blank" rel="noopener" href="https://community.aidlux.com/postDetail/556">Linux下为什么目录的大小总是4096</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="何先生">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北国回忆录">
-      <meta itemprop="description" content="东拼西凑、杂七杂八">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 北国回忆录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">数据结构与算法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-09-16 12:39:50" itemprop="dateCreated datePublished" datetime="2023-09-16T12:39:50+08:00">2023-09-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-07-30 19:26:37" itemprop="dateModified" datetime="2024-07-30T19:26:37+08:00">2024-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%9B%9B%E5%A4%A7%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">四大件</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="复杂度的渐进表示"><a href="#复杂度的渐进表示" class="headerlink" title="复杂度的渐进表示"></a>复杂度的渐进表示</h1><ul>
-<li>最小上界复杂度：$T(n) &#x3D; O(f(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \le C \cdot f(n)$</li>
-<li>最大下界复杂度：$T(n) &#x3D; \Omega(g(n))$ 表示存在常数 $C&gt;0, n_0&gt;0$ 使得当 $n \ge n_0$ 时有 $T(n) \ge C \cdot g(n)$</li>
-<li>等价复杂度：$T(n) &#x3D; \Theta(h(n))$ 表示同时满足 $T(n) &#x3D; O(h(n))$ 和 $T(n) &#x3D; \Omega(h(n))$</li>
-</ul>
-<p>各种常见时间复杂度函数的比较：</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image.png" alt="各种常见时间复杂度函数的比较"></p>
-<p>当数据规模达到一定程度时，各类时间复杂度有如下关系：</p>
-<p>$1 &lt; log^n &lt; n &lt; n \cdot log^n &lt; n^2 &lt; 2^n &lt; n!$</p>
-<p>如果两个程序块的复杂度分别是 $T_1(n)&#x3D;O(f_1(n))$、$T_2(n)&#x3D;O(f_2(n))$，则：</p>
-<ul>
-<li>当两个程序前后拼接执行时：时间复杂度 $T(n) &#x3D; max(T_1(n), T_2(n))$</li>
-<li>当两个程序包含嵌套执行时：时间复杂度 $T(n) &#x3D; T_1(n) \cdot T_2(n)$</li>
-</ul>
-<p>注意事项：</p>
-<ul>
-<li>当 $T(n)$ 是一个 k 阶多项式时，$T(n)&#x3D;\Theta(n^k)$</li>
-<li>一个 for 循环的时间复杂度等于循环次数乘以循环体的时间复杂度</li>
-<li>if-else 的时间复杂度，取各个判断分支中时间复杂度最大的一个</li>
-</ul>
-<h2 id="示例：递归的时间复杂度如何去算"><a href="#示例：递归的时间复杂度如何去算" class="headerlink" title="示例：递归的时间复杂度如何去算"></a>示例：递归的时间复杂度如何去算</h2><p>问题：寻找一串数字的最大子列和？</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-1.png" alt="数字的最大子列和"></p>
-<p>将一个问题分为两半，原本的时间复杂度时是 $T(n)$，分为两半后，数据规模减半，两边的时间复杂度都是 $T(\frac{n}{2})$。另外，当综合两边的结果时，需要把全部元素“看一遍”，因此，综合两个 $T(n)$ 时的时间复杂度是 $O(n)$。因此有式子：</p>
-<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + O(n)$</p>
-<p>而 $O(n) &#x3D; c \cdot n$，因此，公式变为：</p>
-<p>$T(n) &#x3D; 2 \cdot T(\frac{n}{2}) + c \cdot n$</p>
-<p>将 $n&#x3D;\frac{n}{2}$ 递推地带入公式即可推导出时间复杂度。</p>
-<h2 id="各种操作时间复杂度比较"><a href="#各种操作时间复杂度比较" class="headerlink" title="各种操作时间复杂度比较"></a>各种操作时间复杂度比较</h2><table>
-<thead>
-<tr>
-<th align="center">结构</th>
-<th align="center">操作</th>
-<th align="center">平均时间复杂度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">数组</td>
-<td align="center">求表长</td>
-<td align="center">$\Theta(1)$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">按序号查找</td>
-<td align="center">$\Theta(1)$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">按值查找</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">插入指定位置</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">删除指定位置</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">链表</td>
-<td align="center">求表长</td>
-<td align="center">$\Theta(N)$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">按序号查找</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">按值查找</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">插入指定位置</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-<tr>
-<td align="center">–</td>
-<td align="center">删除指定位置</td>
-<td align="center">$\Theta(\frac{N}{2})$</td>
-</tr>
-</tbody></table>
-<h1 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h1><p>线性表的两种储存结构：</p>
-<ul>
-<li>顺序储存结构：数组</li>
-<li>链式储存结构：链表</li>
-</ul>
-<h1 id="广义表"><a href="#广义表" class="headerlink" title="广义表"></a>广义表</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> GNode* GList;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">GNode</span>&#123;</span><br><span class="line">  <span class="type">int</span> Tag;</span><br><span class="line">  <span class="keyword">union</span>&#123;</span><br><span class="line">      ElementType Data;</span><br><span class="line">      Glist SubList;</span><br><span class="line">  &#125;URegion;</span><br><span class="line">  GList Next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>广义表的数据项有可能是数据，也有可能是表，因此，使用联合体来表示数据域，使用 Tag 标签来表示该节点储存的是哪一种数据。</p>
-<h1 id="多重链表"><a href="#多重链表" class="headerlink" title="多重链表"></a>多重链表</h1><p>有多个指针域的链表。但注意，双向链表有两个指针域，分别指向前一个节点和后一个节点，但它不是多重链表。</p>
-<p>多重链表可以用来表示稀疏矩阵，相比于使用二维数组能够节省更多空间。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-3.png" alt="Alt text"></p>
-<p>图像中， Term 是矩阵的入口节点，4 和 5 代表矩阵拥有四行五列，7 代表矩阵拥有 7 个元素。Term 中包含两个指针域，分别指向右侧和下方。Head 节点是矩阵各行各列的头节点，Head 中包含两个指针域和一个值域，两个指针域与 Term 的指针域相同，值域中保存着指向下一个 Head 节点的指针，所以实际上 Head 节点中包含的是三个指针域。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-2.png" alt="Alt text"></p>
-<h1 id="堆栈-Stack"><a href="#堆栈-Stack" class="headerlink" title="堆栈(Stack)"></a>堆栈(Stack)</h1><p>后入先出</p>
-<h1 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列(Queue)"></a>队列(Queue)</h1><p>先入先出</p>
-<h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><p>儿子兄弟表示法，避免空指针浪费空间<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-4.png" alt="Alt text"><br>将任意的树通过这种方法表示后旋转45°<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-5.png" alt="Alt text"><br>可以得到二叉树，因此，任何一个树都可以表示为二叉树。</p>
-<h2 id="二叉树分类"><a href="#二叉树分类" class="headerlink" title="二叉树分类"></a>二叉树分类</h2><p>斜二叉树</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-6.png" alt="斜二叉树"></p>
-<p>完美二叉树（满二叉树）</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-7.png" alt="完美二叉树"></p>
-<p>完全二叉树</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-8.png" alt="完全二叉树"></p>
-<p>二叉树的特点：</p>
-<ul>
-<li>第 i 层最大节点数 $2^{i-1}$</li>
-<li>深度为 k 的二叉树最大节点数 $2^k-1$</li>
-<li>对于任何二叉树，若 $n_0$ 表示叶节点个数、$n_2$是度为 2 的非叶节点个数，那么两者满足关系式$n_0&#x3D;n_2+1$</li>
-</ul>
-<p>对于最后一点，我们可以从二叉树边的个数来考虑。我们设度为 2 的节点个数为 $n_2$，度为 1 的节点个数为 $n_1$ 度为 0 的节点个数为 $n_0$。那么，整个二叉树拥有的边的个数为 $n_0+n_1 +n_2-1$，同时，通过度来计算边的个数为 $0 \cdot n_0 + 1 \cdot n_1 + 2 \cdot n_2$，两侧相等得到$n_0&#x3D;n_2+1$</p>
-<h2 id="二叉树的储存"><a href="#二叉树的储存" class="headerlink" title="二叉树的储存"></a>二叉树的储存</h2><p>完全二叉树可以使用数组储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-9.png" alt="Alt text"><br>一般的二叉树，通过将其补全为完全二叉树，也可以使用数组储存，但是会浪费空间。</p>
-<p>所有类型的二叉树都可以使用链表来储存<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-10.png" alt="Alt text"></p>
-<h2 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h2><p>先序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-11.png" alt="Alt text"><br>中序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-12.png" alt="Alt text"><br>后序遍历<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-13.png" alt="Alt text"></p>
-<p>无论先序、中序还是后序，同一个节点我们都会经历三次<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-14.png" alt="Alt text"><br>先序是在第一次经历节点时就使用节点值、中序是第二次经历节点时就使用节点值、后续是第三次经历节点时就使用节点值。</p>
-<p>递归的算法都可以使用堆栈来实现。</p>
-<p>层序遍历</p>
-<p>使用队列遍历二叉树，压入父节点，弹出节点时再压入其左右儿子节点，如此反复，直到所有的节点全部被访问。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-15.png" alt="Alt text"></p>
-<h2 id="二叉树遍历应用"><a href="#二叉树遍历应用" class="headerlink" title="二叉树遍历应用"></a>二叉树遍历应用</h2><p>先序遍历：查找所有叶节点<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-16.png" alt="查找所有叶节点"><br>后序遍历：求二叉树的高度<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-17.png" alt="Alt text"><br>构造运算树<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-18.png" alt="Alt text"><br>虽然直接构造的中缀表达式会收到运算优先级的影响，但是可以通过每次遍历到父节点就为前面的式子加括号来解决问题。</p>
-<p>另外，只通过先序和后序遍历结果不能够唯一确定一个二叉树。<br><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-19.png" alt="Alt text"><br>可以看到，我们无法根据先序和后序遍历结果对子树是左子树还是右子树进行判断。因此必须有两种遍历结果并且其中必须包含中序遍历结果才能判断。</p>
-<h2 id="静态链表是结构体数组"><a href="#静态链表是结构体数组" class="headerlink" title="静态链表是结构体数组"></a>静态链表是结构体数组</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType Element;</span><br><span class="line">    Tree Left;</span><br><span class="line">    Tree Right;</span><br><span class="line">&#125;T1[MaxTree], T2[MaxTree];</span><br></pre></td></tr></table></figure>
-
-<p>其中的 T1 和 T2 就是静态链表。</p>
-<h2 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h2><p>一种二叉树，可以为空，当不为空时需要满足以下条件：</p>
-<ul>
-<li>左儿子小于根节点</li>
-<li>右儿子大于根节点</li>
-<li>左右子树都是二叉搜索树</li>
-</ul>
-<p>查找指定元素：查找效率取决于树的高度。</p>
-<p>查找最大值：最大值一定在树的最右边</p>
-<p>查找最小值：最小值一定在树的最左边</p>
-<p>尾递归可以用循环来实现，尾递归是指在返回时调用递归</p>
-<p>插入元素：从根部向下一直比较，元素最终插入到树的最下面。</p>
-<p>删除元素：删除元素后，用右子树的最小值或左子树的最大值替代被删除元素。由于右子树的最小值和左子树的最大值最多只有一个儿子节点，因此，删除任意元素的问题转变为删除一个没有儿子节点或者只有一个儿子节点的元素问题。当删除没有儿子节点的元素时，直接删除即可；当删除有一个儿子节点的元素时，用儿子节点替代被删除元素即可。</p>
-<h2 id="平衡二叉树（AVL树）"><a href="#平衡二叉树（AVL树）" class="headerlink" title="平衡二叉树（AVL树）"></a>平衡二叉树（AVL树）</h2><p>平衡因子：$BF(T)&#x3D;h_L-h_R$，左子树高度减去右子树高度。</p>
-<p>平衡二叉树：对于任意一个子树而言$|BF(T)|\le1$。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-21.png" alt="Alt text"></p>
-<p>高度为 h 的平衡二叉树和其最少节点数 n 之间满足关系式：$h&#x3D;O(log_2^n)$。所以，一个平衡二叉树（AVL树）的查找时间复杂度为 $O(log_2^n)$。</p>
-<h3 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h3><p>右旋调整：RR 旋转</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-22.png" alt="RR 旋转"></p>
-<p>左旋调整：LL 旋转</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-23.png" alt="Alt text"></p>
-<p>LR 旋转</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-24.png" alt="Alt text"></p>
-<p>RL 旋转</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-25.png" alt="Alt text"></p>
-<p>上述旋转的命名方法：如果插入的节点在左子树的右子树上，则调整方式命名为 LR 旋转；如果插入节点在右子树的左子树上，则调整方式命名为 RL 旋转。</p>
-<h1 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h1><p>堆是一个具有优先级的特殊队列。</p>
-<p>堆的实现方式：</p>
-<ul>
-<li>数组<ul>
-<li>插入：插入到尾部，$\Theta(1)$</li>
-<li>删除：查找最大（后最小）优先级 $\Theta(n)$，删除元素后移动后面的元素 $O(n)$</li>
-</ul>
-</li>
-<li>链表<ul>
-<li>插入：总是插入到链表的头部 $\Theta(1)$</li>
-<li>删除：查找最大关键字后删除节点 $\Theta(n)$</li>
-</ul>
-</li>
-<li>有序数组（按优先级排序）<ul>
-<li>插入：找到合适的位置 $O(n)$ 或 $O(log_2^n)$，移动元素并插入 $O(n)$</li>
-<li>删除：删除最后一个元素 $\Theta(1)$</li>
-</ul>
-</li>
-<li>有序链表<ul>
-<li>插入：找到合适的元素位置插入元素 $O(n)$</li>
-<li>删除：删除首元或最后元素 $\Theta(1)$</li>
-</ul>
-</li>
-</ul>
-<p>实际的堆是通过完全二叉树实现的，这样插入和删除的时间复杂度都是 $O(log_2^n)$。为了减少删除操作的难度，对于该完全二叉树的所有子树而言，我们将最大或最小的元素放在根部，以满足我们对删除的需求。将最大元素放在根部，我们将获得最大堆；将最小元素放在根部，我们将获得最小堆。</p>
-<p>插入操作：先将元素插入到堆（完全二叉树）的最后，然后逐步和自己的父节点进行优先级比较，以安放到合适的位置。时间复杂度为 $O(log_2^n)$</p>
-<p>删除操作：删除堆（完全二叉树）的根，然后将完全二叉树的最后一个元素放到根部，然后逐步和子节点进行比较，以安放到合适位置。时间复杂度为 $O(log_2^n)$</p>
-<p>最大堆的建立：</p>
-<ul>
-<li>方案一：将元素一个一个的插入到空堆中。时间复杂度为 $O(n \cdot log_2^n)$</li>
-<li>方案二：先构造完全二叉树，然后调整大小构成堆。$O(n)$</li>
-</ul>
-<h1 id="哈夫曼树（最优二叉树）"><a href="#哈夫曼树（最优二叉树）" class="headerlink" title="哈夫曼树（最优二叉树）"></a>哈夫曼树（最优二叉树）</h1><p>带权路径长度（WPL）：每一个叶子结点的权重乘以其到根节点的路径长度之和。</p>
-<p>哈夫曼树：WPL 最小的二叉树。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-26.png" alt="Alt text"></p>
-<p>图中第一个 WPL：$1 \cdot 4 + 2 \cdot 4 + 3 \cdot 3 + 4 \cdot 2 + 5 \cdot 1 &#x3D; 34$</p>
-<p>图中第二个 WPL：$5 \cdot 4 + 4 \cdot 4 + 3 \cdot 3 + 2 \cdot 2 + 1 \cdot 1 &#x3D; 50$</p>
-<p>图中第三个 WPL：$1 \cdot 3 + 2 \cdot 3 + 3 \cdot 2 + 4 \cdot 2 + 5 \cdot 2 &#x3D; 33$</p>
-<h2 id="构造一个哈夫曼树"><a href="#构造一个哈夫曼树" class="headerlink" title="构造一个哈夫曼树"></a>构造一个哈夫曼树</h2><ul>
-<li><p>给定一个列表 [1, 2, 3, 4, 5]，将它们看作 5 个树的根节点。</p>
-</li>
-<li><p>在它们之中找到两个最小根节点的树进行合并。此处将 [1, 2] 进行合并，变为以 3 为根，1、2 为叶节点的树。此时根节点列表变为[3, 3, 4, 5]。</p>
-</li>
-<li><p>重复第二步，直到根节点列表中只有一个根节点。此时，原给定列表中的所有数值变成了所构建的树的叶节点，所构建的树是哈夫曼树。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-27.png" alt="森特佩"></p>
-<p>$\downarrow$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-28.png" alt="Alt text"></p>
-<p>$\downarrow$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-29.png" alt="Alt text"></p>
-<p>$\downarrow$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-30.png" alt="Alt text"></p>
-<p>$\downarrow$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-31.png" alt="Alt text"></p>
-</li>
-</ul>
-<p>哈夫曼树的特点：</p>
-<ul>
-<li>从哈夫曼树的构造过程可知，哈夫曼树中不存在度为一的节点。由公式 $n_0&#x3D;n_2+1$ 可得，叶节点数为 n 的哈夫曼树的总节点数为 $2 \cdot n-1$</li>
-<li>哈夫曼树交换左右子树仍然是哈夫曼树</li>
-<li>同一组权值可能出现两个不同构的哈夫曼树，但他们的 WPL 相同</li>
-</ul>
-<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>为了避免编码的二义性，应当避免一个字符的编码是另一个字符编码的前缀。使用二叉树的叶节点来构造这种编码可以避免二义性：</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-32.png" alt="Alt text"></p>
-<p>其中，a 的编码是 00，u 的编码是 01，x 的编码是 10，z 的编码是 11。这个例子可能有点特殊，其实，即使编码不是等长码也可以。但编码的节点必须是二叉树的叶节点。</p>
-<p>这样的编码方式似乎很不错。但是，由于每一个字符出现的频率不相同，因此，这样的编码并不是效率最高的。我们假设我们要对下面的字符序列进行编码：[aaaxuaxz]，那么，a、u、x、z 使用上面的二叉树编码后的结果所包含的总位数为：$2 \cdot 4 + 2 \cdot 1 + 2 \cdot 2 + 2 \cdot 1 &#x3D; 16$。而，如果我们将字符出现的频率作为该字符的权重，并使用哈夫曼树构造这样的编码，则可以最小化编码后的位数，同时，因为哈夫曼树也是二叉树，且编码后的字符都位于哈夫曼树的叶结点上，所以得到的编码也具有唯一性。上面的例子写成哈夫曼树如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">a</th>
-<th align="center">u</th>
-<th align="center">x</th>
-<th align="center">z</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">4</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-33.png" alt="Alt text"></p>
-<p>所以字符应编码如下：</p>
-<table>
-<thead>
-<tr>
-<th align="center">a</th>
-<th align="center">u</th>
-<th align="center">x</th>
-<th align="center">z</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">0</td>
-<td align="center">110</td>
-<td align="center">10</td>
-<td align="center">111</td>
-</tr>
-</tbody></table>
-<h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>只执行两个操作：</p>
-<ul>
-<li>将两个元素连线：通过将两个元素所在集合合并实现</li>
-<li>查询两个元素是否联通</li>
-</ul>
-<p>每一个集合可以用树来储存。通过合并两个树实现集合的合并；通过查找两个元素的根节点，并比较根节点是否相同，来判断两个元素是否在同一集合（联通）。这里的树是多叉树。</p>
-<p>用结构数组可以储存这样的树：</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-34.png" alt="Alt text"></p>
-<p>合并两个树（集合）的过程如下：</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-35.png" alt="Alt text"></p>
-<p>$\downarrow$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-36.png" alt="Alt text"></p>
-<p>在合并的过程中，由于树越来越高会降低查找的效率，因此，我们尽量将小的树拼到高的树上。</p>
-<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><p>无向图的深度优先搜索 DFS 的时间复杂度：</p>
-<p>当图拥有 N 个节点 E 条边时</p>
-<ul>
-<li>用邻接表储存图：$O(N+E)$</li>
-<li>邻接矩阵储存图：$O(N^2)$</li>
-</ul>
-<p>无向图的广度优先搜索 BFS 的时间复杂度：</p>
-<p>当图拥有 N 个节点 E 条边时</p>
-<ul>
-<li>用邻接表储存图：$O(N+E)$</li>
-<li>邻接矩阵储存图：$O(N^2)$</li>
-</ul>
-<h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>从头开始两两比较，保证较大的数字在数字比较对的后一位。每一次遍历，整个序列最大的数字将被排到数列最后。</p>
-<p>时间复杂度：</p>
-<ul>
-<li>最好情况：$T&#x3D;O(N)$</li>
-<li>最坏情况：$T&#x3D;O(N^2)$</li>
-</ul>
-<p>由于只需要对相邻的两个元素进行操作，因此，它天然的适用于数组和链表。</p>
-<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>一个数字一个数字的拿进来，然后和已经存在的有序序列进行比较插入。</p>
-<p>时间复杂度：</p>
-<ul>
-<li>最好情况：$T&#x3D;O(N)$</li>
-<li>最坏情况：$T&#x3D;O(N^2)$</li>
-</ul>
-<p>由于 N 个不同元素组成的序列平均有 N(N-1)&#x2F;4 个逆序对。<br>所以，任何以交换相邻两个元素来排序的算法，其平均时间复杂度为 $\Omega(N^2)$<br>因此，为了减小排序的平均时间复杂度，我们应该努力的让每一次基本操作消去不止一个逆序对。</p>
-<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>首先设定一组间隔数，例如 5、3、1 ，这组间隔的最后一个数字必须是 1.而后对需要被排序的数组做如下操作：</p>
-<ul>
-<li>将数组的第 1、6、11、… 每隔 5 个元素选取一个，进行插入排序</li>
-<li>将数组的第 1、4、7、 … 每隔 3 个元素选取一个，进行插入排序</li>
-<li>将数组的第 1、2、3、 … 每隔 1 个元素选取一个，进行插入排序</li>
-</ul>
-<p>执行完上述操作后得到有序数组。</p>
-<p>在执行完间隔为 3 的排序后，间隔为 5 的序列仍然是有序的。</p>
-<p>需要注意的是，所选的间隔数最好互质，不然各个间隔的排序很可能不起作用，白白的增加时间复杂度。这一个原因也造成了原始的希尔排序的最坏时间复杂度为 $\Theta(N^2)$。因此，对于希尔排序间隔数的选择有以下方法：</p>
-<ul>
-<li>Hibbard 增量序列：间隔数选取 $2^k-1$，最坏时间复杂度 $\Theta(N^{\frac{3}{2}})$，猜想的平均时间复杂度 $\Omega(N^{\frac{5}{4}})$</li>
-<li>Sedgewick 增量序列：间隔选取 $9 \times 4^i - 9 \times 2^i + 1$ 或 $4^i - 3 \times 2^i +1$，猜想平均时间复杂度 $T_{avg}&#x3D;O(N^{\frac{7}{6}})$，最坏时间复杂度 $T_{worst}&#x3D;O(N^{\frac{4}{3}})$</li>
-</ul>
-<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>每次找序列的最小元素，移动到序列的最后。</p>
-<p>由于无论如何都要一遍一遍的便利未排序的数组，所以时间复杂度：$T&#x3D;\Theta(N^2)$</p>
-<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法一</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMinHeap(A);               <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)  </span><br><span class="line">        TmpA[i] = DeleteMin(A); <span class="comment">// 时间复杂度为 O(logN)</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">        A[i] = TmpA[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>算法一的步骤如下：</p>
-<ol>
-<li>建立一个最小堆</li>
-<li>将最小堆中的根逐步弹出，放入暂存数组中</li>
-<li>将原数组替换为排序后的数组</li>
-</ol>
-<p>算法一的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
-<p>该算法的时间复杂度还能够接受，唯一的问题是，该算法需要开辟一个和待排序数组同等大小的数组。因此我们提出了算法，算法二更加节省空间。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法二</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Heap_Sort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    BuildMaxHeap(A);            <span class="comment">// 时间复杂度为 O(N)</span></span><br><span class="line">    <span class="keyword">for</span>(i=N<span class="number">-1</span>;i&gt;<span class="number">0</span>;i--)  </span><br><span class="line">        Swap(&amp;A[<span class="number">0</span>], &amp;A[i]);     <span class="comment">// 将最大堆的根和该堆的最后一个元素交换位置</span></span><br><span class="line">        AdjustMaxHeep(A, i)     <span class="comment">// 将最后一个元素排除在外，将剩余部分调整为最大堆</span></span><br><span class="line">                                <span class="comment">// 该步的时间复杂度是 O(logN) 树高</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>算法二的步骤如下：</p>
-<ol>
-<li>建立一个最大堆</li>
-<li>将当前堆的根与堆的最后一个元素交换</li>
-<li>将被交换的根排除在堆外，将剩余元素重新调整为最大堆。</li>
-<li>如果堆只剩下一个元素，则终止</li>
-<li>回到 2</li>
-</ol>
-<p>算法二的时间复杂度为：$T(N)&#x3D;O(N \cdot logN)$</p>
-<p>算法二相比于算法一不需要开辟额外的空间。</p>
-<p>另外，虽然堆排序的时间复杂度小于希尔排序，但是在实际应用中不如使用：希尔排序+Sedgewick增量</p>
-<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><h3 id="有序子序列的归并"><a href="#有序子序列的归并" class="headerlink" title="有序子序列的归并"></a>有序子序列的归并</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-42.png" alt="Alt text"></p>
-<p>开三个指针，分别指向序列一元素、序列二元素、储存空间元素。然后比较序列一元素和序列二元素，将较小的存入储存空间，然后较小的序列指针加 1 、储存空间的指针加 1。</p>
-<p>由于需要把两个子序列都看一遍，所以时间复杂度是 $O(N)$</p>
-<p>后面的归并排序，将使用该算法合并两个有序序列。</p>
-<h3 id="归并排序的递归实现"><a href="#归并排序的递归实现" class="headerlink" title="归并排序的递归实现"></a>归并排序的递归实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序的递归实现</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">MSort</span><span class="params">(ElementType A[], ElementType TmpA[], <span class="type">int</span> L, <span class="type">int</span> RightEnd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> Center;</span><br><span class="line">    <span class="keyword">if</span>(RightEnd-L&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        Center = (L+RightEnd)/<span class="number">2</span>;</span><br><span class="line">        MSort(A, Tmp, L, Center);</span><br><span class="line">        MSort(A, Tmp, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">        Merge(A, TmpA, L, Center+<span class="number">1</span>, RightEnd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>将无序数组一分为二，分别对左侧数组和右侧数组排序，然后使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并他们。递归的解决这个问题。</p>
-<p>最好、最坏、平均时间复杂度是 $O(Nlog^N)$</p>
-<h3 id="归并排序的非递归算法"><a href="#归并排序的非递归算法" class="headerlink" title="归并排序的非递归算法"></a>归并排序的非递归算法</h3><p>将无序数组切分为单个元素，我们将单个元素看作有序序列，然后两两元素（有序序列）使用<a href="#%E6%9C%89%E5%BA%8F%E5%AD%90%E5%BA%8F%E5%88%97%E7%9A%84%E5%BD%92%E5%B9%B6">有序子序列的归并</a>合并，重复执行，直到合并所有序列为止。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-45.png" alt="Alt text"></p>
-<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Quicksort</span><span class="params">(ElementType A[], <span class="type">int</span> N)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(N&lt;<span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">    pivot = 从 A 中选择主元;</span><br><span class="line">    将 S = &#123; A[]\pivot &#125; 分为两个独立子集:</span><br><span class="line">        A1 = &#123; a 在 S 中，且 a 小于等于 pivot &#125;</span><br><span class="line">        A2 = &#123; a 在 S 中，且 a 大于 pivot &#125;</span><br><span class="line">    A[] = Quicksort(A1, N1) 并 &#123;pivot&#125; 并 Quicksort(A2, N2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>选择一个主元</li>
-<li>将小于主元的数构成一个集合，大于主元的数构成一个集合，分别对这两个集合进行快速排序</li>
-<li>然后再将小于主元的有序集合、主元、大于主元的有序集合合并在一起，完成排序</li>
-</ul>
-<p>快速排序有两个主要工作分别是：</p>
-<ul>
-<li>选主元：取头、中、尾三个元素的中位数作为主元</li>
-<li>子集划分：选好主元后，在数组的头尾分别定义两个指针，将指针中的内容与主元比较大小。当左侧指针找到比主元大的元素时，左侧指针停止移动，等待右侧指针找到比主元小的元素。当右侧指针找到比主元小的元素后，两个指针交换内容。如果直到两个指针相遇，右侧指针都没找到比主元小的元素，则交换右侧指针所指元素和主元。此时，以主元为界，将数组划分为大于主元的部分和小于主元的部分。</li>
-</ul>
-<p>时间复杂度分析：$T(N)&#x3D;O(N \cdot logN)$</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/202002091953256.gif" alt="image"></p>
-<h2 id="对大数据元素排序"><a href="#对大数据元素排序" class="headerlink" title="对大数据元素排序"></a>对大数据元素排序</h2><ol>
-<li>表排序（间接排序）</li>
-</ol>
-<p>有时，需要被排序的数据元素很大，不方便被频繁的移动，因此，我们定义一个表记录各个元素的原始位置，然后对元素排序时只移动表中的记录。最后表中的序列标示着各个数据元素的正确位置。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-46.png" alt="Alt text"></p>
-<ol start="2">
-<li>物理排序</li>
-</ol>
-<p>在获得表排序的结果后，我们需要对元素进行移动，我们希望移动的次数越少越好。</p>
-<p>因此引入了“环”的概念，他表示一组需要交换位置的元素的集合。对每一个环进行排序后，总体上的时间复杂度是 $O(mN)$，其中 m 是元素移动的时间。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-47.png" alt="Alt text"></p>
-<p>图中，不同的元素代表不同的环。</p>
-<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>为所有可能的数值创建一个空位置，然后将需要排序的数组中的元素插入到对应的位置，最后从头到尾，将所有位置中的元素输出，即可得到排序。</p>
-<p>若需要被排序的元素个数为 N，可能出现的数值个数为 M，则整个排序过程，需要插入 N 次，最后输出结果时需要读取 M 次，因此，时间复杂度是 $O(M+N)$</p>
-<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>有时，可能出现的数值数量要远远大于我们需要排序的元素个数，这个时候，用桶排序就不划算了。因此提出了基数排序。</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-48.png" alt="Alt text"></p>
-<p>上述基数排序的流程如下：</p>
-<ol>
-<li><p>首先基于个位数进行排序</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-49.png" alt="Alt text"></p>
-</li>
-<li><p>将排序后的序列作为新的需要排序的序列</p>
-</li>
-<li><p>基于十位数进行排序</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-50.png" alt="Alt text"></p>
-<p>由于 0、1、8 的十位都是 0 ，所以他们都按照顺序排在了 0 下面。其他数字也按照这样的规则进行排序。</p>
-</li>
-<li><p>将排序后的序列作为新的需要排序的序列<br>这里的新序列是 [0, 1, 8, 512, 216, 125, 27, 729, 343, 64]</p>
-</li>
-<li><p>基于百位数进行排序</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-51.png" alt="Alt text"></p>
-</li>
-<li><p>读出排序后的序列</p>
-</li>
-</ol>
-<p>时间复杂度：$O(P(N+B))$，P 为排序的次数，B 为桶的个数，N 为元素个数。当桶的个数（基数）足够少时，近似于线性时间复杂度。</p>
-<h2 id="各种排序的比较"><a href="#各种排序的比较" class="headerlink" title="各种排序的比较"></a>各种排序的比较</h2><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-43.png" alt="Alt text"></p>
-<h1 id="散列表（哈希表）"><a href="#散列表（哈希表）" class="headerlink" title="散列表（哈希表）"></a>散列表（哈希表）</h1><p>有一组元素，元素个数为 N ，还有一个可以存放元素的空表，表的长度为 M。设计一种函数，能够将待查找的元素映射到空表的一个位置。这个函数称为<strong>哈希函数</strong>。元素的长度与空表的长度之比 $\frac{N}{M}$ 称为<strong>装填因子</strong>。</p>
-<h2 id="哈希函数的选取方法"><a href="#哈希函数的选取方法" class="headerlink" title="哈希函数的选取方法"></a>哈希函数的选取方法</h2><h3 id="数字关键词"><a href="#数字关键词" class="headerlink" title="数字关键词"></a>数字关键词</h3><ul>
-<li>直接定值法：待查找元素统一减去某个元素</li>
-<li>除留余数法：将关键词进行求余运算，将被除数取为一个素数，能够让映射更为均匀</li>
-<li>数字分析法：分析元素的关键位。当数字的关键位存在明显差异时，就可以将关键位取出，然后使用一些方法映射到哈希表。</li>
-<li>折叠法：把关键词拆分成几个部分，然后叠加</li>
-<li>平方取中法：对关键词平方，然后取中间的几位数</li>
-</ul>
-<h3 id="字符关键词"><a href="#字符关键词" class="headerlink" title="字符关键词"></a>字符关键词</h3><ul>
-<li>考虑字符串的前三个字符，分别作为百位、十位、个位，然后分别乘以 32，字符可以通过左移五位实现乘以 32。</li>
-</ul>
-<h2 id="解决冲突的方法"><a href="#解决冲突的方法" class="headerlink" title="解决冲突的方法"></a>解决冲突的方法</h2><h3 id="开放地址法"><a href="#开放地址法" class="headerlink" title="开放地址法"></a>开放地址法</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-52.png" alt="Alt text"></p>
-<p>如果位置发生冲突，就按照一定规则找下一个位置。</p>
-<ul>
-<li><p>线性探测法</p>
-<ul>
-<li>原理：插入位置发生冲突时，逐次向下 $+i^2$ 寻找能够储存的位置。超出散列表范围则求余，回到散列表的开始。</li>
-<li>问题线性探测的问题是，当某一个位置发生冲突后，该位置的冲突会越来越多，产生聚集现象。</li>
-</ul>
-</li>
-<li><p>平方探测</p>
-<ul>
-<li>原理：插入位置发生冲突时，逐次向下 $\pm i^2$ 寻找能够储存的位置，加和减交替出现。超出散列表范围则求余，回到散列表的开始。</li>
-<li>问题：平方探测的问题是，由于它是跳跃着查找的，所以当冲突发生时，某一个可能的空位可能始终无法被探测到。</li>
-<li>解决方案：解决方法是，将散列表的长度设计为 $4k+3$，这样可以保证在探测的过程中，每一个位置都可以被找到。</li>
-</ul>
-</li>
-<li><p>双散列探测</p>
-<ul>
-<li>原理：设置两个<strong>散列函数</strong>，第一个散列函数用来第一次插入的位置计算。当位置发生冲突时，则使用第二个散列函数计算平移量，然后原始插入位置与平移量相加得到最终位置。</li>
-</ul>
-</li>
-</ul>
-<h3 id="分离链接法"><a href="#分离链接法" class="headerlink" title="分离链接法"></a>分离链接法</h3><p>将发生冲突的元素通过链表串在一起。</p>
-<p>分离链表法的装载因子可以大于 1.</p>
-<h2 id="散列表查找的效率评估"><a href="#散列表查找的效率评估" class="headerlink" title="散列表查找的效率评估"></a>散列表查找的效率评估</h2><p>影响散列表的查找效率的主要因素是<strong>冲突</strong>，而产生冲突的多少主要由下列三个方面决定：</p>
-<ul>
-<li>散列函数是否均匀</li>
-<li>处理冲突的方法</li>
-<li>散列表的装填因子 $\alpha$</li>
-</ul>
-<h3 id="效率的计算平均查找长度"><a href="#效率的计算平均查找长度" class="headerlink" title="效率的计算平均查找长度"></a>效率的计算平均查找长度</h3><ul>
-<li>成功平均查找长度(ASLs)<ul>
-<li>定义：查找散列表中存在的元素所需要的平均时间。</li>
-<li>计算：对所有的存在的元素的查找次数求平均。</li>
-</ul>
-</li>
-<li>不成功平均查找长度(ASLu)<ul>
-<li>定义：查找散列表中不存在的元素，所需要的平均时间。</li>
-<li>计算：将哈希表中不存在的所有数值情况，按照哈希函数映射的结果进行分类。每一个类别的查找次数是相同的。将所有类别的查找次数相加求平均即可。</li>
-</ul>
-</li>
-</ul>
-<h3 id="各种探测方法的查找性能"><a href="#各种探测方法的查找性能" class="headerlink" title="各种探测方法的查找性能"></a>各种探测方法的查找性能</h3><ul>
-<li><p>线性探测法的查找性能</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-53.png" alt="Alt text"></p>
-<p>反应一般情况下的查找次数，可能与真实次数存在差异。</p>
-</li>
-<li><p>平方探测法和双散列探测法的查找性能</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-54.png" alt="Alt text"></p>
-</li>
-<li><p>分离链接发的查找性能</p>
-<p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-56.png" alt="Alt text"></p>
-</li>
-</ul>
-<h3 id="期望探测次数与装在因子的关系"><a href="#期望探测次数与装在因子的关系" class="headerlink" title="期望探测次数与装在因子的关系"></a>期望探测次数与装在因子的关系</h3><p><img src="/2023/09/16/%E5%9B%9B%E5%A4%A7%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/image-55.png" alt="Alt text"></p>
-<p>可以看到，双散列探测法 和 平方探测法 优于 线性探测法。</p>
-<h1 id="KMP-算法（串匹配）"><a href="#KMP-算法（串匹配）" class="headerlink" title="KMP 算法（串匹配）"></a>KMP 算法（串匹配）</h1><ol>
-<li><p>什么是串</p>
-<ul>
-<li>线性储存的一组数据（默认是字符）</li>
-</ul>
-</li>
-<li><p>串的模式匹配</p>
-<ul>
-<li>给定一个字符串，给定一个模式，查找这个模式在字符串中出现的位置。</li>
-</ul>
-</li>
-</ol>
-<h2 id="KMP-算法"><a href="#KMP-算法" class="headerlink" title="KMP 算法"></a>KMP 算法</h2><p><img src="/.%5C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%5Cimage57.png" alt="Alt text"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/16/linux/shell/shell/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3643,7 +4012,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
